@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('age');
             $table->text('university');
             $table->text('location');
-            $table->string('alert_count');
+            $table->string('alert_count')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

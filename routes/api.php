@@ -26,8 +26,21 @@ Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_
 Route::post('filter_search_trips',[DriverController::class,'filter_search_trips'])->name('filter_search_trips');
 Route::get('browse_notifications',[DriverController::class,'browse_notifications'])->name('browse_notifications');
 /*--------------------------------Student------------------------*/
-Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
 
+
+Route::prefix('student/')->group(function (){
+    Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
+    Route::post('Create_Profile',[StudentController::class,'Create_Profile'])->name('Create_Profile');
+
+    Route::group(["middleware"=>['auth:student-api']],function(){
+    
+        Route::get('Delete_Profile',[StudentController::class,'Delete_Profile'])->name('Delete_Profile');
+        Route::get('Show_Profile',[StudentController::class,'Show_Profile'])->name('Show_Profile');
+        Route::post('Edit_Profile',[StudentController::class,'Edit_Profile'])->name('Edit_Profile');
+        Route::get('Browse_my_Trips',[StudentController::class,'Browse_my_Trips'])->name('Browse_my_Trips');
+        Route::get('logout',[Auth_ApiController::class,'logout'])->name('logout');
+    });
+    });
 
 
 
