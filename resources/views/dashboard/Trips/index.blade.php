@@ -101,14 +101,14 @@
                         <span class="badge bg-success">{{$trip->line->start}} - {{$trip->line->end}} - {{$trip->line->price}}</span>
                       </td>
                           
-
+                      <td>{{$trip->status}}</td>
                       <td>{{$trip->driver->num_stu}}</td>
                    
                       <td>{{$trip->price_final}}</td>
                       <td>{{$trip->num_stu}}</td>
 
 
-                      <td>{{$trip->status}}</td>
+                 
                   
 
 

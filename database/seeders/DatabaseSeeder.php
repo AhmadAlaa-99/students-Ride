@@ -5,7 +5,8 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Hash;
-
+use Faker\Factory;
+use Carbon\Carbon;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -16,6 +17,16 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        $start=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي'];
+        $end=['الهمك','البرامكة',' المزة','مساكن برزة'];
+        for($i=0; $i<10 ;$i++)
+        {
+        \App\Models\line::create([
+            'start'=>$start[rand(0, count($start) - 1)],
+            'end'=>$end[rand(0, count($end) - 1)],
+            'price'=>rand(1000, 5000),
+        ]);
+    }
         $pass='12345678';
         $password=Hash::make($pass);
          \App\Models\admin::create([
@@ -26,25 +37,60 @@ class DatabaseSeeder extends Seeder
          \App\Models\User::create([
             'name' => 'test_admin',
             'email' => 'test@admin.com',
-           
             'password' =>$password, 
         ]);
+        $faker=Factory::create();
+        for($i=0; $i<10 ;$i++)
+        {
         \App\Models\driver::create([
-            'full_name'=>'ahmas',
-            'email'=>'testdriver@gmail.com',
+            'full_name'=>$faker->firstname,
+            'email'=>$faker->firstname,
             'password'=>$password,
             'gender'=>'male',
-            'phone_number'=>'0957567',
-            'date_reg'=>'12/01/2020',
-            'data_reg_end'=>'12/01/2020',
+            'phone_number'=>'9639'.random_int(10000000,99999999),
+            'date_reg'=>Carbon::now()->toDateString(),
+            'data_reg_end'=>Carbon::now()->addYear()->toDateString(),
             'age'=>'23',
             'vehicle_number'=>'432',
             'vehicle_type'=>'van',
             'portfolio'=>'test',
             'status'=>'1',
-            'num_stu'=>'5',
+            'num_stu'=>rand(4, 15),
             'alert_count'=>'0',
-            'full_name' => 'test_admin',
+           
         ]);
     }
+    for($i=0; $i<20 ;$i++)
+    {
+        \App\Models\student::create([
+            'full_name'=>$faker->firstname,
+            'email'=>$faker->firstname,
+            'password'=>$password,
+            'gender'=>'male',
+            'phone_number'=>'9639'.random_int(10000000,99999999),
+     
+            'age'=>'23',
+            'university'=>'university_damas',
+            'location'=>'damas',
+            'alert_count'=>'0',
+        ]);
+    }
+    $type=['اياب','ذهاب'];
+    $st=Carbon::now();
+    $en=Carbon::now()->addMonth();
+    for($i=0; $i<10 ;$i++)
+    {
+        \App\Models\trip::create([
+            'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+            'time_arrange'=>'8:30,8:45,9:00',
+            'time_final'=>'-',
+            'status'=>'1',
+            'driver_id'=>rand(1,10),
+            'line_id'=>rand(1,10),
+            'type'=>$type[rand(0, count($type) - 1)],
+            ]);
+    }
+
+
+}
 } 

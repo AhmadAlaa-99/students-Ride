@@ -86,10 +86,10 @@
                       <span class="badge bg-warning">{{$line->end}}</span>
                         </td>
                       <td>
-                      <span class="badge bg-danger">{{$line->trips->count()}}</span>
+                      <span class="badge bg-danger">{{$line->price}}</span>
                       </td>
                       <td>
-                        <span class="badge bg-success">Active</span>
+                        <span class="badge bg-success">{{$line->trips->count()}}</span>
                       </td>
                       <td>
                         <div style="display: flex;">
