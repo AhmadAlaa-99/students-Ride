@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\driver;
 use App\Models\trip;
 use App\Models\student;
+use App\Models\suggestion;
 use App\Models\student_trip;
 use App\Models\User;
 use App\Http\Controllers\BaseController;
@@ -14,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Auth;
 use App\Notifications\TripCancel_admin;
 use App\Notifications\TripCancel_students;
-
+use Carbon\Carbon;
 use App\Notifications\status_TripStudents;
 use App\Notifications\status_TripAdmin;
 
@@ -38,7 +39,7 @@ class StudentController extends BaseController
         if (auth()->guard('student-api')->attempt($validator) || Student::where('email','=',$request->email)->first()){
             return response()->json([
                 'status'=>false,
-                 'message'=>'The email has already been taken'
+                 'message'=>'هذا الايميل موجود مسبقاً'
             ]);    
         }
         
@@ -63,7 +64,7 @@ class StudentController extends BaseController
         
         //response
         return response()->json([
-            'message'=>'register successfully',
+            'message'=>'تم إنشاء الحساب بنجاح',
             'status'=>true,
             'data'=>$student,
             'token'=>$token
@@ -93,7 +94,7 @@ class StudentController extends BaseController
        if ( Student::where('email','=',$request->email)->first()){
         return response()->json([
             'status'=>false,
-             'message'=>'The email has already been taken'
+            'message'=>'هذا الايميل موجود مسبقاً'
         ]);    
     }
         $student_id= auth()->guard('student-api')->id();
@@ -112,7 +113,7 @@ class StudentController extends BaseController
         //response date
         return response()->json([
             'status'=>true,
-            "message"=>'profile updated successful',
+            "message"=>'تم تحديث معلومات الملف الشخصي بنجاح',
             'data'=>$student
         ],200);
     }
@@ -126,59 +127,173 @@ class StudentController extends BaseController
         
         return response()->json([
             'status'=>true,
-             'message'=>'successfully'
+             'message'=>'تم حذف الحساب '
         ]);    
     }
    
     public function search_trip ()
     {
-        $trips = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-               ->get(['trips.*', 'lines.*']);
-
+                $today = Carbon::now();
+                $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+                        ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
+                        ->where('trips.trip_date', '>', $today)
+                        ->select('trips.*', 'lines.*','drivers.full_name as DriverName')
+                        ->get();
                return response()->json([
                 'status'=>true,
-                 'message'=>'successfully',
-                 'data'=>$trips
+                 'data'=>$info
             ]);  
         
     }
     public function choose_The_Information_trip($id)
     {
         $student_id= auth()->guard('student-api')->id();
+        if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
+            return response()->json([
+                'status'=>false,
+                 'message'=>'تم التسجيل على هذه الرحلة مسبقا',
+            ]);
+        }
         $student_trip = new student_trip();
-        $time_arrange=trip::where('id','=',$id)->get('time_arrange');
+        $student_trip->time_arrange=trip::where('id','=',$id)->get('time_arrange')->first();
         $student_trip->trip_id=$id;
+        $student_trip->student_id=$student_id;
+        $student_trip->status=1;
+        $date =trip::where('id','=',$id)->get('trip_date')->first();
         $student_trip->save();
         return response()->json([
             'status'=>true,
-             'message'=>'successfully',
+             'message'=>'تم حجز رحلة بنجاح',
              'data'=>$student_trip
-        ]);    
+            ]);
     }
-
-    public function Cancel_Trip()
+    public function Cancel_Trip($id)
     {
-        
+        $student_id= auth()->guard('student-api')->id();
+        if (!student_trip::where([['student_id','=',$student_id],['id','=',$id]])->exists()){
+            return response()->json([
+                'status'=>false,
+                 'message'=>'هذه الرحلة غير موجودة',
+                ]);     
+        }
+        $now = Carbon::now();
+        $hour = $now->hour ;
+        if ($hour >= 21) {
+         $student=student::find($student_id);
+         $student->alert_count=$student->alert_count+1;
+         $student->save();
+         $trip=student_trip::where('id','=',$id)->first();
+         $trip->delete();
+         //delete account if conunt of alert big than 5
+         if ($student->alert_count>=5){
+           $this->Delete_Profile();
+            return response()->json([
+                'status'=>true,
+                 'message'=>'تم حظر الحساب وذلك لتجاوز عدد مرات الالغاء بعد الساعه 9 مساء ال 5 مرات ',
+                ]);
+         }
+         else {
+         return response()->json([
+            'status'=>true,
+            'message'=>'تم الالغاء بنجاح',
+            'عدد الانذارات'=>$student->alert_count
+            ]);
+        }
+    }
+        else {
+            $trip=student_trip::where('id','=',$id)->first();
+            $trip->delete();
+            return response()->json([
+                'status'=>true,
+                 'message'=>'تم الالغاء بنجاح',
+                 'time'=>$hour
+                ]);
+        }
+       
     }
     public function Browse_my_Trips()
     {
         $student_id= auth()->guard('student-api')->id();
-        $data = student_trip::get()->first();
-        return response()->json($data, 200);
+        $today = Carbon::now();
+        $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+                ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
+                ->join('student_trip' , 'student_trip.trip_id','=','trips.id')
+                ->where('student_trip.student_id', '=', $student_id)
+                ->select('trips.*', 'lines.*','drivers.full_name as DriverName')
+                ->get();
+        
+        
+        return response()->json($info, 200);
     }
 
-    public function Send_Suggestion(Request $request)
+    
+    public function show_my_current_trips()
     {
+        $today = Carbon::now();
+        $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
+                ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
+                ->where('trips.trip_date', '>', $today)
+                ->select('trips.*', 'student_trip.*','drivers.full_name as DriverName')
+                ->get();
+       return response()->json([
+        'status'=>true,
+         'data'=>$info
+    ]);  
+    }
+    public function show_details_for_trip($student_trip_id)
+    {
+        $student_id= auth()->guard('student-api')->id();
+        if (!student_trip::where([['id','=',$student_trip_id],['student_id','=',$student_id]])->exists()){
+            return response()->json([
+                 'status'=>false,
+                 'message'=>'هذه الرحلة غير موجودة',
+            ]); 
+        }
+        $today = Carbon::now();
+        $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
+                ->where('student_trip.id', '=', $student_trip_id)
+                ->where('trips.trip_date', '>', $today)
+                ->select('trips.*', 'student_trip.*')
+                ->get()->first();
+          return response()->json([
+            'status'=>true,
+            'data'=>$info
+    ]);  
+    }
+    public function Send_Suggestion(Request $request,$trip_id)
+    {
+        
+        $validator=$request->validate([
+            'message'=>'required',
+        ]);
+        $student_id= auth()->guard('student-api')->id();
+        if (!student_trip::where([['student_id','=',$student_id],['trip_id','=',$trip_id]])->exists()){
+            return response()->json([
+                'status'=>false,
+                 'message'=>'لا تستطيع ارسال اقتراح عن هذه الرحلة لانك لم تكن مسجل فيها',
+                ]);     
+        }
+        $suggestion = new suggestion();
+        $suggestion->email=student::where('id','=',$student_id)->get('email');
+        $suggestion->body=$request->message;
+        $suggestion->trip_id=$trip_id;
+        $suggestion->save();
+        return response()->json([
+            'status'=>true,
+             'message'=>'تم ارسال الاقتراح بنجاح',
+             'data'=>$suggestion
+        ]); 
         
     }
     public function browse_Notification ()
     {
-        
+        $student=student::where('id',Auth::guard('student-api')->id())->first();
+        $notification=$student->unreadNotifications;
+          return $this->sendResponse($notification,'student Notifications');
     }
-    public function Forget_Password()
-    {
-        
-    }
+    public function Forget_Password(){}     
+    
+    public function browse_the_map(){}
    
 
 }

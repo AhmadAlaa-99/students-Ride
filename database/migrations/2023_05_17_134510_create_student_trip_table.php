@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('student_trip', function (Blueprint $table) {
+            Schema::create('student_trip', function (Blueprint $table) {
             $table->id();
             $table->text('time_arrange');
             $table->text('status');//0 default  //1 exist     //-1 not exist(same cancel after 9) 

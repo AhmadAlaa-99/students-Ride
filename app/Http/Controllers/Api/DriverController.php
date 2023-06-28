@@ -67,7 +67,7 @@ class DriverController extends BaseController
         ]);
 
         //send notify admin update trip status
-           $trip=trip::where('id',$tripId)->first();
+        $trip=trip::where('id',$tripId)->first();
         $admin=User::where('id','1')->first();
         $driver=driver::where('id',$trip->driver_id)->first();
         $admin->notify(new status_TripAdmin($trip,$driver));

@@ -40,7 +40,11 @@ Route::prefix('student/')->group(function (){
         Route::get('Browse_my_Trips',[StudentController::class,'Browse_my_Trips'])->name('Browse_my_Trips');
         Route::get('search_trip',[StudentController::class,'search_trip'])->name('search_trip');
         Route::post('choose_The_Information_trip/{id}',[StudentController::class,'choose_The_Information_trip']);
-       
+        Route::get('Cancel_Trip/{id}',[StudentController::class,'Cancel_Trip']);
+        Route::get('show_my_current_trips',[StudentController::class,'show_my_current_trips']);
+        Route::get('show_details_for_trip/{id}',[StudentController::class,'show_details_for_trip']);
+        Route::get('browse_Notification',[StudentController::class,'browse_Notification']);
+        Route::post('Send_Suggestion/{trip_id}',[StudentController::class,'Send_Suggestion']);
         Route::get('logout',[Auth_ApiController::class,'logout'])->name('logout');
     });
     });
