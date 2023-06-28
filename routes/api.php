@@ -38,6 +38,9 @@ Route::prefix('student/')->group(function (){
         Route::get('Show_Profile',[StudentController::class,'Show_Profile'])->name('Show_Profile');
         Route::post('Edit_Profile',[StudentController::class,'Edit_Profile'])->name('Edit_Profile');
         Route::get('Browse_my_Trips',[StudentController::class,'Browse_my_Trips'])->name('Browse_my_Trips');
+        Route::get('search_trip',[StudentController::class,'search_trip'])->name('search_trip');
+        Route::post('choose_The_Information_trip/{id}',[StudentController::class,'choose_The_Information_trip']);
+       
         Route::get('logout',[Auth_ApiController::class,'logout'])->name('logout');
     });
     });

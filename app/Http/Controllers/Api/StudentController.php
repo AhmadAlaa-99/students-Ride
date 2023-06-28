@@ -130,10 +130,32 @@ class StudentController extends BaseController
         ]);    
     }
    
-    public function choose_The_Information_trip ()
+    public function search_trip ()
     {
+        $trips = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+               ->get(['trips.*', 'lines.*']);
+
+               return response()->json([
+                'status'=>true,
+                 'message'=>'successfully',
+                 'data'=>$trips
+            ]);  
         
     }
+    public function choose_The_Information_trip($id)
+    {
+        $student_id= auth()->guard('student-api')->id();
+        $student_trip = new student_trip();
+        $time_arrange=trip::where('id','=',$id)->get('time_arrange');
+        $student_trip->trip_id=$id;
+        $student_trip->save();
+        return response()->json([
+            'status'=>true,
+             'message'=>'successfully',
+             'data'=>$student_trip
+        ]);    
+    }
+
     public function Cancel_Trip()
     {
         
@@ -141,27 +163,15 @@ class StudentController extends BaseController
     public function Browse_my_Trips()
     {
         $student_id= auth()->guard('student-api')->id();
-        $data = trip::get();
+        $data = student_trip::get()->first();
         return response()->json($data, 200);
     }
-    public function FeedBack()
-    {
-        
-    }
-   
-    public function Brows_The_Map()
-    {
-        
-    }
-    public function Send_Suggestion()
+
+    public function Send_Suggestion(Request $request)
     {
         
     }
     public function browse_Notification ()
-    {
-        
-    }
-    public function LogOut ()
     {
         
     }
