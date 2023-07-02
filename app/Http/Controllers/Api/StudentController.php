@@ -76,7 +76,9 @@ class StudentController extends BaseController
         $student_id= auth()->guard('student-api')->id();
       
         $student=Student::where('id',$student_id)->first();
-        return $this->sendResponse($student, 'profile');
+        return response()->json([
+            'data'=>$student,
+        ],200);
         
     }
     public function  Edit_Profile(Request $request)
