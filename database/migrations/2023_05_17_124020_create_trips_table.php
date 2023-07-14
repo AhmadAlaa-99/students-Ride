@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->date('trip_date');
-            $table->text('time_arrange');
+            $table->time('time_1',0);
+            $table->time('time_2',0);
+            $table->time('time_3',0);
             $table->text('time_final');
             $table->text('status');
             $table->text('type');

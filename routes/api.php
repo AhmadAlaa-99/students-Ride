@@ -38,7 +38,10 @@ Route::prefix('student/')->group(function (){
         Route::get('Show_Profile',[StudentController::class,'Show_Profile'])->name('Show_Profile');
         Route::post('Edit_Profile',[StudentController::class,'Edit_Profile'])->name('Edit_Profile');
         Route::get('Browse_my_Trips',[StudentController::class,'Browse_my_Trips'])->name('Browse_my_Trips');
-        Route::get('search_trip',[StudentController::class,'search_trip'])->name('search_trip');
+        Route::get('end_start_lines',[StudentController::class,'end_start_lines']);
+
+        Route::post('information_of_trip',[StudentController::class,'information_of_trip']);
+
         Route::post('choose_The_Information_trip/{id}',[StudentController::class,'choose_The_Information_trip']);
         Route::get('Cancel_Trip/{id}',[StudentController::class,'Cancel_Trip']);
         Route::get('show_my_current_trips',[StudentController::class,'show_my_current_trips']);

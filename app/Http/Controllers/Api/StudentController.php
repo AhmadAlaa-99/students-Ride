@@ -133,22 +133,95 @@ class StudentController extends BaseController
         ]);    
     }
    
-    public function search_trip ()
+    public function end_start_lines ()
     {
-                $today = Carbon::now();
-                $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-                        ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
-                        ->where('trips.trip_date', '>', $today)
-                        ->select('trips.*', 'lines.*','drivers.full_name as DriverName')
-                        ->get();
+        $now = now()->format('H')+3;
+        $nine_pm = '21';
+
+        if ($now >= $nine_pm) {
+            return response()->json([
+                'status'=>false,
+                 'message'=>'نعتذر قد تم الانتهاء من حجوزات اليوم يجب الانتظار للغد',
+            ]);
+        }
+
+        $now = Carbon::now();
+
+        // Get tomorrow's date in the default timezone
+        $tomorrow = $now->addDay();
+
+        // Format the date as a string (adjust the format string as needed)
+        $tomorrow_str = $tomorrow->format('Y-m-d');
+
+                 $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+                ->whereDate('trips.trip_date', '=', $tomorrow)
+                ->select('lines.start')
+                ->get();
+
+                $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+                ->whereDate('trips.trip_date', '=', $tomorrow)
+                ->select('lines.end')
+                ->get();
+
+                // $today = Carbon::now();
+                // $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+                //         ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
+                //         ->where('trips.trip_date', '>', $today)
+                //         ->select('trips.*', 'lines.*','drivers.full_name as DriverName')
+                //         ->get();
+
                return response()->json([
                 'status'=>true,
-                 'data'=>$info
+                 'source'=>$source,
+                 'destination'=>$destination,
+
             ]);  
         
     }
-    public function choose_The_Information_trip($id)
+    public function information_of_trip(Request $request){
+        $validator = $request->validate([
+            'start'=>'required',
+            'end'=>'required'
+       ]); 
+       $now = now()->format('H');
+       $nine_pm = '21';
+
+       if ($now >= $nine_pm) {
+           return response()->json([
+               'status'=>false,
+                'message'=>'نعتذر قد تم الانتهاء من حجوزات اليوم يجب الانتظار للغد',
+           ]);
+       }
+
+       $now = Carbon::now();
+
+       // Get tomorrow's date in the default timezone
+       $tomorrow = $now->addDay();
+
+       // Format the date as a string (adjust the format string as needed)
+       $tomorrow_str = $tomorrow->format('Y-m-d');
+
+        $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+       ->whereDate('trips.trip_date', '=', $tomorrow)
+       ->where ('lines.start','=',$request->start)
+       ->where ('lines.end','=',$request->end)
+       ->select('trips.*','lines.*')
+       ->get();
+
+       return response()->json([
+        'status'=>true,
+         'information'=>$info,
+
+    ]);  
+    }
+    public function choose_The_Information_trip(Request $request,$id)
     {
+        $validator = $request->validate([
+            'main_time'=>'required',
+            'time_desire_1'=>'required',
+            'time_desire_2'=>'required',
+           
+       ]); 
         $student_id= auth()->guard('student-api')->id();
         if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
             return response()->json([
@@ -157,7 +230,9 @@ class StudentController extends BaseController
             ]);
         }
         $student_trip = new student_trip();
-        $student_trip->time_arrange=trip::where('id','=',$id)->get('time_arrange')->first();
+        $student_trip->main_time=$request->main_time;
+        $student_trip->time_desire_1=$request->time_desire_1;
+        $student_trip->time_desire_2=$request->time_desire_2;
         $student_trip->trip_id=$id;
         $student_trip->student_id=$student_id;
         $student_trip->status=1;
@@ -178,7 +253,7 @@ class StudentController extends BaseController
                  'message'=>'هذه الرحلة غير موجودة',
                 ]);     
         }
-        $now = Carbon::now();
+        $now = Carbon::now()+3;
         $hour = $now->hour ;
         if ($hour >= 21) {
          $student=student::find($student_id);

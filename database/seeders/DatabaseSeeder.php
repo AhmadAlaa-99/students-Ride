@@ -78,11 +78,17 @@ class DatabaseSeeder extends Seeder
     $type=['اياب','ذهاب'];
     $st=Carbon::now();
     $en=Carbon::now()->addMonth();
+    $time1 = Carbon::createFromTime(8, 30, 0);
+    $time2= Carbon::createFromTime(9, 0, 0);
+    $time3 = Carbon::createFromTime(9, 30, 0);
+
     for($i=0; $i<10 ;$i++)
     {
         \App\Models\trip::create([
             'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
-            'time_arrange'=>'8:30,8:45,9:00',
+            'time_1'=>$time1->format('H:i'),
+            'time_2'=>$time2->format('H:i'),
+            'time_3'=>$time3->format('H:i'),
             'time_final'=>'-',
             'status'=>'1',
             'driver_id'=>rand(1,10),
