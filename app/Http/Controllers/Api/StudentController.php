@@ -253,8 +253,8 @@ class StudentController extends BaseController
                  'message'=>'هذه الرحلة غير موجودة',
                 ]);     
         }
-        $now = Carbon::now()+3;
-        $hour = $now->hour ;
+        $now = Carbon::now();
+        $hour = $now->hour +3;
         if ($hour >= 21) {
          $student=student::find($student_id);
          $student->alert_count=$student->alert_count+1;
