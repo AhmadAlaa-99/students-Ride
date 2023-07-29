@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         {
         \App\Models\driver::create([
             'full_name'=>$faker->firstname,
-            'email'=>$faker->firstname,
+            'email'=>$faker->firstname.'@gmail.com',
             'password'=>$password,
             'gender'=>'male',
             'phone_number'=>'9639'.random_int(10000000,99999999),
@@ -64,17 +64,17 @@ class DatabaseSeeder extends Seeder
     {
         \App\Models\student::create([
             'full_name'=>$faker->firstname,
-            'email'=>$faker->firstname,
+            'email'=>$faker->firstname.'@gmail.com',
             'password'=>$password,
             'gender'=>'male',
             'phone_number'=>'9639'.random_int(10000000,99999999),
-     
             'age'=>'23',
             'university'=>'university_damas',
             'location'=>'damas',
             'alert_count'=>'0',
         ]);
     }
+
     $type=['اياب','ذهاب'];
     $st=Carbon::now();
     $en=Carbon::now()->addMonth();
@@ -82,6 +82,42 @@ class DatabaseSeeder extends Seeder
     $time2= Carbon::createFromTime(9, 0, 0);
     $time3 = Carbon::createFromTime(9, 30, 0);
 
+
+    \App\Models\trip::create([
+        'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+        'time_1'=>'9:00',
+        'time_2'=>'9:30',
+        'time_3'=>'10:00',
+        'time_final'=>'9:30',
+        'status'=>'حالية',
+        'driver_id'=>1,
+        'line_id'=>1,
+        'type'=>$type[rand(0, count($type) - 1)],
+        ]);
+        
+        \App\Models\trip::create([
+            'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+            'time_1'=>$time1->format('H:i'),
+            'time_2'=>$time2->format('H:i'),
+            'time_3'=>$time3->format('H:i'),
+            'time_final'=>'-',
+            'status'=>'قادمة',
+            'driver_id'=>1,
+            'line_id'=>1,
+            'type'=>$type[rand(0, count($type) - 1)],
+            ]);
+        for($i=1; $i<3 ;$i++)
+        {
+            \App\Models\student_trip::create([
+                'main_time'=>'-',
+                'time_desire_1'=>'-',
+                'time_desire_2'=>'-',
+                'status'=>'0',
+                'student_id'=>$i,
+                'trip_id'=>1,
+            ]);
+            $i++;
+        }
     for($i=0; $i<10 ;$i++)
     {
         \App\Models\trip::create([
@@ -90,12 +126,13 @@ class DatabaseSeeder extends Seeder
             'time_2'=>$time2->format('H:i'),
             'time_3'=>$time3->format('H:i'),
             'time_final'=>'-',
-            'status'=>'1',
+            'status'=>'قادمة',
             'driver_id'=>rand(1,10),
             'line_id'=>rand(1,10),
             'type'=>$type[rand(0, count($type) - 1)],
             ]);
     }
+   
 
 
 }

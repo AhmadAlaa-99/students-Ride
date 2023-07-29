@@ -17,17 +17,20 @@ use App\Http\Controllers\Api\StudentController;
 */
 /*--------------------------------Driver------------------------*/
 Route::post('login_driver',[Auth_ApiController::class,'login_driver'])->name('login_driver');
-Route::get('show_my_trips',[DriverController::class,'show_my_trips'])->name('show_my_trips');
-Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
+Route::get('show_my_current_trips',[DriverController::class,'show_my_current_trips'])->name('show_my_current_trips');
+Route::get('show_my_finite_trips',[DriverController::class,'show_my_finite_trips'])->name('show_my_finite_trips');
+Route::get('show_my_next_trips',[DriverController::class,'show_my_next_trips'])->name('show_my_next_trips');
 Route::get('show_details_for_current_trip/{id}',[DriverController::class,'show_details_for_current_trip'])->name('show_details_for_current_trip');
+Route::post('filter_search_trips',[DriverController::class,'filter_search_trips'])->name('filter_search_trips');
 Route::post('check_box_trip/{id}',[DriverController::class,'check_box_trip'])->name('check_box_trip');
 Route::post('check_box_student/{trip_id}/{student_id}',[DriverController::class,'check_box_student'])->name('check_box_student');
+
+
+
+Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
 Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_profile');
-Route::post('filter_search_trips',[DriverController::class,'filter_search_trips'])->name('filter_search_trips');
 Route::get('browse_notifications',[DriverController::class,'browse_notifications'])->name('browse_notifications');
 /*--------------------------------Student------------------------*/
-
-
 Route::prefix('student/')->group(function (){
     Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
     Route::post('Create_Profile',[StudentController::class,'Create_Profile'])->name('Create_Profile');

@@ -58,6 +58,10 @@ class student extends Authenticatable implements JWTSubject
     }
     public function trips()
     {
-        return $this->belongsToMany(trip::class)->withPivot('time_arrange','status');
+        return $this->belongsToMany(trip::class)->withPivot('main_time','time_desire_1','time_desire_2','status');
     }
 }
+
+
+
+

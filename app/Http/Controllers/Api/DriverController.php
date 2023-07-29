@@ -19,10 +19,39 @@ use App\Notifications\status_TripAdmin;
 
 class DriverController extends BaseController
 { 
-    public function show_my_trips()
+
+    public function show_my_current_trips()
     {
         $driver=auth()->guard('driver-api')->user()->id;
-        $trips=trip::where('driver_id',$driver)->get();
+        $trips=trip::where([
+            'driver_id'=>$driver,
+            'status'=>'حالية',
+            ])->with('line')->get();
+        return $this->sendResponse($trips, 'Driver Trips');
+    }
+    public function show_my_finite_trips()
+    {
+        $driver=auth()->guard('driver-api')->user()->id;
+        
+        $trips=trip::where([
+            'driver_id'=>$driver,
+            'status'=>'منتهية',
+            ])->get();
+            $totalPrice = $trips->sum(function ($trip) {
+                return (float) $trip->price_final;
+            });
+    
+            return $this->sendResponse([$trips,'totalPrice'=>$totalPrice],'Driver Trips');
+
+      
+    }
+    public function show_my_next_trips()
+    {
+        $driver=auth()->guard('driver-api')->user()->id;
+        $trips=trip::where([
+            'driver_id'=>$driver,
+            'status'=>'قادمة',
+            ])->get();
         return $this->sendResponse($trips, 'Driver Trips');
     }
 
@@ -59,6 +88,8 @@ class DriverController extends BaseController
             'students',
         ])->first();
         return $this->sendResponse($trip,'current_trip');
+
+        
     }
     public function check_box_trip($tripId,Request $request)
     {
@@ -89,12 +120,18 @@ class DriverController extends BaseController
     {
         $st_date=$request->st_date;
         $en_date=$request->en_date;
-        $trips=trip::where('driver_id',Auth::guard('driver-api')->id())->betweenDates($st_date, $en_date)->with([
-            'driver',
+
+        $trips=trip::where(
+            ['driver_id'=>Auth::guard('driver-api')->id(),
+            'status'=>'منتهية',
+            ])->betweenDates($st_date, $en_date)->with([
             'line',
-            'students',
         ])->get();
-        return $this->sendResponse($trips, 'results_search_trips');
+        $totalPrice = $trips->sum(function ($trip) {
+            return (float) $trip->price_final;
+        });
+
+        return $this->sendResponse([$trips,'totalPrice'=>$totalPrice],'results_search_trips');
     }
     public function browse_notifications()
     {

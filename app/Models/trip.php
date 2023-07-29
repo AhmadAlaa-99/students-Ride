@@ -30,7 +30,7 @@ class trip extends Model
     }
     public function students()
     {
-        return $this->belongsToMany(student::class)->withPivot('time_arrange');
+        return $this->belongsToMany(student::class)->withPivot('main_time','time_desire_1','time_desire_2','status');
     }
     public function scopeBetweenDates($query, $startDate, $endDate)
 {

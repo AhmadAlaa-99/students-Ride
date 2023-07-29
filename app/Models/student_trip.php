@@ -10,4 +10,5 @@ class student_trip extends Model
     use HasFactory;
     protected $table='student_trip';
     protected $guarded=[''];
+    
 }
