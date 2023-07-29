@@ -109,9 +109,9 @@ class DatabaseSeeder extends Seeder
         for($i=1; $i<3 ;$i++)
         {
             \App\Models\student_trip::create([
-                'main_time'=>'-',
-                'time_desire_1'=>'-',
-                'time_desire_2'=>'-',
+                'main_time'=>$time1->format('H:i'),
+                'time_desire_1'=>$time1->format('H:i'),
+                'time_desire_2'=>$time1->format('H:i'),
                 'status'=>'0',
                 'student_id'=>$i,
                 'trip_id'=>1,
