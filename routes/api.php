@@ -26,6 +26,8 @@ Route::post('check_box_trip/{id}',[DriverController::class,'check_box_trip'])->n
 Route::post('check_box_student/{trip_id}/{student_id}',[DriverController::class,'check_box_student'])->name('check_box_student');
 
 
+Route::get('All_inforamtion_of_trip/{id}',[StudentController::class,'All_inforamtion_of_trip'])->name('All_inforamtion_of_trip');
+
 
 Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
 Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_profile');

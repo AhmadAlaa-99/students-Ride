@@ -174,6 +174,7 @@ class StudentController extends BaseController
                 'status'=>true,
                  'source'=>$source,
                  'destination'=>$destination,
+                 
 
             ]);  
         
@@ -183,13 +184,14 @@ class StudentController extends BaseController
             'start'=>'required',
             'end'=>'required'
        ]); 
-       $now = now()->format('H');
-       $nine_pm = '21';
+       $now = now()->format('H')+3;
+       $nine_pm = '16';
 
        if ($now >= $nine_pm) {
            return response()->json([
                'status'=>false,
                 'message'=>'نعتذر قد تم الانتهاء من حجوزات اليوم يجب الانتظار للغد',
+                'now'=>$now
            ]);
        }
 
@@ -371,6 +373,22 @@ class StudentController extends BaseController
     public function Forget_Password(){}     
     
     public function browse_the_map(){}
-   
+
+    public function All_inforamtion_of_trip($id){
+        
+
+        $trip_info = trip::join('drivers', 'trips.driver_id', '=', 'drivers.id')
+                          ->join('lines', 'trips.line_id', '=', 'lines.id')
+                          ->where('trips.id', '=', $id)->first();
+
+        $student_info = student_trip ::join ('students','student_trip.student_id','=','students.id') 
+        ->where('student_trip.trip_id', '=', $id);  
+    
+       return response()->json([
+        'status'=>true,
+        'trip_info'=>$trip_info,
+        'student_info'=>$student_info
+    ]);  
+    }
 
 }
