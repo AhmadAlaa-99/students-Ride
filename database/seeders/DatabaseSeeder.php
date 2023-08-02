@@ -94,6 +94,30 @@ class DatabaseSeeder extends Seeder
         'line_id'=>1,
         'type'=>$type[rand(0, count($type) - 1)],
         ]);
+
+        \App\Models\trip::create([
+            'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+            'time_1'=>'9:00',
+            'time_2'=>'9:30',
+            'time_3'=>'10:00',
+            'time_final'=>'9:30',
+            'status'=>'منتهية',
+            'driver_id'=>1,
+            'line_id'=>1,
+            'type'=>$type[rand(0, count($type) - 1)],
+            ]);
+
+            \App\Models\trip::create([
+                'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+                'time_1'=>'9:00',
+                'time_2'=>'9:30',
+                'time_3'=>'10:00',
+                'time_final'=>'9:30',
+                'status'=>'منتهية',
+                'driver_id'=>1,
+                'line_id'=>1,
+                'type'=>$type[rand(0, count($type) - 1)],
+                ]);
         
         \App\Models\trip::create([
             'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
