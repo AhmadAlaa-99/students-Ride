@@ -377,17 +377,14 @@ class StudentController extends BaseController
     public function All_inforamtion_of_trip($id){
         
 
-        $trip_info = trip::join('drivers', 'trips.driver_id', '=', 'drivers.id')
-                          ->join('lines', 'trips.line_id', '=', 'lines.id')
+        $trip_info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
                           ->where('trips.id', '=', $id)->first();
 
-        $student_info = student_trip ::join ('students','student_trip.student_id','=','students.id') 
-        ->where('student_trip.trip_id', '=', $id);  
-    
+        
        return response()->json([
         'status'=>true,
         'trip_info'=>$trip_info,
-        'student_info'=>$student_info
+    
     ]);  
     }
 
