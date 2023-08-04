@@ -47,7 +47,6 @@ class DriverController extends BaseController
             return (float) $trip->price_final;
         });
   return response()->json([
-    'status'=>true,
     'data'=>$trips,
     'totalPrice'=>$totalPrice,
 ]);  
@@ -104,12 +103,11 @@ class DriverController extends BaseController
         ])->first();
     
   return response()->json([
-    'status'=>true,
     'data'=>$info
 ]);  
 
 
-        return $this->sendResponse($trip,'current_trip');
+  
 
         
     }
@@ -153,7 +151,6 @@ class DriverController extends BaseController
 
 
          return response()->json([
-    'status'=>true,
     'data'=>$trips,
     'totalPrice'=>$totalPrice,
 ]);  
