@@ -23,36 +23,49 @@ class DriverController extends BaseController
     public function show_my_current_trips()
     {
         $driver=auth()->guard('driver-api')->user()->id;
-        $trips=trip::where([
-            'driver_id'=>$driver,
-            'status'=>'حالية',
-            ])->with('line')->get();
-        return $this->sendResponse($trips, 'Driver Trips');
+        $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+                ->where('trips.status', '=','حالية')
+                ->get();
+          return response()->json([
+            'status'=>true,
+            'data'=>$info
+    ]);  
+
     }
     public function show_my_finite_trips()
     {
+       
+
         $driver=auth()->guard('driver-api')->user()->id;
-        
-        $trips=trip::where([
+        $trips = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+        ->where([
             'driver_id'=>$driver,
             'status'=>'منتهية',
-            ])->get();
-            $totalPrice = $trips->sum(function ($trip) {
-                return (float) $trip->price_final;
-            });
-    
-            return $this->sendResponse([$trips,'totalPrice'=>$totalPrice],'Driver Trips');
+            ])
+        ->get();
+        $totalPrice = $trips->sum(function ($trip) {
+            return (float) $trip->price_final;
+        });
+  return response()->json([
+    'data'=>$trips,
+    'totalPrice'=>$totalPrice,
+]);  
+      
 
       
     }
     public function show_my_next_trips()
     {
         $driver=auth()->guard('driver-api')->user()->id;
-        $trips=trip::where([
+        $trips=trip::join('lines', 'trips.line_id', '=', 'lines.id')->where([
             'driver_id'=>$driver,
             'status'=>'قادمة',
             ])->get();
-        return $this->sendResponse($trips, 'Driver Trips');
+            return response()->json([
+                'status'=>true,
+                'data'=>$trips,
+               
+            ]);  
     }
 
     public function cancel_trip($tripId)
@@ -82,12 +95,19 @@ class DriverController extends BaseController
     }
     public function show_details_for_current_trip($tripId)
     { 
-        $trip=trip::where('id',$tripId)->with([
+        $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+        ->where('trips.id', '=',$tripId)
+        ->with([
             'driver',
-            'line',
             'students',
         ])->first();
-        return $this->sendResponse($trip,'current_trip');
+    
+  return response()->json([
+    'data'=>$info
+]);  
+
+
+  
 
         
     }
@@ -120,18 +140,20 @@ class DriverController extends BaseController
     {
         $st_date=$request->st_date;
         $en_date=$request->en_date;
-
-        $trips=trip::where(
+         
+        $trips=trip::join('lines', 'trips.line_id', '=', 'lines.id')->where(
             ['driver_id'=>Auth::guard('driver-api')->id(),
             'status'=>'منتهية',
-            ])->betweenDates($st_date, $en_date)->with([
-            'line',
-        ])->get();
+            ])->betweenDates($st_date, $en_date)->get();
         $totalPrice = $trips->sum(function ($trip) {
             return (float) $trip->price_final;
         });
 
-        return $this->sendResponse([$trips,'totalPrice'=>$totalPrice],'results_search_trips');
+
+         return response()->json([
+    'data'=>$trips,
+    'totalPrice'=>$totalPrice,
+]);  
     }
     public function browse_notifications()
     {
