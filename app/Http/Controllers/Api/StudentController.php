@@ -18,6 +18,7 @@ use App\Notifications\TripCancel_students;
 use Carbon\Carbon;
 use App\Notifications\status_TripStudents;
 use App\Notifications\status_TripAdmin;
+use Illuminate\Support\Arr;
 
 class StudentController extends BaseController
 { 
@@ -136,7 +137,7 @@ class StudentController extends BaseController
     public function end_start_lines ()
     {
         $now = now()->format('H')+3;
-        $nine_pm = '11';
+        $nine_pm = '21';
         
         if ($now >= $nine_pm) {
 
@@ -162,14 +163,12 @@ class StudentController extends BaseController
         }
 
         $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->whereDate('trips.trip_date', '=', $tomorrow)
-        ->select('lines.start')
-        ->get();
+        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.start');
+    
 
         $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->whereDate('trips.trip_date', '=', $tomorrow)
-        ->select('lines.end')
-        ->get();
+        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.end');
+       
 
                return response()->json([
                 'status'=>true,
