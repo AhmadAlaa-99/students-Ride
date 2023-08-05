@@ -81,32 +81,84 @@ class DatabaseSeeder extends Seeder
     $time1 = Carbon::createFromTime(8, 30, 0);
     $time2= Carbon::createFromTime(9, 0, 0);
     $time3 = Carbon::createFromTime(9, 30, 0);
+    
+    $now = Carbon::now();
+       
+        $tomorrow = $now->addDay();
+       
+        $tomorrow_str = $tomorrow->format('Y-m-d');
 
 
     \App\Models\trip::create([
-        'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+        'trip_date'=>$tomorrow_str,
         'time_1'=>'9:00',
         'time_2'=>'9:30',
         'time_3'=>'10:00',
         'time_final'=>'9:30',
-        'status'=>'حالية',
+        'status'=>'قادمة',
         'driver_id'=>1,
         'line_id'=>1,
         'type'=>$type[rand(0, count($type) - 1)],
         ]);
 
         \App\Models\trip::create([
-            'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+            'trip_date'=>$tomorrow_str,
             'time_1'=>'9:00',
             'time_2'=>'9:30',
             'time_3'=>'10:00',
             'time_final'=>'9:30',
-            'status'=>'منتهية',
-            'driver_id'=>1,
-            'line_id'=>1,
+            'status'=>'قادمة',
+            'driver_id'=>2,
+            'line_id'=>2,
             'type'=>$type[rand(0, count($type) - 1)],
             ]);
-
+            \App\Models\trip::create([
+                'trip_date'=>$tomorrow_str,
+                'time_1'=>'8:00',
+                'time_2'=>'8:30',
+                'time_3'=>'9:00',
+                'time_final'=>'8:30',
+                'status'=>'قادمة',
+                'driver_id'=>3,
+                'line_id'=>3,
+                'type'=>$type[rand(0, count($type) - 1)],
+                ]);
+         
+                \App\Models\trip::create([
+                    'trip_date'=>$tomorrow_str,
+                    'time_1'=>'9:00',
+                    'time_2'=>'9:30',
+                    'time_3'=>'10:00',
+                    'time_final'=>'9:30',
+                    'status'=>'قادمة',
+                    'driver_id'=>4,
+                    'line_id'=>4,
+                    'type'=>$type[rand(0, count($type) - 1)],
+                    ]);
+                    $tomorrow=$tomorrow->addDay();
+                    $tomorrow_str= $tomorrow_str = $tomorrow->format('Y-m-d');
+                    \App\Models\trip::create([
+                        'trip_date'=>$tomorrow_str,
+                        'time_1'=>'9:00',
+                        'time_2'=>'9:30',
+                        'time_3'=>'10:00',
+                        'time_final'=>'9:30',
+                        'status'=>'قادمة',
+                        'driver_id'=>5,
+                        'line_id'=>5,
+                        'type'=>$type[rand(0, count($type) - 1)],
+                        ]);
+                        \App\Models\trip::create([
+                            'trip_date'=>$tomorrow_str,
+                            'time_1'=>'9:00',
+                            'time_2'=>'9:30',
+                            'time_3'=>'10:00',
+                            'time_final'=>'9:30',
+                            'status'=>'قادمة',
+                            'driver_id'=>6,
+                            'line_id'=>6,
+                            'type'=>$type[rand(0, count($type) - 1)],
+                            ]);
             \App\Models\trip::create([
                 'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
                 'time_1'=>'9:00',
@@ -114,10 +166,23 @@ class DatabaseSeeder extends Seeder
                 'time_3'=>'10:00',
                 'time_final'=>'9:30',
                 'status'=>'منتهية',
-                'driver_id'=>1,
-                'line_id'=>1,
+                'driver_id'=>7,
+                'line_id'=>7,
                 'type'=>$type[rand(0, count($type) - 1)],
                 ]);
+
+                \App\Models\trip::create([
+                    'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+                    'time_1'=>'9:00',
+                    'time_2'=>'9:30',
+                    'time_3'=>'10:00',
+                    'time_final'=>'9:30',
+                    'status'=>'منتهية',
+                    'driver_id'=>8,
+                    'line_id'=>8,
+                    'type'=>$type[rand(0, count($type) - 1)],
+                    ]);
+            
         
         \App\Models\trip::create([
             'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
