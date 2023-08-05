@@ -209,11 +209,6 @@ class StudentController extends BaseController
 
         }
 
-        // return response()->json([
-        //     'start'=>$request->start,
-        //      'end'=>$request->end,
-    
-        // ]); 
 
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
        ->whereDate('trips.trip_date', $tomorrow)
