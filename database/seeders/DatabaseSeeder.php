@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $start=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي'];
-        $end=['الهمك','البرامكة',' المزة','مساكن برزة'];
+        $end=['الهمك','البرامكة','المزة','مساكن برزة'];
         for($i=0; $i<10 ;$i++)
         {
         \App\Models\line::create([

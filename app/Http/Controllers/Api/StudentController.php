@@ -136,46 +136,45 @@ class StudentController extends BaseController
     public function end_start_lines ()
     {
         $now = now()->format('H')+3;
-        $nine_pm = '21';
-
+        $nine_pm = '11';
+        
         if ($now >= $nine_pm) {
-            return response()->json([
-                'status'=>false,
-                 'message'=>'نعتذر قد تم الانتهاء من حجوزات اليوم يجب الانتظار للغد',
-            ]);
+
+            $now = Carbon::now();
+
+            $tomorrow = $now->addDay();
+
+            $tomorrow=$tomorrow->addDay();
+
+            $tomorrow_str = $tomorrow->format('Y-m-d');
+
+        
         }
 
+        else {
+
         $now = Carbon::now();
-
-        // Get tomorrow's date in the default timezone
+       
         $tomorrow = $now->addDay();
-
-        // Format the date as a string (adjust the format string as needed)
+       
         $tomorrow_str = $tomorrow->format('Y-m-d');
 
-                 $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-                ->whereDate('trips.trip_date', '=', $tomorrow)
-                ->select('lines.start')
-                ->get();
+        }
 
-                $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-                ->whereDate('trips.trip_date', '=', $tomorrow)
-                ->select('lines.end')
-                ->get();
+        $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+        ->whereDate('trips.trip_date', '=', $tomorrow)
+        ->select('lines.start')
+        ->get();
 
-                // $today = Carbon::now();
-                // $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-                //         ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
-                //         ->where('trips.trip_date', '>', $today)
-                //         ->select('trips.*', 'lines.*','drivers.full_name as DriverName')
-                //         ->get();
+        $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+        ->whereDate('trips.trip_date', '=', $tomorrow)
+        ->select('lines.end')
+        ->get();
 
                return response()->json([
                 'status'=>true,
                  'source'=>$source,
                  'destination'=>$destination,
-                 
-
             ]);  
         
     }
@@ -184,29 +183,42 @@ class StudentController extends BaseController
             'start'=>'required',
             'end'=>'required'
        ]); 
+
        $now = now()->format('H')+3;
-       $nine_pm = '16';
+       $nine_pm = '21';
 
        if ($now >= $nine_pm) {
-           return response()->json([
-               'status'=>false,
-                'message'=>'نعتذر قد تم الانتهاء من حجوزات اليوم يجب الانتظار للغد',
-                'now'=>$now
-           ]);
+        $now = Carbon::now();
+
+        $tomorrow = $now->addDay();
+
+        $tomorrow=$tomorrow->addDay();
+
+        $tomorrow_str = $tomorrow->format('Y-m-d');
+
        }
+
+      else {
 
        $now = Carbon::now();
 
-       // Get tomorrow's date in the default timezone
        $tomorrow = $now->addDay();
 
-       // Format the date as a string (adjust the format string as needed)
+       
        $tomorrow_str = $tomorrow->format('Y-m-d');
 
+        }
+
+        // return response()->json([
+        //     'start'=>$request->start,
+        //      'end'=>$request->end,
+    
+        // ]); 
+
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-       ->whereDate('trips.trip_date', '=', $tomorrow)
-       ->where ('lines.start','=',$request->start)
-       ->where ('lines.end','=',$request->end)
+       ->whereDate('trips.trip_date', $tomorrow)
+       ->where ('lines.start',$request->start)
+       ->where ('lines.end',$request->end)
        ->select('trips.*','lines.*')
        ->get();
 
