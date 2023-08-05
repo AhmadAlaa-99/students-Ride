@@ -317,8 +317,9 @@ class StudentController extends BaseController
         $today = Carbon::now();
         $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
                 ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
+                ->join('lines', 'trips.line_id','lines.id')
                 ->where('trips.trip_date', '>', $today)
-                ->select('trips.*', 'student_trip.*','drivers.full_name as DriverName')
+                ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
                 ->get();
        return response()->json([
         'status'=>true,
