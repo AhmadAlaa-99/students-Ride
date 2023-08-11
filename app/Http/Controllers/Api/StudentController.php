@@ -314,11 +314,14 @@ class StudentController extends BaseController
     
     public function show_my_current_trips()
     {
+        $student_id= auth()->guard('student-api')->id();
         $today = Carbon::now();
         $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
                 ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
                 ->join('lines', 'trips.line_id','lines.id')
                 ->where('trips.trip_date', '>', $today)
+                ->where('student_trip.student_id', '=', $student_id)
+                //->where('student_trip.status', '=', 'حالية')
                 ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
                 ->get();
        return response()->json([
@@ -326,10 +329,10 @@ class StudentController extends BaseController
          'data'=>$info
     ]);  
     }
-    public function show_details_for_trip($student_trip_id)
+    public function show_details_for_trip($trip_id)
     {
         $student_id= auth()->guard('student-api')->id();
-        if (!student_trip::where([['trip_id','=',$student_trip_id],['student_id','=',$student_id]])->exists()){
+        if (!student_trip::where([['trip_id','=',$trip_id],['student_id','=',$student_id]])->exists()){
             return response()->json([
                  'status'=>false,
                  'message'=>'هذه الرحلة غير موجودة',
@@ -337,11 +340,12 @@ class StudentController extends BaseController
         }
         $today = Carbon::now();
         $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
+                ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
                 ->join('lines', 'trips.line_id','lines.id')
-                ->where('student_trip.id', '=', $student_trip_id)
                 ->where('trips.trip_date', '>', $today)
-                ->select('trips.*', 'student_trip.*')
-                ->first();
+                ->where('student_trip.student_id', '=', $student_id)
+                ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
+                ->get()->first();
           return response()->json([
             'status'=>true,
             'data'=>$info
