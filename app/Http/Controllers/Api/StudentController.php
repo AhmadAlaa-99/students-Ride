@@ -329,7 +329,7 @@ class StudentController extends BaseController
     public function show_details_for_trip($student_trip_id)
     {
         $student_id= auth()->guard('student-api')->id();
-        if (!student_trip::where([['id','=',$student_trip_id],['student_id','=',$student_id]])->exists()){
+        if (!student_trip::where([['trip_id','=',$student_trip_id],['student_id','=',$student_id]])->exists()){
             return response()->json([
                  'status'=>false,
                  'message'=>'هذه الرحلة غير موجودة',
@@ -337,10 +337,11 @@ class StudentController extends BaseController
         }
         $today = Carbon::now();
         $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
+                ->join('lines', 'trips.line_id','lines.id')
                 ->where('student_trip.id', '=', $student_trip_id)
                 ->where('trips.trip_date', '>', $today)
                 ->select('trips.*', 'student_trip.*')
-                ->get()->first();
+                ->first();
           return response()->json([
             'status'=>true,
             'data'=>$info

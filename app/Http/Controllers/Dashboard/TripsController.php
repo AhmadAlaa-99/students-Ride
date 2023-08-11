@@ -45,15 +45,14 @@ class TripsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Line $line,Request $request) 
-    { 
-        
-        $times = implode(',', $request->input('times'));
-        
+    {     
         //num_stu
         //price_final
        trip::create([
     'trip_date'=>$request->trip_date,
-    'time_arrange'=>$times,
+    'time_1'=>$request->time_1,
+    'time_2'=>$request->time_2,
+    'time_3'=>$request->time_3,
     'time_final'=>'-',
     'status'=>'1',
     'driver_id'=>$request->driver_id,

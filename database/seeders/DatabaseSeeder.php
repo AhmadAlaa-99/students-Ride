@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $start=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي'];
-        $end=['الهمك','البرامكة','المزة','مساكن برزة'];
+        $end=['الهمك','البرامكة',' المزة','مساكن برزة'];
         for($i=0; $i<10 ;$i++)
         {
         \App\Models\line::create([
@@ -55,11 +55,12 @@ class DatabaseSeeder extends Seeder
             'vehicle_type'=>'van',
             'portfolio'=>'test',
             'status'=>'1',
-            'num_stu'=>rand(4, 15),
+            'num_stu'=>'8',
             'alert_count'=>'0',
            
         ]);
     }
+
     for($i=0; $i<20 ;$i++)
     {
         \App\Models\student::create([
@@ -78,135 +79,86 @@ class DatabaseSeeder extends Seeder
     $type=['اياب','ذهاب'];
     $st=Carbon::now();
     $en=Carbon::now()->addMonth();
+    $tm=Carbon::now()->addDay();
     $time1 = Carbon::createFromTime(8, 30, 0);
     $time2= Carbon::createFromTime(9, 0, 0);
     $time3 = Carbon::createFromTime(9, 30, 0);
-    
-    $now = Carbon::now();
-       
-        $tomorrow = $now->addDay();
-       
-        $tomorrow_str = $tomorrow->format('Y-m-d');
 
+    $time4 = Carbon::createFromTime(10, 0, 0);
+    $time5= Carbon::createFromTime(10, 30, 0);
+    $time6 = Carbon::createFromTime(11, 0, 0);
 
     \App\Models\trip::create([
-        'trip_date'=>$tomorrow_str,
-        'time_1'=>'9:00',
-        'time_2'=>'9:30',
-        'time_3'=>'10:00',
-        'time_final'=>'9:30',
-        'status'=>'قادمة',
-        'driver_id'=>1,
-        'line_id'=>1,
-        'type'=>$type[rand(0, count($type) - 1)],
+        'trip_date'=>$tm,
+        'time_1'=>$time1->format('H:i'),
+        'time_2'=>$time2->format('H:i'),
+        'time_3'=>$time3->format('H:i'),
+        'time_final'=>$time2->format('H:i'),
+        'status'=>'حالية',
+        'driver_id'=>'1',
+        'line_id'=>'1',
+      
         ]);
 
-        \App\Models\trip::create([
-            'trip_date'=>$tomorrow_str,
-            'time_1'=>'9:00',
-            'time_2'=>'9:30',
-            'time_3'=>'10:00',
-            'time_final'=>'9:30',
-            'status'=>'قادمة',
-            'driver_id'=>2,
-            'line_id'=>2,
-            'type'=>$type[rand(0, count($type) - 1)],
+        for($i=6; $i<10 ;$i++)
+        {
+            \App\Models\student_trip::create([
+                'main_time'=>$time2->format('H:i'),
+                'time_desire_1'=>$time1->format('H:i'),
+                'time_desire_2'=>$time3->format('H:i'),
+                'status'=>'0',
+                'student_id'=>$i,
+                'trip_id'=>1,
             ]);
-            \App\Models\trip::create([
-                'trip_date'=>$tomorrow_str,
-                'time_1'=>'8:00',
-                'time_2'=>'8:30',
-                'time_3'=>'9:00',
-                'time_final'=>'8:30',
-                'status'=>'قادمة',
-                'driver_id'=>3,
-                'line_id'=>3,
-                'type'=>$type[rand(0, count($type) - 1)],
-                ]);
-         
-                \App\Models\trip::create([
-                    'trip_date'=>$tomorrow_str,
-                    'time_1'=>'9:00',
-                    'time_2'=>'9:30',
-                    'time_3'=>'10:00',
-                    'time_final'=>'9:30',
-                    'status'=>'قادمة',
-                    'driver_id'=>4,
-                    'line_id'=>4,
-                    'type'=>$type[rand(0, count($type) - 1)],
-                    ]);
-                    $tomorrow=$tomorrow->addDay();
-                    $tomorrow_str= $tomorrow_str = $tomorrow->format('Y-m-d');
-                    \App\Models\trip::create([
-                        'trip_date'=>$tomorrow_str,
-                        'time_1'=>'9:00',
-                        'time_2'=>'9:30',
-                        'time_3'=>'10:00',
-                        'time_final'=>'9:30',
-                        'status'=>'قادمة',
-                        'driver_id'=>5,
-                        'line_id'=>5,
-                        'type'=>$type[rand(0, count($type) - 1)],
-                        ]);
-                        \App\Models\trip::create([
-                            'trip_date'=>$tomorrow_str,
-                            'time_1'=>'9:00',
-                            'time_2'=>'9:30',
-                            'time_3'=>'10:00',
-                            'time_final'=>'9:30',
-                            'status'=>'قادمة',
-                            'driver_id'=>6,
-                            'line_id'=>6,
-                            'type'=>$type[rand(0, count($type) - 1)],
-                            ]);
-            \App\Models\trip::create([
-                'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
-                'time_1'=>'9:00',
-                'time_2'=>'9:30',
-                'time_3'=>'10:00',
-                'time_final'=>'9:30',
-                'status'=>'منتهية',
-                'driver_id'=>7,
-                'line_id'=>7,
-                'type'=>$type[rand(0, count($type) - 1)],
-                ]);
-
-                \App\Models\trip::create([
-                    'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
-                    'time_1'=>'9:00',
-                    'time_2'=>'9:30',
-                    'time_3'=>'10:00',
-                    'time_final'=>'9:30',
-                    'status'=>'منتهية',
-                    'driver_id'=>8,
-                    'line_id'=>8,
-                    'type'=>$type[rand(0, count($type) - 1)],
-                    ]);
-            
         
-        \App\Models\trip::create([
-            'trip_date'=>Carbon::createFromTimestamp(mt_rand($st->timestamp,$en->timestamp)),
+        }
+    \App\Models\trip::create([
+        'trip_date'=>$tm,
+        'time_1'=>$time4->format('H:i'),
+        'time_2'=>$time5->format('H:i'),
+        'time_3'=>$time6->format('H:i'),
+        'time_final'=>$time4->format('H:i'),
+        'status'=>'حالية',
+        'driver_id'=>'2',
+        'line_id'=>'1',
+        
+        ]);
+        for($i=1;$i<5;$i++)
+        {
+            \App\Models\student_trip::create([
+                'main_time'=>$time4->format('H:i'),
+                'time_desire_1'=>$time5->format('H:i'),
+                'time_desire_2'=>$time6->format('H:i'),
+                'status'=>'0',
+                'student_id'=>$i,
+                'trip_id'=>2,
+            ]);
+        }
+
+            \App\Models\trip::create([
+            'trip_date'=>$tm,
             'time_1'=>$time1->format('H:i'),
             'time_2'=>$time2->format('H:i'),
             'time_3'=>$time3->format('H:i'),
             'time_final'=>'-',
             'status'=>'قادمة',
-            'driver_id'=>1,
-            'line_id'=>1,
-            'type'=>$type[rand(0, count($type) - 1)],
+            'driver_id'=>4,
+            'line_id'=>2,
+            
             ]);
-        for($i=1; $i<3 ;$i++)
-        {
-            \App\Models\student_trip::create([
-                'main_time'=>$time1->format('H:i'),
-                'time_desire_1'=>$time1->format('H:i'),
-                'time_desire_2'=>$time1->format('H:i'),
-                'status'=>'0',
-                'student_id'=>$i,
-                'trip_id'=>1,
+            
+            \App\Models\trip::create([
+                'trip_date'=>$tm,
+                'time_1'=>$time4->format('H:i'),
+                'time_2'=>$time5->format('H:i'),
+                'time_3'=>$time6->format('H:i'),
+                'time_final'=>'-',
+                'status'=>'قادمة',
+                'driver_id'=>5,
+                'line_id'=>2,
+                
             ]);
-            $i++;
-        }
+
     for($i=0; $i<10 ;$i++)
     {
         \App\Models\trip::create([
@@ -216,13 +168,11 @@ class DatabaseSeeder extends Seeder
             'time_3'=>$time3->format('H:i'),
             'time_final'=>'-',
             'status'=>'قادمة',
-            'driver_id'=>rand(1,10),
-            'line_id'=>rand(1,10),
-            'type'=>$type[rand(0, count($type) - 1)],
+            'driver_id'=>rand(5,10),
+            'line_id'=>rand(5,10),
+            
             ]);
     }
-   
-
-
 }
+
 } 

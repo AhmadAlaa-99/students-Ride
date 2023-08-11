@@ -21,7 +21,6 @@ return new class extends Migration
             $table->time('time_3',0);
             $table->text('time_final');
             $table->text('status');
-            $table->text('type');
             $table->text('num_stu')->nullable();
             $table->text('price_final')->nullable();
             $table->unsignedBigInteger('driver_id')->nullable();

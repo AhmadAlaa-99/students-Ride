@@ -55,7 +55,15 @@
                                                     </div>
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="email-id" class="form-control"
-                                                            name="times[]" placeholder="EX : 9:20,9:40,9:60">
+                                                            name="time1" placeholder="EX : 9:20,9:40,9:60">
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" id="email-id" class="form-control"
+                                                            name="time2" placeholder="EX : 9:20,9:40,9:60">
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" id="email-id" class="form-control"
+                                                            name="time3" placeholder="EX : 9:20,9:40,9:60">
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label> السائق</label>
