@@ -365,7 +365,7 @@ class StudentController extends BaseController
                 ]);     
         }
         $suggestion = new suggestion();
-        $suggestion->email=student::where('id','=',$student_id)->get('email');
+        $suggestion->email=student::where('id','=',$student_id)->pluck('email')->first();
         $suggestion->body=$request->message;
         $suggestion->trip_id=$trip_id;
         $suggestion->save();
