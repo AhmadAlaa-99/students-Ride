@@ -17,7 +17,7 @@ use App\Http\Controllers\Api\StudentController;
 */
 /*--------------------------------Driver------------------------*/
 
-Route::group(["middleware"=>['auth:driver-api']],function(){
+//Route::group(["middleware"=>['auth:driver-api']],function(){
     
 Route::post('login_driver',[Auth_ApiController::class,'login_driver'])->name('login_driver');
 Route::get('show_my_current_trips',[DriverController::class,'show_my_current_trips'])->name('show_my_current_trips');
@@ -35,7 +35,7 @@ Route::get('All_inforamtion_of_trip/{id}',[StudentController::class,'All_inforam
 Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
 Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_profile');
 Route::get('browse_notifications',[DriverController::class,'browse_notifications'])->name('browse_notifications');
-});
+//});
 /*--------------------------------Student------------------------*/
 Route::prefix('student/')->group(function (){
     Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
