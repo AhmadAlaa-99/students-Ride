@@ -93,9 +93,7 @@ class DriverController extends BaseController
 
     public function end_trip($tripId,Request $request)
     {
-        $trip=trip::where('id',$tripId)->update([
-            'status'=>'منتهية',
-        ]);
+      
         $check_box = json_encode($request->input('check_box', []));
         //$check_box = $request->input('check_box', []);
         //return [true,false,truse,false];
@@ -106,6 +104,18 @@ class DriverController extends BaseController
                     'status'=>$status,
                 ]);       
     }
+    $num_stu_final=student_trip::where(
+        [
+            'trip_id'=>$tripId,
+            'status'=>'1',
+        ])->count();
+        $trip=trip::where('id',$tripId)->first();
+           $trip->update([
+        'status'=>'منتهية',
+        'num_stu_final'=>$num_stu_final,
+        'price_final'=>$num_stu_final*$trip->line->price,
+    ]);
+
 /*
         $student = student::find($student_id);  
         $student->trips()->updateExistingPivot($trip_id,

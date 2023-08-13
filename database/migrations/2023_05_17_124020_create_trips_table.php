@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('time_final');
             $table->text('status');
             $table->text('num_stu')->nullable();
+            $table->text('num_stu_final')->nullable();
             $table->text('price_final')->nullable();
             $table->unsignedBigInteger('driver_id')->nullable();
             $table->unsignedBigInteger('line_id')->nullable();

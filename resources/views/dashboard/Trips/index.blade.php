@@ -85,9 +85,15 @@
                     <td>{{ $i }}</td>
                       <td>{{$trip->trip_date}}</td>
                       <td>
-                        @foreach($trip->time_arrange as $time)
-                        {{$time }}
-                        @endforeach
+                      <span class="badge bg-danger">
+                      {{$trip->time_1}} - {{$trip->time_2}} - {{$trip->time_3}}
+                      </span>
+                    
+                      
+
+
+
+
                       </td>
                       <td>{{$trip->time_final}}</td>
                       <td>

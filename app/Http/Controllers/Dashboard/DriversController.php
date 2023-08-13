@@ -171,6 +171,7 @@ class DriversController extends Controller
 
     public function down_contract_file($id)
     {
+        
        $file_name=driver::select('portfolio')->where('id',$id)->latest()->paginate(5);
          foreach($file_name as $file)
          {

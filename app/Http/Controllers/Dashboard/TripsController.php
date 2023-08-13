@@ -54,7 +54,7 @@ class TripsController extends Controller
     'time_2'=>$request->time_2,
     'time_3'=>$request->time_3,
     'time_final'=>'-',
-    'status'=>'1',
+    'status'=>'قادمة',
     'driver_id'=>$request->driver_id,
     'line_id'=>$request->line_id,
     ]);

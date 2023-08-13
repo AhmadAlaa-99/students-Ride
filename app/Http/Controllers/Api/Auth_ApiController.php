@@ -116,6 +116,12 @@ class Auth_ApiController extends BaseController
 
 
 
+
+
+
+
+
+
     public function forgotPasswordCreate(Request $request)
     {
         $student=student::where('email',$request->email)->first();
@@ -145,31 +151,52 @@ class Auth_ApiController extends BaseController
 
 
 
-
-
-
      public function forgotPasswordToken(Request $request)
      {
-        $code=$request->token;
+        $code=$request->code;
          $checkReset=ForgetPassword::where([
              'token'=>$code,
-             'email'=>$request->email,
+           //  'email'=>$request->email,
+         ])->first();
+
+         if(!$checkReset)
+         {
+             return 'Error Code';
+         }
+         /*
+         $student=student::where('email',$checkReset->email)->first();
+         if(!$student)
+         {
+             return 'student not found';
+         }
+
+         $student->password=bcrypt($request->password);
+         $student->save();
+         $checkReset->delete();
+         */
+         return $this->sendResponse($student,'Verify Succssesfully!');
+    }
+
+    public function update_password(Request $request)
+     {
+        $code=$request->code;
+         $checkReset=ForgetPassword::where([
+             'token'=>$code,
+           //  'email'=>$request->email,
          ])->first();
          if(!$checkReset)
          {
-             return 'details not match';
+             return 'Error Code';
          }
-         $student=student::where('email',$request->email)->first();
+         $student=student::where('email',$checkReset->email)->first();
          if(!$student)
          {
-             return 'user not found';
+             return 'student not found';
          }
-         $student->password=$student->password=bcrypt($request->password);
-         
+         $student->password=bcrypt($request->password);
          $student->save();
          $checkReset->delete();
-         return $this->sendResponse($student, 'Reset Password Successfully!');
-
+         return $this->sendResponse($student,'Reset Password Successfully!');
     }
 
 }
