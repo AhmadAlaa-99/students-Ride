@@ -224,12 +224,26 @@ class StudentController extends BaseController
     }
     public function choose_The_Information_trip(Request $request,$id)
     {
+        $trip=trip::where('id',$id)->first(); 
+
         $validator = $request->validate([
-            'main_time'=>'required',
-            'time_desire_1'=>'required',
-            'time_desire_2'=>'required',
-           
-       ]); 
+            'main_time' => [
+                'required',
+                Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
+            ],
+            'time_desire_1' => [
+                'required',
+                Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
+                Rule::notIn([$main_time]),
+            ],
+            'time_desire_2' => [
+                'required',
+                Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
+                Rule::notIn([$main_time, $time_desire_1]),
+            ],
+        ]);
+  
+      
         $student_id= auth()->guard('student-api')->id();
         if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
             return response()->json([

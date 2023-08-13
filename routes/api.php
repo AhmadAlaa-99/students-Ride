@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\StudentController;
 |
 */
 /*--------------------------------Driver------------------------*/
+Route::post('forgotpasswordCreate', [Auth_ApiController::class, 'forgotPasswordCreate']);//notify email 
+Route::post('forgotpassword', [Auth_ApiController::class, 'forgotPasswordToken']);  //request code
 
 //Route::group(["middleware"=>['auth:driver-api']],function(){
     

@@ -103,4 +103,60 @@ class Auth_ApiController extends Controller
             return 'not driver';
          }
     }
+
+
+
+
+
+    public function forgotPasswordCreate(Request $request)
+    {
+        $student=student::where('email',$request->email)->first();
+        if($student)
+        {
+            //error : Property [email] does not exist on the Eloquent builder instance
+            //solve : get email by array this error and not found get or fast 
+            //$user=User::where(['email'=>$request->email]);
+            //$user=User::where('email',$request->email)->first();
+            $Password=ForgetPassword::updateOrCreate(
+                ['email'=>$request->email],
+                    [
+                        'email'=>$request->email,
+                        'token'=>random_int(1000,9999),
+                    ]
+                    ); 
+         Mail::to($user->email)->send(new ForgottenPassword($Password));
+       //  $user->notify(new ResetPassword($user));
+         return $this->sendResponse($Password, 'link reset sent');
+        }
+        else
+        {
+            return $this->sendError(' Error', ['error', 'Unauthorized']);
+        }
+
+     }
+
+     public function forgotPasswordToken(Request $request)
+     {
+        $code=$request->token;
+         $checkReset=ForgetPassword::where([
+             'token'=>$code,
+             'email'=>$request->email,
+         ])->first();
+         if(!$checkReset)
+         {
+             return 'details not match';
+         }
+         $user=User::where('email',$request->email)->first();
+         if(!$user)
+         {
+             return 'user not found';
+         }
+         $user->password=$user->c_password=bcrypt($request->password);
+         
+         $user->save();
+         $checkReset->delete();
+         return $this->sendResponse($user, 'Reset Password Successfully!');
+
+    }
+
 }
