@@ -112,7 +112,7 @@
                     
 
                      <a class="btn btn-outline-info btn-sm"
-                                                           href="{{ url('getfile') }}/{{$driver->portfolio}}"
+                                                           href="{{route('down.contract_file',$driver->id)}}"
                                                                             role="button"><i
                                                                                 class="fas fa-download"></i>&nbsp;
                                                                             تحميل</a>

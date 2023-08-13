@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
             'age'=>'23',
             'vehicle_number'=>'432',
             'vehicle_type'=>'van',
-            'portfolio'=>'test',
+            'portfolio'=>'doc-1691922701.jpg',
             'status'=>'1',
             'num_stu'=>'8',
             'alert_count'=>'0',

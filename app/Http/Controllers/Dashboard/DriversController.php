@@ -48,9 +48,12 @@ class DriversController extends Controller
     
            ]);
          //  $path=$request->file('portfolio')->store('public/files');
+         $image_name='doc-'.time().'.'.$request->portfolio->extension();
 
-           $path = $request->portfolio->getClientOriginalName();
-           $request->portfolio->move(public_path('Drivers_Docs/' . $path), $path);
+         $request->portfolio->move(public_path('contracts'),$image_name);
+
+
+          
 
         $password=Hash::make($request->password);
     $driver=driver::create([
@@ -64,7 +67,7 @@ class DriversController extends Controller
     'data_reg_end'=>$request->data_reg_end,
     'vehicle_number'=>$request->vehicle_number,
     'vehicle_type'=>$request->vehicle_type,
-    'portfolio'=>$path,
+    'portfolio'=>$image_name,
     'num_stu'=>$request->num_stu,
     'status'=>'active',
     'alert_count'=>'0',
@@ -165,6 +168,18 @@ class DriversController extends Controller
         ]);
        return redirect()->route('drivers.index');
     }
+
+    public function down_contract_file($id)
+    {
+       $file_name=driver::select('portfolio')->where('id',$id)->latest()->paginate(5);
+         foreach($file_name as $file)
+         {
+             $path=public_path().'/contracts/'.$file->portfolio;
+         }
+ 
+          return Response::download($path);
+    }
+
     public function inactive_driver($id)
     {
         $driver=driver::where('id',$id)->update([

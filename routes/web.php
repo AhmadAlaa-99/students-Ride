@@ -53,8 +53,8 @@ Route::group(['middleware'=>'auth'],function()
     Route::resource('lines',LinesController::class);
     Route::get('/getfile/{filename}', [App\Http\Controllers\Dashboard\DriversController::class,'download_file'])->name('getfile');
 
+    Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversController::class, 'down_contract_file'])->name('down.contract_file');
 
- 
     Route::resource('drivers',DriversController::class);
     Route::get('/driver_trips/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_trips'])->name('driver_trips');
     Route::get('/driver_sendalert/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_sendalert'])->name('driver_sendalert');

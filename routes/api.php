@@ -38,6 +38,7 @@ Route::post('end_trip/{id}',[DriverController::class,'end_trip'])->name('end_tri
 
 Route::post('check_box_student/{trip_id}/{student_id}',[DriverController::class,'check_box_student'])->name('check_box_student');
 
+Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversController::class, 'down_contract_file'])->name('down.contract_file');
 
 
 Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
