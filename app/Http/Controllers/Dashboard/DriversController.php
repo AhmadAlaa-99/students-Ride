@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\driver;
 use Hash;
+use Storage;
 use App\Models\trip;
+use Response;
 use App\Notifications\alert_driver;
 
 class DriversController extends Controller
@@ -41,6 +43,14 @@ class DriversController extends Controller
      */
     public function store(driver $driver,Request $request) 
     {
+        $validatedData = $request->validate([
+           // 'portfolio' => 'required|csv,txt,xlx,xls,pdf|max:2048',
+    
+           ]);
+         //  $path=$request->file('portfolio')->store('public/files');
+
+           $path = $request->portfolio->getClientOriginalName();
+           $request->portfolio->move(public_path('Drivers_Docs/' . $path), $path);
 
         $password=Hash::make($request->password);
     $driver=driver::create([
@@ -54,7 +64,7 @@ class DriversController extends Controller
     'data_reg_end'=>$request->data_reg_end,
     'vehicle_number'=>$request->vehicle_number,
     'vehicle_type'=>$request->vehicle_type,
-    'portfolio'=>$request->portfolio,
+    'portfolio'=>$path,
     'num_stu'=>$request->num_stu,
     'status'=>'active',
     'alert_count'=>'0',
@@ -122,12 +132,13 @@ class DriversController extends Controller
             ->withSuccess(__('User deleted successfully.'));
     }
 
-    public function download_file(driver $driver) 
+    public function download_file($filename) 
     {
-        $line->delete();
-
-        return redirect()->route('drivers.index')
-            ->withSuccess(__('User deleted successfully.'));
+       
+        $file = Storage::disk('public')->get($filename);
+        return (new Response($file, 200))
+              ->header('Content-Type', 'image/jpeg');
+   
     }
     public function driver_trips($id)
     {

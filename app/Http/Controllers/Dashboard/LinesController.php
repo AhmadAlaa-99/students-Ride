@@ -26,6 +26,7 @@ class LinesController extends Controller
      */
     public function create() 
     {
+
         return view('dashboard.Lines.create');
     }
     /**
@@ -57,9 +58,9 @@ class LinesController extends Controller
      */
     public function show(line $line) 
     {
+       
         $line=line::where('id',$line->id)->first();
         $trips=trip::where('line_id',$line->id)->get();
-
         return view('Dashboard.Lines.show', [
             'line' => $line,
             'trips'=>$trips,
@@ -75,6 +76,10 @@ class LinesController extends Controller
      */
     public function edit(line $line) 
     {
+        
+        
+  
+      
         return view('dashboard.Lines.edit', [
             'line' => $line
         ]);
@@ -88,12 +93,18 @@ class LinesController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function update(User $user, UpdateUserRequest $request) 
+    public function update(Request $request,line $line) 
     {
-        $user->update($request->validated());
-
-        return redirect()->route('lines.index')
-            ->withSuccess(__('User updated successfully.'));
+       
+      
+        $line->update([
+            'start'=>$request->start,
+            'end'=>$request->end,
+            'price'=>$request->price,
+        ]);
+        session()->flash('edit', 'تم تعديل الخط بنجاح');
+        return redirect()->route('lines.index');
+          
     }
 
     /**
@@ -105,6 +116,9 @@ class LinesController extends Controller
      */
     public function destroy(line $line) 
     {
+        
+       
+        return $line;
         $line->delete();
 
         return redirect()->route('lines.index')

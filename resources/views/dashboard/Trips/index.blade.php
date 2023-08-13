@@ -67,17 +67,13 @@
                       <th>السائق</th>
                       <th> الخط</th>
                       <th> حالة الرحلة</th>
-
                       <th>العدد الكلي للركاب</th>
                       <th>العدد الفعلي للركاب</th>
                       <th>الاجرة الفعلية</th>
-
-                 
                       <th>العمليات</th>
                     </tr>
                   </thead>
                   <tbody>
-                 
                   @php
                                 $i = 0;
                                 @endphp
@@ -85,7 +81,7 @@
                                     @php
                                     $i++
                                     @endphp
-                    <tr>
+                                 <tr>
                     <td>{{ $i }}</td>
                       <td>{{$trip->trip_date}}</td>
                       <td>
@@ -103,15 +99,12 @@
                           
                       <td>{{$trip->status}}</td>
                       <td>{{$trip->driver->num_stu}}</td>
-                   
                       <td>{{$trip->price_final}}</td>
                       <td>{{$trip->num_stu}}</td>
 
 
                  
-                  
-
-
+        
                       <td>
                         <div style="display: flex;">
                         <a href="{{route('trip_completed',$trip->id)}}">

@@ -329,6 +329,7 @@ class StudentController extends BaseController
          'data'=>$info
     ]);  
     }
+    
     public function show_details_for_trip($trip_id)
     {
         $student_id= auth()->guard('student-api')->id();

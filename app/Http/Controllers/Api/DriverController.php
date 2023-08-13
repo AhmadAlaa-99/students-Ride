@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\driver;
 use App\Models\trip;
+use App\Models\student_trip;
 use App\Models\student;
 use App\Models\User;
 use App\Http\Controllers\BaseController;
@@ -67,31 +68,65 @@ class DriverController extends BaseController
                
             ]);  
     }
-
-    public function cancel_trip($tripId)
+    public function start_trip($tripId,Request $request)
     {
         $trip=trip::where('id',$tripId)->update([
-            'status'=>'تم الالغاء'
+            'status'=>'قيد التقدم',
         ]);
         /*
-        $driver=driver::where('id',$trip->id)->update([
-            'alert_count'=>$driver->alert_count++,]);
-        */
-
-        //send notify to admin  for know trip cancelled
+        //send notify admin update trip status
         $trip=trip::where('id',$tripId)->first();
         $admin=User::where('id','1')->first();
         $driver=driver::where('id',$trip->driver_id)->first();
-       
-        $admin->notify(new TripCancel_admin($trip,$driver));
-
+        $admin->notify(new status_TripAdmin($trip,$driver));
+        //send notify students in this trip 
         $students = student::whereHas('trips', function ($query) use ($tripId) {
             $query->where('trip_id', $tripId);
         })->get();
-        //send notification all users
-        $trip = trip::find($tripId); 
-        $trip->students()->detach($students);
-        \Notification::send($students,new TripCancel_students($trip));
+
+        \Notification::send($students,new status_TripStudents($trip));
+        */
+        return $this->sendResponse($trip,'current_trip');
+    }
+
+    public function end_trip($tripId,Request $request)
+    {
+        $trip=trip::where('id',$tripId)->update([
+            'status'=>'منتهية',
+        ]);
+
+        $check_box = $request->input('check_box', []);
+        //return [true,false,truse,false];
+        $students=student_trip::where('trip_id',$tripId)->get();
+          foreach ($students as $index => $student) {
+            $status = boolval($check_box[$index]);
+                $student->update([
+                    'status'=>$status,
+                ]);       
+    }
+/*
+        $student = student::find($student_id);  
+        $student->trips()->updateExistingPivot($trip_id,
+         ['status' => $request->status, ]);
+        return $this->sendResponse($student,'Update status as'.$request->status);
+   [false,true,true,true]
+
+        /*
+        //send notify admin update trip status
+        $trip=trip::where('id',$tripId)->first();
+        $admin=User::where('id','1')->first();
+        $driver=driver::where('id',$trip->driver_id)->first();
+        $admin->notify(new status_TripAdmin($trip,$driver));
+        //send notify students in this trip 
+        $students = student::whereHas('trips', function ($query) use ($tripId) {
+            $query->where('trip_id', $tripId);
+        })->get();
+
+        \Notification::send($students,new status_TripStudents($trip));
+        */
+    
+        return $this->sendResponse($trip,'current_trip');
+      
     }
     public function show_details_for_current_trip($tripId)
     { 
@@ -104,19 +139,15 @@ class DriverController extends BaseController
     
   return response()->json([
     'data'=>$info
-]);  
-
-
-  
-
-        
+]);    
     }
     public function check_box_trip($tripId,Request $request)
     {
         $trip=trip::where('id',$tripId)->update([
             'status'=>$request->status,
         ]);
-
+         
+        
         //send notify admin update trip status
         $trip=trip::where('id',$tripId)->first();
         $admin=User::where('id','1')->first();
@@ -127,6 +158,7 @@ class DriverController extends BaseController
             $query->where('trip_id', $tripId);
         })->get();
         \Notification::send($students,new status_TripStudents($trip));
+        
         return $this->sendResponse($trip,'current_trip');
     }
     public function show_profile()

@@ -23,16 +23,27 @@ Route::post('login_driver',[Auth_ApiController::class,'login_driver'])->name('lo
 Route::get('show_my_current_trips',[DriverController::class,'show_my_current_trips'])->name('show_my_current_trips');
 Route::get('show_my_finite_trips',[DriverController::class,'show_my_finite_trips'])->name('show_my_finite_trips');
 Route::get('show_my_next_trips',[DriverController::class,'show_my_next_trips'])->name('show_my_next_trips');
+
+
+
+
 Route::get('show_details_for_current_trip/{id}',[DriverController::class,'show_details_for_current_trip'])->name('show_details_for_current_trip');
 Route::post('filter_search_trips',[DriverController::class,'filter_search_trips'])->name('filter_search_trips');
-Route::post('check_box_trip/{id}',[DriverController::class,'check_box_trip'])->name('check_box_trip');
+
+
+
+Route::post('start_trip/{id}',[DriverController::class,'start_trip'])->name('start_trip');
+Route::post('end_trip/{id}',[DriverController::class,'end_trip'])->name('end_trip');
+
+
 Route::post('check_box_student/{trip_id}/{student_id}',[DriverController::class,'check_box_student'])->name('check_box_student');
 
 
-Route::get('All_inforamtion_of_trip/{id}',[StudentController::class,'All_inforamtion_of_trip'])->name('All_inforamtion_of_trip');
-
 
 Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
+
+Route::get('All_inforamtion_of_trip/{id}',[StudentController::class,'All_inforamtion_of_trip'])->name('All_inforamtion_of_trip');
+
 Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_profile');
 Route::get('browse_notifications',[DriverController::class,'browse_notifications'])->name('browse_notifications');
 //});
@@ -48,9 +59,7 @@ Route::prefix('student/')->group(function (){
         Route::post('Edit_Profile',[StudentController::class,'Edit_Profile'])->name('Edit_Profile');
         Route::get('Browse_my_Trips',[StudentController::class,'Browse_my_Trips'])->name('Browse_my_Trips');
         Route::get('end_start_lines',[StudentController::class,'end_start_lines']);
-
         Route::post('information_of_trip',[StudentController::class,'information_of_trip']);
-
         Route::post('choose_The_Information_trip/{id}',[StudentController::class,'choose_The_Information_trip']);
         Route::get('Cancel_Trip/{id}',[StudentController::class,'Cancel_Trip']);
         Route::get('show_my_current_trips',[StudentController::class,'show_my_current_trips']);

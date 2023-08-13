@@ -93,13 +93,14 @@
                       </td>
                       <td>
                         <div style="display: flex;">
-                        <a href="#">
+                        <a href="{{route('lines.destroy',$line->id)}}">
                         <div class="icon dripicons-trash"></div>
                         </a>
+                        
                         <a href="{{route('lines.show',$line->id)}}">
                         <div class="icon dripicons-blog"></div>
                         </a>
-                        <a href="#">
+                        <a href="{{route('lines.edit',$line->id)}}">
                         <div class="icon dripicons-document-edit"></div>
                         </a>
                         </td>

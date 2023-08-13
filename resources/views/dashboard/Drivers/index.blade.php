@@ -107,7 +107,18 @@
                       <td>{{$driver->num_stu}}</td>
                       <td>{{$driver->financial}}</td>
                       
-                      <td>{{$driver->portfolio}}</td>
+                      <td>
+                        
+                    
+
+                     <a class="btn btn-outline-info btn-sm"
+                                                           href="{{ url('getfile') }}/{{$driver->portfolio}}"
+                                                                            role="button"><i
+                                                                                class="fas fa-download"></i>&nbsp;
+                                                                            تحميل</a>
+
+
+                      </td>
                       <td>{{$driver->status}}</td>
                       <td>{{$driver->alert_count}}</td>
                       <td><a href="{{route('driver_trips',$driver->id)}}">driver_trips</a></td>

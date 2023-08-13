@@ -51,19 +51,19 @@
                                                             name="trip_date" placeholder="تاريخ الرحلة">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <label>توقيت الرحلة</label>
+                                                        <label>اوقات الرحلة</label>
                                                     </div>
-                                                    <div class="col-md-8 form-group">
-                                                        <input type="text" id="email-id" class="form-control"
-                                                            name="time1" placeholder="EX : 9:20,9:40,9:60">
+                                                    <div class="col-md-2 form-group">
+                                                        <input type="time" id="email-id" class="form-control"
+                                                            name="time_1" placeholder="EX : 9:20,9:40,9:60">
                                                     </div>
-                                                    <div class="col-md-8 form-group">
-                                                        <input type="text" id="email-id" class="form-control"
-                                                            name="time2" placeholder="EX : 9:20,9:40,9:60">
+                                                    <div class="col-md-2 form-group">
+                                                        <input type="time" id="email-id" class="form-control"
+                                                            name="time_2" placeholder="EX : 9:20,9:40,9:60">
                                                     </div>
-                                                    <div class="col-md-8 form-group">
-                                                        <input type="text" id="email-id" class="form-control"
-                                                            name="time3" placeholder="EX : 9:20,9:40,9:60">
+                                                    <div class="col-md-2 form-group">
+                                                        <input type="time" id="email-id" class="form-control"
+                                                            name="time_3" placeholder="EX : 9:20,9:40,9:60">
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label> السائق</label>
@@ -99,21 +99,9 @@
                                                 </div>
                                                     </div>
 
-                                                    <div class="col-md-4">
-                                                        <label>نوع الرحلة</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
-                                                    <div class="input-group mb-3">
-                                                    <label class="input-group-text"
-                                                        for="inputGroupSelect01">Options</label>
-                                                    <select class="form-select" name="type"id="inputGroupSelect01">
-                                                        <option selected>Select Type...</option>
-                        
-                                                        <option value="ذهاب">ذهاب</option>
-                                                        <option value="اياب">اياب</option>
-                                                    
-                                                      
-                                                    </select>
+                                              
+                                                
+                                           
                                                 </div>
                                                     </div>
 

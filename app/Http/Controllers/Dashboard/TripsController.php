@@ -17,7 +17,7 @@ class TripsController extends Controller
      */
     public function index() 
     {
-        $trips = trip::with('driver','line')->paginate(10);
+        $trips = trip::with('driver','line')->get();
         $lines=line::all();
         $drivers=driver::all();
         return view('dashboard.Trips.index', compact('trips','lines','drivers'));
@@ -57,7 +57,6 @@ class TripsController extends Controller
     'status'=>'1',
     'driver_id'=>$request->driver_id,
     'line_id'=>$request->line_id,
-    'type'=>$request->type,
     ]);
  
     session()->flash('Add', 'تم اضافة الرحلة بنجاح');

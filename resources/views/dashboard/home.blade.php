@@ -23,8 +23,10 @@
                             <div class="card-body px-3 py-4-5">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="stats-icon purple">
-                                            <i class="iconly-boldShow"></i>
+                                        
+                                        <div class="avatar avatar-lg">
+                                            <img src="images/Avatar_dri.png">
+                            
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -40,8 +42,9 @@
                             <div class="card-body px-3 py-4-5">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="stats-icon blue">
-                                            <i class="iconly-boldProfile"></i>
+                                    <div class="avatar avatar-lg">
+                                            <img src="images/Avatar_stu.png">
+                            
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -57,10 +60,13 @@
                             <div class="card-body px-3 py-4-5">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="stats-icon green">
-                                            <i class="iconly-boldAdd-User"></i>
+                                    <div class="avatar avatar-lg">
+                                            <img src="images/Avatar_tri.png">
+            
                                         </div>
                                     </div>
+                                    
+                                    
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">عدد الرحلات</h6>
                                         <h6 class="font-extrabold mb-0">{{\App\Models\trip::count()}}</h6>
@@ -74,8 +80,11 @@
                             <div class="card-body px-3 py-4-5">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="stats-icon red">
-                                            <i class="iconly-boldBookmark"></i>
+                                    
+
+                                      <div class="avatar avatar-lg">
+                                            <img src="images/Avatar_lines.png">
+            
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -99,41 +108,37 @@
                                         <thead>
                                             <tr>
                                                 <th>اسم السائق</th>
-                                                <th>مسار الرحلة</th>
-                                                <th>نوع الرحلة</th>
+                                                <th>بيانات الخط</th>
+                                                <th>عدد الركاب</th>
                                                 <th>تاريخ الرحلة</th>
-                                                <th>مجال الوقت</th>
                                                 <th>التوقيت النهائي</th>
-                                                <th>حالة الرحلة</th>
-                                                <th>تفاصيل الرحلة</th>
+                                             
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach ($trips as $trip)
                                             <tr>
+                                           
                                                 <td class="col-3">
                                                     <div class="d-flex align-items-center">
                                                         <div class="avatar avatar-md">
-                                                            <img src="assets/images/faces/5.jpg">
+                                                        <img src="images/Avatar_dri.png">
                                                         </div>
-                                                        <p class="font-bold ms-3 mb-0">Si Cantik</p>
+                                                        <p class="font-bold ms-3 mb-0">{{$trip->driver->full_name}}</p>
                                                     </div>
                                                 </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your graduation!</p>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your graduation!</p>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your graduation!</p>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your graduation!</p>
-                                                </td>
+                      <td>
+                        <span class="badge bg-success">{{$trip->line->start}} - {{$trip->line->end}} - {{$trip->line->price}}</span>
+                      </td>
+                      <td>{{$trip->driver->num_stu}}</td>
+                      
+                      <td>{{$trip->trip_date}}</td>
+                      <td>{{$trip->time_final}}</td>
+                  
                                                 
                                             </tr>
                                           
-                                            
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -148,7 +153,8 @@
                     <div class="card-body py-4 px-5">
                         <div class="d-flex align-items-center">
                             <div class="avatar avatar-xl">
-                                <img src="{{ URL::to('/images/'. Auth::user()->avatar) }}" alt="{{ Auth::user()->avatar }}">
+                                <!-- {{ URL::to('/images/'. Auth::user()->avatar) }} -->
+                                <img src="images/Avatar_adm.png" alt="{{ Auth::user()->avatar }}">
                             </div>
                             <div class="ms-3 name">
                                 <h5 class="font-bold">{{ Auth::user()->name }}</h5>
@@ -164,37 +170,27 @@
                         <h4>الذمم المالية</h4>
                     </div>
                     <div class="card-content pb-4">
+                       
+                  @foreach($dri as $dr )
                         <div class="recent-message d-flex px-4 py-3">
                             <div class="avatar avatar-lg">
-                                <img src="assets/images/faces/4.jpg">
+                            <img src="images/Avatar_dri.png">
+                               
                             </div>
                             <div class="name ms-4">
-                                <h5 class="mb-1">Hank Schrader</h5>
-                                <h6 class="text-muted mb-0">@johnducky</h6>
+                                <h5 class="mb-1">{{$dr->full_name}}</h5>
+                                <h6 class="text-muted mb-0">{{$dr->financial}}</h6>
                             </div>
                         </div>
-                        <div class="recent-message d-flex px-4 py-3">
-                            <div class="avatar avatar-lg">
-                                <img src="assets/images/faces/5.jpg">
-                            </div>
-                            <div class="name ms-4">
-                                <h5 class="mb-1">Dean Winchester</h5>
-                                <h6 class="text-muted mb-0">@imdean</h6>
-                            </div>
-                        </div>
-                        <div class="recent-message d-flex px-4 py-3">
-                            <div class="avatar avatar-lg">
-                                <img src="assets/images/faces/1.jpg">
-                            </div>
-                            <div class="name ms-4">
-                                <h5 class="mb-1">John Dodol</h5>
-                                <h6 class="text-muted mb-0">@dodoljohn</h6>
-                            </div>
-                        </div>
+                        @endforeach
+                        
+                     
+                      <!--
                         <div class="px-4">
                             <button class='btn btn-block btn-xl btn-light-primary font-bold mt-3'>
                                 تصفح بيانات</button>
                         </div>
+-->
                     </div>
                 </div>
              

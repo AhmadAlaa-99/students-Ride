@@ -51,7 +51,10 @@ Route::group(['middleware'=>'auth'],function()
     });
     /** Data Management */
     Route::resource('lines',LinesController::class);
+    Route::get('/getfile/{filename}', [App\Http\Controllers\Dashboard\DriversController::class,'download_file'])->name('getfile');
 
+
+ 
     Route::resource('drivers',DriversController::class);
     Route::get('/driver_trips/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_trips'])->name('driver_trips');
     Route::get('/driver_sendalert/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_sendalert'])->name('driver_sendalert');
@@ -76,16 +79,19 @@ Route::group(['middleware'=>'auth'],function()
 
 
 // ----------------------------- forget password ----------------------------//
+
 Route::controller(ForgotPasswordController::class)->group(function () {
     Route::get('forget-password', 'getEmail')->name('forget-password');
     Route::post('forget-password', 'postEmail')->name('forget-password');
 });
 
 // ----------------------------- reset password -----------------------------//
+
 Route::controller(ResetPasswordController::class)->group(function () {
     Route::get('reset-password/{token}', 'getPassword');
     Route::post('reset-password', 'updatePassword');
 });
+
 
 
 Route::get('/clear', function() {
