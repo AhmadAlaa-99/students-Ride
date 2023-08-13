@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\student;
+use App\Models\ForgetPassword;
+use Illuminate\Http\Request;
+use App\Mail\ForgottenPassword;
 
 class Auth_ApiController extends Controller
 {
@@ -124,8 +128,8 @@ class Auth_ApiController extends Controller
                         'token'=>random_int(1000,9999),
                     ]
                     ); 
-         Mail::to($user->email)->send(new ForgottenPassword($Password));
-       //  $user->notify(new ResetPassword($user));
+           Mail::to($user->email)->send(new ForgottenPassword($Password));
+          // $user->notify(new ResetPassword($user));
          return $this->sendResponse($Password, 'link reset sent');
         }
         else
