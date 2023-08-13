@@ -9,8 +9,12 @@ use App\Models\student;
 use App\Models\ForgetPassword;
 use Illuminate\Http\Request;
 use App\Mail\ForgottenPassword;
+use App\Http\Controllers\BaseController as BaseController;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
-class Auth_ApiController extends Controller
+class Auth_ApiController extends BaseController
 {
     /**
      * Create a new AuthController instance.
@@ -128,7 +132,7 @@ class Auth_ApiController extends Controller
                         'token'=>random_int(1000,9999),
                     ]
                     ); 
-           Mail::to($user->email)->send(new ForgottenPassword($Password));
+           Mail::to($student->email)->send(new ForgottenPassword($Password));
           // $user->notify(new ResetPassword($user));
          return $this->sendResponse($Password, 'link reset sent');
         }
@@ -138,6 +142,11 @@ class Auth_ApiController extends Controller
         }
 
      }
+
+
+
+
+
 
      public function forgotPasswordToken(Request $request)
      {
@@ -150,16 +159,16 @@ class Auth_ApiController extends Controller
          {
              return 'details not match';
          }
-         $user=User::where('email',$request->email)->first();
-         if(!$user)
+         $student=student::where('email',$request->email)->first();
+         if(!$student)
          {
              return 'user not found';
          }
-         $user->password=$user->c_password=bcrypt($request->password);
+         $student->password=$student->password=bcrypt($request->password);
          
-         $user->save();
+         $student->save();
          $checkReset->delete();
-         return $this->sendResponse($user, 'Reset Password Successfully!');
+         return $this->sendResponse($student, 'Reset Password Successfully!');
 
     }
 

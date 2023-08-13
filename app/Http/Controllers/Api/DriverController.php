@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\driver;
+use Illuminate\Support\Facades\Json;
 use App\Models\trip;
 use App\Models\student_trip;
 use App\Models\student;
 use App\Models\User;
-use App\Http\Controllers\BaseController;
+use App\Http\Controllers\BaseController; 
 use Illuminate\Notifications\Notifiable;
 use Auth;
 use App\Notifications\TripCancel_admin;
@@ -73,6 +74,7 @@ class DriverController extends BaseController
         $trip=trip::where('id',$tripId)->update([
             'status'=>'قيد التقدم',
         ]);
+
         /*
         //send notify admin update trip status
         $trip=trip::where('id',$tripId)->first();
@@ -94,8 +96,8 @@ class DriverController extends BaseController
         $trip=trip::where('id',$tripId)->update([
             'status'=>'منتهية',
         ]);
-
-        $check_box = $request->input('check_box', []);
+        $check_box = json_encode($request->input('check_box', []));
+        //$check_box = $request->input('check_box', []);
         //return [true,false,truse,false];
         $students=student_trip::where('trip_id',$tripId)->get();
           foreach ($students as $index => $student) {
