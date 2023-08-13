@@ -174,25 +174,28 @@ class Auth_ApiController extends BaseController
          $student->save();
          $checkReset->delete();
          */
-         return $this->sendResponse($student,'Verify Succssesfully!');
+         return 'true!';
     }
 
     public function update_password(Request $request)
      {
+
         $code=$request->code;
          $checkReset=ForgetPassword::where([
              'token'=>$code,
            //  'email'=>$request->email,
          ])->first();
-         if(!$checkReset)
-         {
-             return 'Error Code';
-         }
          $student=student::where('email',$checkReset->email)->first();
          if(!$student)
          {
              return 'student not found';
          }
+            $validator=Validator::make( $request->all(),
+            [
+                'password'=>'required',
+                'c_password'=>'required|same:password'
+            ]);
+
          $student->password=bcrypt($request->password);
          $student->save();
          $checkReset->delete();
