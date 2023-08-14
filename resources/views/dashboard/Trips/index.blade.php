@@ -105,8 +105,9 @@
                           
                       <td>{{$trip->status}}</td>
                       <td>{{$trip->driver->num_stu}}</td>
+                      <td>{{$trip->num_stu_final}}</td>
                       <td>{{$trip->price_final}}</td>
-                      <td>{{$trip->num_stu}}</td>
+                      
 
 
                  

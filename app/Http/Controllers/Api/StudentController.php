@@ -225,7 +225,7 @@ class StudentController extends BaseController
     public function choose_The_Information_trip(Request $request,$id)
     {
         $trip=trip::where('id',$id)->first(); 
-/*
+
         $validator = $request->validate([
             'main_time' => [
                 'required',
@@ -242,7 +242,7 @@ class StudentController extends BaseController
                 Rule::notIn([$main_time, $time_desire_1]),
             ],
         ]);
-  */
+  
       
         $student_id= auth()->guard('student-api')->id();
         if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){

@@ -179,6 +179,11 @@ class Auth_ApiController extends BaseController
 
     public function update_password(Request $request)
      {
+        $validator=Validator::make( $request->all(),
+        [
+            'password'=>'required',
+            'c_password'=>'required|same:password'
+        ]);
 
         $code=$request->code;
          $checkReset=ForgetPassword::where([
@@ -190,11 +195,7 @@ class Auth_ApiController extends BaseController
          {
              return 'student not found';
          }
-            $validator=Validator::make( $request->all(),
-            [
-                'password'=>'required',
-                'c_password'=>'required|same:password'
-            ]);
+        
 
          $student->password=bcrypt($request->password);
          $student->save();
