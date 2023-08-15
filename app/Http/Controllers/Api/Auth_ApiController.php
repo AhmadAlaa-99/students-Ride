@@ -13,6 +13,7 @@ use App\Http\Controllers\BaseController as BaseController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Models\DeviceToken;
 
 class Auth_ApiController extends BaseController
 {
@@ -114,14 +115,6 @@ class Auth_ApiController extends BaseController
 
 
 
-
-
-
-
-
-
-
-
     public function forgotPasswordCreate(Request $request)
     {
         $student=student::where('email',$request->email)->first();
@@ -191,16 +184,25 @@ class Auth_ApiController extends BaseController
            //  'email'=>$request->email,
          ])->first();
          $student=student::where('email',$checkReset->email)->first();
+
          if(!$student)
          {
              return 'student not found';
          }
-        
-
          $student->password=bcrypt($request->password);
          $student->save();
          $checkReset->delete();
          return $this->sendResponse($student,'Reset Password Successfully!');
+    }
+
+    public function fcm_token_store(Request $request)
+    {
+        $driver_id=auth()->guard('driver-api')->id;
+        $fcm_token=$request->fcm_token;
+        DeviceToken::create([
+            'driver_id'=>$driver_id,
+            'fcm_token'=>$fcm_token,
+        ]);
     }
 
 }

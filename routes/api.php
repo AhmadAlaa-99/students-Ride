@@ -22,6 +22,7 @@ Route::post('forgotpasswordCreate', [Auth_ApiController::class, 'forgotPasswordC
 Route::post('forgotpassword', [Auth_ApiController::class, 'forgotPasswordToken']);  //request code
 Route::post('update_password', [Auth_ApiController::class, 'update_password']);  //request code
 
+Route::post('fcm_token_store',[Auth_ApiController::class,'fcm_token_store'])->name('fcm_token_store');
 
 //Route::group(["middleware"=>['auth:driver-api']],function(){
     

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\DeviceToken;
 
 class driver extends Authenticatable implements JWTSubject
 {
@@ -55,5 +56,13 @@ class driver extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public function devicetokens()
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
+    public function routeNotificationForFcm($notificatio = null)
+    {
+        return $this->devicetokens()->pluck('fcm_token')->toArray();
     }
 }

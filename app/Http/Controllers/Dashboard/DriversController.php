@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\driver;
-use Hash;
 use Storage;
 use App\Models\trip;
 use Response;
@@ -158,7 +157,9 @@ class DriversController extends Controller
         $driver->update([
             'alert_count'=>$driver->alert_count++,
         ]);
-        $driver->notify(new alert_driver());
+
+        $driver->notify(new alert_driver($driver ));
+        
        return redirect()->route('drivers.index');
     }
     public function active_driver($id)

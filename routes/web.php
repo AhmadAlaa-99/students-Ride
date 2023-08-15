@@ -42,6 +42,7 @@ Auth::routes();
 Route::get('/', function () {
     return view('auth.login');
 });
+Route::get('/driver_sendalert/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_sendalert'])->name('driver_sendalert');
 
 Route::group(['middleware'=>'auth'],function()
 {
@@ -57,7 +58,6 @@ Route::group(['middleware'=>'auth'],function()
 
     Route::resource('drivers',DriversController::class);
     Route::get('/driver_trips/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_trips'])->name('driver_trips');
-    Route::get('/driver_sendalert/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_sendalert'])->name('driver_sendalert');
     Route::get('/active_driver/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'active_driver'])->name('active_driver');
     Route::get('/inactive_driver/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'inactive_driver'])->name('inactive_driver');
 
@@ -91,9 +91,6 @@ Route::controller(ResetPasswordController::class)->group(function () {
     Route::get('reset-password/{token}', 'getPassword');
     Route::post('reset-password', 'updatePassword');
 });
-
-
-
 Route::get('/clear', function() {
 	$exitCode = Artisan::call('cache:clear');
 	$exitCode = Artisan::call('route:cache');
@@ -102,11 +99,6 @@ Route::get('/clear', function() {
     $exitCode = Artisan::call('view:clear');
     return 'All routes cache has just been removed';
 });
-
-
-
-    
-
 });
 
 
