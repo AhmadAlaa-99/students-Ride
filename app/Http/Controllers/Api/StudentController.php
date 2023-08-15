@@ -19,6 +19,9 @@ use Carbon\Carbon;
 use App\Notifications\status_TripStudents;
 use App\Notifications\status_TripAdmin;
 use Illuminate\Support\Arr;
+use App\Notifications\Reservation_Confirm;
+
+
 
 class StudentController extends BaseController
 { 
@@ -200,12 +203,8 @@ class StudentController extends BaseController
       else {
 
        $now = Carbon::now();
-
-       $tomorrow = $now->addDay();
-
-       
+       $tomorrow = $now->addDay();       
        $tomorrow_str = $tomorrow->format('Y-m-d');
-
         }
 
 
@@ -220,7 +219,7 @@ class StudentController extends BaseController
         'status'=>true,
          'information'=>$info,
 
-    ]);  
+    ]);
     }
     public function choose_The_Information_trip(Request $request,$id)
     {
@@ -390,6 +389,79 @@ class StudentController extends BaseController
              'data'=>$suggestion
         ]); 
         
+    }
+    public function Trips_Algorithm(){
+        $now = now()->format('H')+3;
+        $nine_pm = '11';
+
+      if ($now >= $nine_pm) {
+        $now = Carbon::now();
+
+        $tomorrow = $now->addDay();
+
+        $tomorrow_str = $tomorrow->format('Y-m-d');
+
+
+        $trips=student_trip::join('trips','trips.id','=','student_trip.trip_id')
+        ->where('trips.trip_date', '=', $tomorrow_str)->get();
+        
+        
+        foreach($trips as $trip)
+        {
+            $count=count(student_trip::where('trip_id','=',$trip['trip_id'])->get());
+
+            $trip_time1=trip::where('id',$trip['trip_id'])->pluck('trips.time_1');
+            $main_time1=student_trip::where('main_time' , $trip_time1)->count();
+            $desire_time1=student_trip::where('time_desire_1' , $trip_time1)->count();
+            $desire2_time1=student_trip::where('time_desire_2' , $trip_time1)->count();
+            
+            
+            $time1=max($main_time1,$desire_time1,$desire2_time1);
+
+
+            $trip_time2=trip::where('id',$trip['trip_id'])->pluck('trips.time_2');
+            $main_time2=student_trip::where('main_time' , $trip_time1)->count();
+            $desire_time2=student_trip::where('time_desire_1' , $trip_time2)->count();
+            $desire2_time2=student_trip::where('time_desire_2' , $trip_time2)->count();
+
+            $time2=max($main_time2,$desire_time2,$desire2_time2);
+
+
+            $trip_time3=trip::where('id',$trip['trip_id'])->pluck('trips.time_3');
+            $main_time3=student_trip::where('main_time' , $trip_time3)->count();
+            $desire_time3=student_trip::where('time_desire_1' , $trip_time3)->count();
+            $desire2_time3=student_trip::where('time_desire_2' , $trip_time3)->count();
+
+            $time3=max($main_time3,$desire_time3,$desire2_time3);
+        
+            $trip_main_time=trip::where('id',$trip['trip_id'])->first();
+            if ($time1 >= $time2 && $time1 >= $time3){
+                $trip_main_time->time_final=$trip_time1->first();
+                $trip_main_time->save();
+            }
+            if ($time2 > $time1 && $time2 >= $time3){
+                $trip_main_time->time_final=$trip_time2->first();
+                $trip_main_time->save();
+            }
+            if ($time3 > $time1 && $time3 > $time2){
+                $trip_main_time->time_final=$trip_time3->first();
+                $trip_main_time->save();
+            }
+               
+            $tripId=$trip->id;
+            $students=student::where('id',$trip['student_id'])->get();
+            \Notification::send($students,new Reservation_Confirm($trip));
+            /*
+            $students=student::whereHas('trips', function ($query) use ($tripId) {
+                $query->where('trip_id',$tripId);
+            })->get();
+            */
+
+                   
+           
+       }
+       
+   }
     }
     public function browse_Notification ()
     {

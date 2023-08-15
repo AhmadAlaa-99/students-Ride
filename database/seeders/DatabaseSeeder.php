@@ -17,15 +17,28 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        $start=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي'];
-        $end=['الهمك','البرامكة',' المزة','مساكن برزة'];
+        $start=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي','جديدة البلد','الزاهرة الجديدة','الزاهرة القديمة','القنيطرة','الهمك','جديدة الفضل'];
+        $end=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي','جديدة البلد','الزاهرة الجديدة','الزاهرة القديمة','القنيطرة','الهمك','جديدة الفضل'];
         for($i=0; $i<10 ;$i++)
         {
+            $randomStartIndex = array_rand($start);
+    $randomEndIndex = array_rand($end);
+    $randomStart = $start[$randomStartIndex];
+    $randomEnd = $end[$randomEndIndex];
+     
         \App\Models\line::create([
-            'start'=>$start[rand(0, count($start) - 1)],
-            'end'=>$end[rand(0, count($end) - 1)],
+
+            'start' => $randomStart,
+            'end' => $randomEnd,
             'price'=>rand(1000, 5000),
         ]);
+        // Remove the used values from the arrays
+    unset($start[$randomStartIndex]);
+    unset($end[$randomEndIndex]);
+
+    // Reset the array keys
+    $start = array_values($start);
+    $end = array_values($end);
     }
         $pass='12345678';
         $password=Hash::make($pass);

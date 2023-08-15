@@ -7,8 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class status_TripStudents extends Notification
-{ 
+class Reservation_Confirm extends Notification
+{
     use Queueable;
     protected $trip;
 
@@ -53,18 +53,18 @@ class status_TripStudents extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
-    {
-        return [
-            //
-        ];
-    }
     public function toDatabase($notifiable)
     {
         return [
             'id'=> $this->trip->id,
-            'title'=>'تنبيه - تم تحديث حالة الرحلة الحالية ',
-          
+            'title'=>'تم حجز الرحلة بنجاح في التوقيت التالي :'.$this->trip->time_final,
+        ];
+    }
+
+    public function toArray($notifiable)
+    {
+        return [
+            //
         ];
     }
 }

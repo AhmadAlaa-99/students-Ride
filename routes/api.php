@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\StudentController;
 |
 */
 /*--------------------------------Driver------------------------*/
+Route::post('Trips_Algorithm',[StudentController::class,'Trips_Algorithm'])->name('Trips_Algorithm');
+
 Route::post('forgotpasswordCreate', [Auth_ApiController::class, 'forgotPasswordCreate']);//notify email 
 Route::post('forgotpassword', [Auth_ApiController::class, 'forgotPasswordToken']);  //request code
 Route::post('update_password', [Auth_ApiController::class, 'update_password']);  //request code
@@ -48,6 +50,8 @@ Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversCon
 Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
 
 Route::get('All_inforamtion_of_trip/{id}',[StudentController::class,'All_inforamtion_of_trip'])->name('All_inforamtion_of_trip');
+
+
 
 Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_profile');
 Route::get('browse_notifications',[DriverController::class,'browse_notifications'])->name('browse_notifications');
