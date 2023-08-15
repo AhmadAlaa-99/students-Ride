@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\driver;
 use App\Models\trip;
+use App\Models\line;
 use App\Models\student;
 use App\Models\suggestion;
 use App\Models\student_trip;
@@ -19,9 +20,6 @@ use Carbon\Carbon;
 use App\Notifications\status_TripStudents;
 use App\Notifications\status_TripAdmin;
 use Illuminate\Support\Arr;
-use App\Notifications\Reservation_Confirm;
-
-
 
 class StudentController extends BaseController
 { 
@@ -119,7 +117,7 @@ class StudentController extends BaseController
         //response date
         return response()->json([
             'status'=>true,
-            "message"=>'تم تحديث معلومات الملف الشخصي بنجاح',
+"message"=>'تم تحديث معلومات الملف الشخصي بنجاح',
             'data'=>$student
         ],200);
     }
@@ -139,6 +137,7 @@ class StudentController extends BaseController
    
     public function end_start_lines ()
     {
+        /*
         $now = now()->format('H')+3;
         $nine_pm = '21';
         
@@ -164,13 +163,15 @@ class StudentController extends BaseController
         $tomorrow_str = $tomorrow->format('Y-m-d');
 
         }
+   */
+      //  $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')->pluck('lines.start');
+      //  ->whereDate('trips.trip_date', '=', $tomorrow)
+      $source=line::pluck('start');
+      $destination=line::pluck('end');
 
-        $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.start');
-    
-
-        $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.end');
+          
+     //   $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')->pluck('lines.end'); 
+       // ->whereDate('trips.trip_date', '=', $tomorrow)
        
 
                return response()->json([
@@ -203,8 +204,12 @@ class StudentController extends BaseController
       else {
 
        $now = Carbon::now();
-       $tomorrow = $now->addDay();       
+
+       $tomorrow = $now->addDay();
+
+       
        $tomorrow_str = $tomorrow->format('Y-m-d');
+
         }
 
 
@@ -219,13 +224,13 @@ class StudentController extends BaseController
         'status'=>true,
          'information'=>$info,
 
-    ]);
+    ]);  
     }
     public function choose_The_Information_trip(Request $request,$id)
     {
-        $trip=trip::where('id',$id)->first(); 
-
-        $validator = $request->validate([
+        $trip=trip::where('id',$id)->first();
+        /*
+$validator = $request->validate([
             'main_time' => [
                 'required',
                 Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
@@ -242,7 +247,7 @@ class StudentController extends BaseController
             ],
         ]);
   
-      
+      */
         $student_id= auth()->guard('student-api')->id();
         if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
             return response()->json([
@@ -323,9 +328,7 @@ class StudentController extends BaseController
         
         return response()->json($info, 200);
     }
-
-    
-    public function show_my_current_trips()
+public function show_my_current_trips()
     {
         $student_id= auth()->guard('student-api')->id();
         $today = Carbon::now();
@@ -389,79 +392,6 @@ class StudentController extends BaseController
              'data'=>$suggestion
         ]); 
         
-    }
-    public function Trips_Algorithm(){
-        $now = now()->format('H')+3;
-        $nine_pm = '11';
-
-      if ($now >= $nine_pm) {
-        $now = Carbon::now();
-
-        $tomorrow = $now->addDay();
-
-        $tomorrow_str = $tomorrow->format('Y-m-d');
-
-
-        $trips=student_trip::join('trips','trips.id','=','student_trip.trip_id')
-        ->where('trips.trip_date', '=', $tomorrow_str)->get();
-        
-        
-        foreach($trips as $trip)
-        {
-            $count=count(student_trip::where('trip_id','=',$trip['trip_id'])->get());
-
-            $trip_time1=trip::where('id',$trip['trip_id'])->pluck('trips.time_1');
-            $main_time1=student_trip::where('main_time' , $trip_time1)->count();
-            $desire_time1=student_trip::where('time_desire_1' , $trip_time1)->count();
-            $desire2_time1=student_trip::where('time_desire_2' , $trip_time1)->count();
-            
-            
-            $time1=max($main_time1,$desire_time1,$desire2_time1);
-
-
-            $trip_time2=trip::where('id',$trip['trip_id'])->pluck('trips.time_2');
-            $main_time2=student_trip::where('main_time' , $trip_time1)->count();
-            $desire_time2=student_trip::where('time_desire_1' , $trip_time2)->count();
-            $desire2_time2=student_trip::where('time_desire_2' , $trip_time2)->count();
-
-            $time2=max($main_time2,$desire_time2,$desire2_time2);
-
-
-            $trip_time3=trip::where('id',$trip['trip_id'])->pluck('trips.time_3');
-            $main_time3=student_trip::where('main_time' , $trip_time3)->count();
-            $desire_time3=student_trip::where('time_desire_1' , $trip_time3)->count();
-            $desire2_time3=student_trip::where('time_desire_2' , $trip_time3)->count();
-
-            $time3=max($main_time3,$desire_time3,$desire2_time3);
-        
-            $trip_main_time=trip::where('id',$trip['trip_id'])->first();
-            if ($time1 >= $time2 && $time1 >= $time3){
-                $trip_main_time->time_final=$trip_time1->first();
-                $trip_main_time->save();
-            }
-            if ($time2 > $time1 && $time2 >= $time3){
-                $trip_main_time->time_final=$trip_time2->first();
-                $trip_main_time->save();
-            }
-            if ($time3 > $time1 && $time3 > $time2){
-                $trip_main_time->time_final=$trip_time3->first();
-                $trip_main_time->save();
-            }
-               
-            $tripId=$trip->id;
-            $students=student::where('id',$trip['student_id'])->get();
-            \Notification::send($students,new Reservation_Confirm($trip));
-            /*
-            $students=student::whereHas('trips', function ($query) use ($tripId) {
-                $query->where('trip_id',$tripId);
-            })->get();
-            */
-
-                   
-           
-       }
-       
-   }
     }
     public function browse_Notification ()
     {

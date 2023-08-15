@@ -9,6 +9,8 @@
         "andreaselia/laravel-api-to-postman": "^1.15",
         "brian2694/laravel-toastr": "^5.57",
         "guzzlehttp/guzzle": "^7.2",
+        "kreait/laravel-firebase": "*",
+        "laravel-notification-channels/fcm": "^3.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
