@@ -183,6 +183,7 @@ class Auth_ApiController extends BaseController
 
     public function fcm_token_store(Request $request)
     {
+        /*
         if(auth()->guard('driver-api')->check())
         {
             $driver_email=auth()->guard('driver-api')->email;
@@ -205,6 +206,9 @@ class Auth_ApiController extends BaseController
         {
             return 'error';
         }
+        */
+        $fcm_token=$request->fcm_token;
+        return $fcm_token;
      
     }
 
