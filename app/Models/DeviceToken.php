@@ -10,9 +10,11 @@ class DeviceToken extends Model
 {
     use HasFactory;
     protected $guarded=[''];
+    /*
     public function driver()
     {
         return $this->belongsTo(driver::class);
     }
+    */
 }
 

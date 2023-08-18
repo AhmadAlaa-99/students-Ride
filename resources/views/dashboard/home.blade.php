@@ -167,7 +167,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>الذمم المالية</h4>
+                        <h4> الذمم المالية</h4>
                     </div>
                     <div class="card-content pb-4">
                        
@@ -185,12 +185,11 @@
                         @endforeach
                         
                      
-                      <!--
+                      
                         <div class="px-4">
-                            <button class='btn btn-block btn-xl btn-light-primary font-bold mt-3'>
-                                تصفح بيانات</button>
+                            <a  href="{{route('drivers.index')}}" class='btn btn-block btn-xl btn-light-primary font-bold mt-3'>
+                                عرض بيانات السائقين</a>
                         </div>
--->
                     </div>
                 </div>
              
@@ -198,16 +197,6 @@
         </section>
     </div>
 
-    <footer>
-        <div class="footer clearfix mb-0 text-muted">
-            <div class="float-start">
-                <p>2021 &copy; Soeng Souy</p>
-            </div>
-            <div class="float-end">
-                <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                href="http://souysoeng.com">Soeng Souy</a></p>
-            </div>
-        </div>
-    </footer>
+ 
 </div>
 @endsection

@@ -14,7 +14,7 @@
 
    
 @endsection
-@section('js')
+@section('js') 
      <script src="{{ URL::to('assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js') }} "></script>
      <script src="{{ URL::to('assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }} "></script>
      <script src="{{ URL::to('assets/vendors/bootstrap-icons/bootstrap-icons.css') }} "></script>
@@ -32,9 +32,7 @@
             <div class="row">
               <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>ادارة السائقين</h3>
-                <p class="text-subtitle text-muted">
-                  عرض تفاصيل السائق - {{$driver->full_name}} - - {{$driver->financial}}
-                </p>
+              
               </div>
               <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav
@@ -43,7 +41,7 @@
                 >
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="index.html">بيانات السائق </a>
+                      <a href="">بيانات السائق </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
                      {{$driver->full_name}} - {{$driver->financial}}
@@ -57,7 +55,12 @@
             <div class="card">
               <div class="card-header">الرحلات التابعة لهذا السائق : {{$driver->full_name}} - {{$driver->financial}}</div>
               <div class="card-body">
-                <table class="table table-striped" id="table1">
+               
+
+
+
+
+              <table class="table table-striped" id="table1">
                   <thead>
                     <tr>
                     <th>#</th>
@@ -67,11 +70,13 @@
                       <th>السائق</th>
                       <th> الخط</th>
                       <th> حالة الرحلة</th>
+                      <th>العدد الكلي للركاب</th>
+                      <th>العدد الفعلي للركاب</th>
+                      <th>الاجرة الفعلية</th>
                       <th>العمليات</th>
                     </tr>
                   </thead>
-                  <tbody>
-                 
+                <tbody>
                   @php
                                 $i = 0;
                                 @endphp
@@ -79,13 +84,13 @@
                                     @php
                                     $i++
                                     @endphp
-                    <tr>
+                                 <tr>
                     <td>{{ $i }}</td>
                       <td>{{$trip->trip_date}}</td>
                       <td>
-                        @foreach($trip->time_arrange as $time)
-                        {{$time }}
-                        @endforeach
+                      <span class="badge bg-danger">
+                      {{$trip->time_1}} - {{$trip->time_2}} - {{$trip->time_3}}
+                      </span>
                       </td>
                       <td>{{$trip->time_final}}</td>
                       <td>
@@ -94,10 +99,19 @@
                       <td>
                         <span class="badge bg-success">{{$trip->line->start}} - {{$trip->line->end}} - {{$trip->line->price}}</span>
                       </td>
+                          
                       <td>{{$trip->status}}</td>
+                      <td>{{$trip->driver->num_stu}}</td>
+                      <td>{{$trip->num_stu_final}}</td>
+                      <td>{{$trip->price_final}}</td>
+                      
+
+
+                 
+        
                       <td>
                         <div style="display: flex;">
-                        <a href="#">
+                        <a href="{{route('trip_completed',$trip->id)}}">
                         <div class="icon dripicons-trash"></div>
                         </a>
                         <a href="#">
@@ -106,8 +120,11 @@
                         <a href="#">
                         <div class="icon dripicons-document-edit"></div>
                         </a>
+                        <a href="#">
+                        <div class="icon dripicons-document-blog"></div>
+                        </a>
                         </td>
-                        </tr>
+                    </tr>
                     @endforeach
                   </tbody>
                 </table>

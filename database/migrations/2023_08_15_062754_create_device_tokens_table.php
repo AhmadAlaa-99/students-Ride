@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('device_tokens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('driver_id')->constrained('drivers')->cascadeOnDelete();
+            $table->string('email');
             $table->string('fcm_token');
             $table->timestamps();
         });

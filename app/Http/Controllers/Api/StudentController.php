@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Mail\delete_profile_student;
+use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Validation\Rules\In;
+use Illuminate\Validation\Rules\NotIn;
+
 use App\Models\driver;
 use App\Models\trip;
 use App\Models\line;
@@ -16,6 +21,8 @@ use Illuminate\Notifications\Notifiable;
 use Auth;
 use App\Notifications\TripCancel_admin;
 use App\Notifications\TripCancel_students;
+use App\Notifications\Reservation_Confirm_admin;
+
 use Carbon\Carbon;
 use App\Notifications\status_TripStudents;
 use App\Notifications\status_TripAdmin;
@@ -229,8 +236,8 @@ class StudentController extends BaseController
     public function choose_The_Information_trip(Request $request,$id)
     {
         $trip=trip::where('id',$id)->first();
-        /*
-$validator = $request->validate([
+    /*
+            $validator = $request->validate([
             'main_time' => [
                 'required',
                 Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
@@ -246,49 +253,92 @@ $validator = $request->validate([
                 Rule::notIn([$main_time, $time_desire_1]),
             ],
         ]);
+        */
+        $validator =   $request->validate([
+            'main_time' => ['required', new In([$trip->time_1, $trip->time_2, $trip->time_3])],
+            'time_desire_1' => [
+                'required',
+                new In([$trip->time_1, $trip->time_2, $trip->time_3]),
+                new NotIn([$request->input('main_time')]),
+            ],
+            'time_desire_2' => [
+                'required',
+                new In([$trip->time_1, $trip->time_2, $trip->time_3]),
+                new NotIn([$request->input('main_time'), $request->input('time_desire_1')]),
+            ],
+        ]);
+      $now = Carbon::now();
+
+      $tomorrow = $now->addDay();
+
+      $tomorrow_str = $tomorrow->format('Y-m-d');
+
+    
+      $count=count(student_trip::where('trip_id','=',$id )->get());
+      $num_str=trip::where('id',$id)->pluck('num_stu')->first();
   
-      */
-        $student_id= auth()->guard('student-api')->id();
-        if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
-            return response()->json([
-                'status'=>false,
-                 'message'=>'تم التسجيل على هذه الرحلة مسبقا',
-            ]);
-        }
+      if ($count >= $num_str){
+          return response()->json([
+              'status'=>false,
+               'message'=>'نعتذر الباص قد امتلأ',
+          ]);
+      }
+      else {
+      $student_id= auth()->guard('student-api')->id();
+      if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
+          return response()->json([
+              'status'=>false,
+               'message'=>'تم التسجيل على هذه الرحلة مسبقا',
+          ]);
+      }
         $student_trip = new student_trip();
         $student_trip->main_time=$request->main_time;
         $student_trip->time_desire_1=$request->time_desire_1;
         $student_trip->time_desire_2=$request->time_desire_2;
         $student_trip->trip_id=$id;
-        $student_trip->student_id=$student_id;
-        $student_trip->status=1;
+        $student_trip->student_id=$student->id();
+       $student_trip->status=0;
         $date =trip::where('id','=',$id)->get('trip_date')->first();
         $student_trip->save();
+
+        $title=sprintf('تأكيد الحجز');
+        $body=sprintf('تم حجز الرحلة بنجاح , سيصلك تأكيد بالوقت بعد التاسعة ');
+        $this->sendFCMNotification('student',$student->id,$title,$body);
+
         return response()->json([
             'status'=>true,
              'message'=>'تم حجز رحلة بنجاح',
              'data'=>$student_trip
             ]);
+            //notify to student 
+            //\Notification::send($student,new confirm_after_choose($trip));
     }
+}
     public function Cancel_Trip($id)
-    {
+    { 
         $student_id= auth()->guard('student-api')->id();
-        if (!student_trip::where([['student_id','=',$student_id],['id','=',$id]])->exists()){
+        if (!student_trip::where([['student_id','=',$student_id],['id','=',$id]])->exists())
+        {
             return response()->json([
                 'status'=>false,
                  'message'=>'هذه الرحلة غير موجودة',
                 ]);     
         }
+
         $now = Carbon::now();
         $hour = $now->hour +3;
         if ($hour >= 21) {
          $student=student::find($student_id);
          $student->alert_count=$student->alert_count+1;
          $student->save();
-         $trip=student_trip::where('id','=',$id)->first();
-         $trip->delete();
+         $student=student_trip::where('trip_id','=',$id)->first();
+         $student->delete();
+         $admin=User::first();
          //delete account if conunt of alert big than 5
-         if ($student->alert_count>=5){
+         if ($student->alert_count>=5)
+         {
+            //notify email student 
+            Mail::to($student->email)->send(new delete_profile_student($student));
            $this->Delete_Profile();
             return response()->json([
                 'status'=>true,
@@ -296,6 +346,12 @@ $validator = $request->validate([
                 ]);
          }
          else {
+            //notify student to attention account_alert
+            $title=sprintf('انذار جديد');
+            $body=sprintf('تلقيت انذار جديد لديك %s انذارات',$student->alert_count,);
+        //  \Notification::send($driver,new alert_driver($driver));
+            $this->sendFCMNotification('student',$student->id,$title,$body);
+     //       \Notification::send($student,new attention_alert_student($student)); 
          return response()->json([
             'status'=>true,
             'message'=>'تم الالغاء بنجاح',
@@ -415,6 +471,105 @@ public function show_my_current_trips()
         'trip_info'=>$trip_info,
     
     ]);  
+    }
+    public function Trips_Algorithm()
+    {
+        $now = now()->format('H')+3;
+        $nine_pm = '12';
+
+      if ($now >= $nine_pm) {
+        $now = Carbon::now();
+        $tomorrow = $now->addDay();
+        $tomorrow_str = $tomorrow->format('Y-m-d');
+        $trips=student_trip::join('trips','trips.id','=','student_trip.trip_id')
+        ->where('trips.trip_date', '=', $tomorrow_str)->get();
+    
+        $now = Carbon::now();
+
+        $tomorrow = $now->addDay();
+
+        $tomorrow_str = $tomorrow->format('Y-m-d');
+
+        $trips=student_trip::join('trips','trips.id','=','student_trip.trip_id')
+        ->where('trips.trip_date', '=', $tomorrow_str)->get();
+            
+        foreach($trips as $trip){
+            
+            $count=count(student_trip::where('trip_id','=',$trip['trip_id'])->get());
+
+            $trip_time1=trip::where('id',$trip['trip_id'])->pluck('trips.time_1');
+            $main_time1=student_trip::where('main_time' , $trip_time1)->count();
+            $desire_time1=student_trip::where('time_desire_1' , $trip_time1)->count();
+            $desire2_time1=student_trip::where('time_desire_2' , $trip_time1)->count();
+            
+            $time1=max($main_time1,$desire_time1,$desire2_time1);
+
+            $trip_time2=trip::where('id',$trip['trip_id'])->pluck('trips.time_2');
+            $main_time2=student_trip::where('main_time' , $trip_time1)->count();
+            $desire_time2=student_trip::where('time_desire_1' , $trip_time2)->count();
+            $desire2_time2=student_trip::where('time_desire_2' , $trip_time2)->count();
+
+            $time2=max($main_time2,$desire_time2,$desire2_time2);
+           
+
+            $trip_time3=trip::where('id',$trip['trip_id'])->pluck('trips.time_3');
+            $main_time3=student_trip::where('main_time' , $trip_time3)->count();
+            $desire_time3=student_trip::where('time_desire_1' , $trip_time3)->count();
+            $desire2_time3=student_trip::where('time_desire_2' , $trip_time3)->count();
+
+            $time3=max($main_time3,$desire_time3,$desire2_time3);
+        
+            $trip_main_time=trip::where('id',$trip['trip_id'])->first();
+            if ($time1 >= $time2 && $time1 >= $time3){
+                $trip_main_time->time_final=$trip_time1->first();
+                $trip_main_time->save();
+            }
+            if ($time2 > $time1 && $time2 >= $time3){
+                $trip_main_time->time_final=$trip_time2->first();
+                $trip_main_time->save();
+            }
+            if ($time3 > $time1 && $time3 > $time2){
+                $trip_main_time->time_final=$trip_time3->first();
+                $trip_main_time->save();
+            }
+            //notify students
+            $tripid=$trip->id;
+            $students = Student::whereHas('trips', function ($query) use($tripid) {
+                $query->where('trip_id', $tripid);
+            })->get();
+           // return $trip;
+            $trip=trip::join('lines', 'trips.line_id', '=', 'lines.id')
+            ->where('trips.id','=',$tripid)->first();
+
+            $trip->update([
+                'status'=>'حالية',
+            ]);
+        
+
+            $title=sprintf('رحلة مجدولة');
+            $body=sprintf('كن مستعد - الرحلة %s - %s - %s في الساعة %s صباحا',
+            $trip->start,$trip->end,$trip->price,$trip->time_final);
+
+            foreach($students as $student)
+            {
+                $this->sendFCMNotification('student',$student->id,$title,$body);
+
+                
+            }
+            //Notification::send($students, new Reservation_Confirm($trip));
+            //notify admin 
+            $admin=User::first();
+            \Notification::send($admin, new Reservation_Confirm_admin($trip));
+            //notify driver 
+            $driver=driver::where('id',$trip->driver_id)->first();
+            //Notification::send($driver, new Reservation_Confirm_driver($trip));
+            $title=sprintf('رحلة مجدولة');
+            $body=sprintf('تم جدولة الرحلة على الخط %s - %s - %s في الساعة %s صباحا',
+            $trip->start,$trip->end,$trip->price,$trip->time_final);
+            $this->sendFCMNotification('driver',$driver->id,$title,$body);
+       }
+       
+  }
     }
 
 }

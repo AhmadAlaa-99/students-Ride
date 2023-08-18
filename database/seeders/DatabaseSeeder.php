@@ -6,6 +6,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Hash;
 use Faker\Factory;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Carbon\Carbon;
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +18,41 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $permissions = [
+            'ادارة الخطوط',
+            'ادارة السائقين',
+         
+            
+    
+
+    
+    ];
+    
+    
+    
+    foreach ($permissions as $permission) {
+    
+    Permission::create(['name' => $permission]);
+    }
+    $pass='12345678';
+    $password=Hash::make($pass);
+    $user=\App\Models\User::create([
+        'name' => 'test_admin',
+        'email' => 'test@admin.com',
+        'password' =>$password, 
+        'roles_name' => ["owner"],
+        'Status' => 'مفعل',
+    ]);
+ 
+  
+        $role = Role::create(['name' => 'owner']);
+   
+        $permissions = Permission::pluck('id','id')->all();
+  
+        $role->syncPermissions($permissions);
+   
+        $user->assignRole([$role->id]);
+
         // \App\Models\User::factory(10)->create();
         $start=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي','جديدة البلد','الزاهرة الجديدة','الزاهرة القديمة','القنيطرة','الهمك','جديدة الفضل'];
         $end=['صحنايا','السومرية','جديدة عرطوز','اشرفية الوادي','جديدة البلد','الزاهرة الجديدة','الزاهرة القديمة','القنيطرة','الهمك','جديدة الفضل'];
@@ -40,18 +77,7 @@ class DatabaseSeeder extends Seeder
     $start = array_values($start);
     $end = array_values($end);
     }
-        $pass='12345678';
-        $password=Hash::make($pass);
-         \App\Models\admin::create([
-             'name' => 'test_admin',
-             'email' => 'test@admin.com',
-             'password' =>$password,
-         ]);
-         \App\Models\User::create([
-            'name' => 'test_admin',
-            'email' => 'test@admin.com',
-            'password' =>$password, 
-        ]);
+      
         $faker=Factory::create();
         for($i=0; $i<10 ;$i++)
         {
@@ -183,6 +209,21 @@ class DatabaseSeeder extends Seeder
             'status'=>'قادمة',
             'driver_id'=>rand(5,10),
             'line_id'=>rand(5,10),
+            
+            ]);
+    }
+    $now = Carbon::now();
+    for($i=0; $i<5 ;$i++)
+    {
+        \App\Models\trip::create([
+            'trip_date'=>$now->addDays(2),
+            'time_1'=>$time1->format('H:i'),
+            'time_2'=>$time2->format('H:i'),
+            'time_3'=>$time3->format('H:i'),
+            'time_final'=>'-',
+            'status'=>'قادمة',
+            'driver_id'=>rand(1,5),
+            'line_id'=>rand(6,10),
             
             ]);
     }

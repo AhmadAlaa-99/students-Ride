@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\trip;
+use App\Models\suggestion;
+use App\Models\student_trip;
 use App\Models\line;
 use App\Models\driver;
 class TripsController extends Controller
@@ -17,7 +19,7 @@ class TripsController extends Controller
      */
     public function index() 
     {
-        $trips = trip::with('driver','line')->get();
+        $trips = trip::with('driver','line')->where('status','قادمة')->get();
         $lines=line::all();
         $drivers=driver::all();
         return view('dashboard.Trips.index', compact('trips','lines','drivers'));
@@ -84,10 +86,17 @@ class TripsController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function edit(line $line) 
+    public function edit(trip $trip) 
     {
-        return view('dashboard.Lines.edit', [
-            'line' => $line
+        $lines=line::all();
+        $drivers=driver::all();
+
+        return view('dashboard.Trips.edit', [
+            'trip' => $trip,
+            'lines' => $lines,
+            'drivers' => $drivers,
+
+
         ]);
     }
 
@@ -128,15 +137,72 @@ class TripsController extends Controller
             'status'=>'1',
         ]);
        // $line=line::where('')
-           $trip=trip::where('id',$id)->update([
+           $trip=trip::where('id',$id)->first();
+           $trip->update([
             'status'=>'completed',
             'num_stu'=>$students->count(),
             'price_final'=>$students->count()*$trip->line->price,
            ]);
-           $driver=driver::where('id',$trip->driver_id)->update([
+           $driver=driver::where('id',$trip->driver_id)->first();
+           $driver->update([
             'financial'=>$driver->financial+=$trip->price_final,
            ]);
            return route('trips.index');       
     }
+    public function trips_finite ()
+    {
+        $trips = trip::with('driver','line')->where('status','منتهية')->get();
+        $lines=line::all();
+        $drivers=driver::all();
+        return view('dashboard.Trips.index', compact('trips','lines','drivers'));
+
+    }
+    public function trips_current ()
+    {
+        $trips = trip::with('driver','line')->where('status','حالية')->get();
+        $lines=line::all();
+        $drivers=driver::all();
+        return view('dashboard.Trips.index', compact('trips','lines','drivers'));
+
+    }
+    public function trips_progress ()
+    {
+        $trips = trip::with('driver','line')->where('status','قيد التقدم')->get();
+        $lines=line::all();
+        $drivers=driver::all();
+        return view('dashboard.Trips.index', compact('trips','lines','drivers'));
+
+    }
+    public function trips_canelled ()
+    {
+        $trips = trip::with('driver','line')->where('status','تم الالغاء')->get();
+        $lines=line::all();
+        $drivers=driver::all();
+        return view('dashboard.Trips.index', compact('trips','lines','drivers'));
+
+    }
+    
+    public function trips_delete($id)
+    {
+        $trip=trip::where('id',$id)->delete();
+        return redirect()->route('trips.index')
+        ->withSuccess(__('Trip deleted successfully.'));
+    }
+    public function trips_reviews($id)
+    { 
+        $trip=trip::where('id',$id)->first();
+        $suggestions=suggestion::where('trip_id',$id)->get();
+        return view('dashboard.Trips.reviews')->with([
+            'suggestions'=>$suggestions,
+            'trip'=>$trip,
+            
+        ]);
+
+    }
+    
+
+
+
+
     
 }

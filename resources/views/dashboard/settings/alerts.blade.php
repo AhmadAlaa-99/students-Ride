@@ -139,15 +139,36 @@
                       <td>
                       <span class="badge bg-danger">{{$driver->alert_count}}</span>
                       </td>
+                  
                       <td>
                         <div style="display: flex;">
-                        <a href="#" title="الغاء تفعيل الحساب">
+                        <a href="{{route('drivers.edit',$driver->id)}}" title="تعديل الحساب">
+                        <div class="icon dripicons-document-edit"></div>
+                        </a>
+                        <a href="{{route('delete_driver',$driver->id)}}" title="حذف الحساب">
                         <div class="icon dripicons-trash"></div>
                         </a>
-                        <a href="#" title="ارسال انذار">
-                        <div class="icon dripicons-blog"></div>
+                       
+                        @if($driver->status=="1")
+                          <a href="{{route('inactive_driver',$driver->id)}}" title="الغاء تفعيل الحساب">
+                        <div class="icon dripicons-wrong"> </div> </a>
+                        
+                        <a href="{{route('driver_sendalert',$driver->id)}}" title=" ارسال انذار">
+                        <div class="icon dripicons-warning"></div>
                         </a>
-                   
+                        
+                        @else
+                        <a href="{{route('receipts_done',$driver->id)}}" title="استيفاء الذمم المالية">
+                        <div class="icon dripicons-wallet"></div>
+                        </a>
+                        <a href="{{route('active_driver',$driver->id)}}" title="تفعيل الحساب">
+                        <div class="icon dripicons-checkmark"></div>
+                        </a>
+                        @endif
+
+                        
+                         
+                       
                         </td>
                  
               

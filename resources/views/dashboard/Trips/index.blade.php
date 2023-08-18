@@ -55,7 +55,6 @@
           </div>
           <section class="section">
             <div class="card">
-              <div class="card-header">بيانات الرحلات المجدولة </div>
               <div class="card-body">
                 <table class="table table-striped" id="table1">
                   <thead>
@@ -73,7 +72,7 @@
                       <th>العمليات</th>
                     </tr>
                   </thead>
-                  <tbody>
+                <tbody>
                   @php
                                 $i = 0;
                                 @endphp
@@ -88,12 +87,6 @@
                       <span class="badge bg-danger">
                       {{$trip->time_1}} - {{$trip->time_2}} - {{$trip->time_3}}
                       </span>
-                    
-                      
-
-
-
-
                       </td>
                       <td>{{$trip->time_final}}</td>
                       <td>
@@ -113,19 +106,25 @@
                  
         
                       <td>
+                   
                         <div style="display: flex;">
-                        <a href="{{route('trip_completed',$trip->id)}}">
+                        @if($trip->status=="قادمة")
+                        <a href="{{route('trips_delete',$trip->id)}}" title="حذف رحلة">
                         <div class="icon dripicons-trash"></div>
                         </a>
-                        <a href="#">
-                        <div class="icon dripicons-blog"></div>
-                        </a>
-                        <a href="#">
+                        <a href="{{route('trips.edit',$trip->id)}}" title="تعديل رحلة">
                         <div class="icon dripicons-document-edit"></div>
                         </a>
-                        <a href="#">
+                        @endif
+                        @if($trip->status=="منتهية" || "ملغاة ")
+                        <a href="{{route('trips_reviews',$trip->id)}}" title="مراجعات رحلة">
+                        <div class="bi bi-emoji-smile" style="padding-right: 3px;"></div>
+                        </a>
+
+                        <a href="{{route('trips.show',$trip->id)}}" title="تفاصيل رحلة">
                         <div class="icon dripicons-document-blog"></div>
                         </a>
+                        @endif
                         </td>
                     </tr>
                     @endforeach

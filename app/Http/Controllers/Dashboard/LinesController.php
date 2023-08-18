@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator;
 use App\Models\line;
 use App\Models\trip;
 class LinesController extends Controller
@@ -39,6 +40,15 @@ class LinesController extends Controller
      */
     public function store(Line $line,Request $request) 
     {
+        $validator = Validator::make($request->all(), [
+            'start' => 'required|unique:lines,start,NULL,id,end,' . $request->end,
+            'end' => 'required|unique:lines,end,NULL,id,start,' . $request->start,
+            'price' => 'required|numeric'
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         $line=line::create([
     'start'=>$request->start,
     'end'=>$request->end,
@@ -78,8 +88,6 @@ class LinesController extends Controller
     {
         
         
-  
-      
         return view('dashboard.Lines.edit', [
             'line' => $line
         ]);
@@ -117,10 +125,16 @@ class LinesController extends Controller
     public function destroy(line $line) 
     {
         
-       
         return $line;
         $line->delete();
 
+        return redirect()->route('lines.index')
+            ->withSuccess(__('User deleted successfully.'));
+    }
+    public function delete_line($id) 
+    {
+        $line=line::where('id',$id)->first();
+        $line->delete();
         return redirect()->route('lines.index')
             ->withSuccess(__('User deleted successfully.'));
     }

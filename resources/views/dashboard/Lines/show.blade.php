@@ -4,9 +4,7 @@
 @endsection
 @section('css')
 <link rel="preconnect" href="https://fonts.gstatic.com">
-
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ URL::to('assets/vendors/dripicons/webfont.css') }}">
     <link rel="stylesheet" href="{{ URL::to('assets/css/pages/dripicons.css') }}">
     <link rel="stylesheet" href="{{ URL::to('assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
@@ -83,12 +81,12 @@
                     <td>{{ $i }}</td>
                       <td>{{$trip->trip_date}}</td>
                       <td>
-                        @foreach($trip->time_arrange as $time)
-                        {{$time }}
-                        @endforeach
+                      <span class="badge bg-danger">
+                      {{$trip->time_1}} - {{$trip->time_2}} - {{$trip->time_3}}
+                      </span>
                       </td>
                       <td>{{$trip->time_final}}</td>
-                      <td>
+                      <td> 
                         <span class="badge bg-success">{{$trip->driver->full_name}}</span>
                       </td>
                       <td>
@@ -97,7 +95,7 @@
                       <td>{{$trip->status}}</td>
                       <td>
                         <div style="display: flex;">
-                        <a href="#">
+                        <a href="">
                         <div class="icon dripicons-trash"></div>
                         </a>
                         <a href="#">

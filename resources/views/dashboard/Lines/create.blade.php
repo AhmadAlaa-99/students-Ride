@@ -49,6 +49,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="start" class="form-control"
                                                             name="start" placeholder="محطة الانطلاق">
+                                                            @error('start')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>محطة الوجهة</label>
@@ -56,6 +59,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="email-id" class="form-control"
                                                             name="end" placeholder="محطة الوجهة">
+                                                            @error('end')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>اجرة الخط</label>
@@ -63,6 +69,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="price" placeholder="اجرة الخط">
+                                                            @error('price')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
 
 </br>

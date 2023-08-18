@@ -43,7 +43,7 @@
                                                     <div class="form-group">
                                                         <label for="first-name-column">الاسم الكامل</label>
                                                         <input type="text" id="first-name-column" class="form-control"
-                                                            placeholder="First Name" name="fname-column" value="{{$account->full_name}}">
+                                                            placeholder="First Name" name="fname-column" value="{{$account->name}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12">

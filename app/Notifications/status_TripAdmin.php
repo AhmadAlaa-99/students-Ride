@@ -63,10 +63,15 @@ class status_TripAdmin extends Notification
     }
     public function toDatabase($notifiable)
     {
-        return [
-            'id'=> $this->trip->id,
-            'title'=>'تم تحديث حالة الرحلة من قبل السائق:',
-            'user'=> $this->driver->full_name,
-        ];
+        $body=sprintf('تم تحديث حالة الرحلة من قبل السائق %s',$this->driver->full_name);
+         $url=sprintf(
+             'http://127.0.0.1:8000/trips/%s',
+             $this->trip->id,
+            );
+            
+         return [
+         'body'=>$body,
+         'action'=>$url,
+         ];
     }
 }

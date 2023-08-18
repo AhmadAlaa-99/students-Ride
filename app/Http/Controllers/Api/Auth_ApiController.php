@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+ 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -117,13 +117,12 @@ class Auth_ApiController extends BaseController
 
     public function forgotPasswordCreate(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email|exists:students,email',
+        ]);
         $student=student::where('email',$request->email)->first();
         if($student)
         {
-            //error : Property [email] does not exist on the Eloquent builder instance
-            //solve : get email by array this error and not found get or fast 
-            //$user=User::where(['email'=>$request->email]);
-            //$user=User::where('email',$request->email)->first();
             $Password=ForgetPassword::updateOrCreate(
                 ['email'=>$request->email],
                     [
@@ -132,8 +131,7 @@ class Auth_ApiController extends BaseController
                     ]
                     ); 
            Mail::to($student->email)->send(new ForgottenPassword($Password));
-          // $user->notify(new ResetPassword($user));
-         return $this->sendResponse($Password, 'link reset sent');
+           return $this->sendResponse($Password, 'link reset sent');
         }
         else
         {
@@ -156,17 +154,6 @@ class Auth_ApiController extends BaseController
          {
              return 'Error Code';
          }
-         /*
-         $student=student::where('email',$checkReset->email)->first();
-         if(!$student)
-         {
-             return 'student not found';
-         }
-
-         $student->password=bcrypt($request->password);
-         $student->save();
-         $checkReset->delete();
-         */
          return 'true!';
     }
 
@@ -177,7 +164,6 @@ class Auth_ApiController extends BaseController
             'password'=>'required',
             'c_password'=>'required|same:password'
         ]);
-
         $code=$request->code;
          $checkReset=ForgetPassword::where([
              'token'=>$code,
@@ -197,12 +183,29 @@ class Auth_ApiController extends BaseController
 
     public function fcm_token_store(Request $request)
     {
-        $driver_id=auth()->guard('driver-api')->id;
-        $fcm_token=$request->fcm_token;
-        DeviceToken::create([
-            'driver_id'=>$driver_id,
-            'fcm_token'=>$fcm_token,
-        ]);
+        if(auth()->guard('driver-api')->check())
+        {
+            $driver_email=auth()->guard('driver-api')->email;
+            $fcm_token=$request->fcm_token;
+            DeviceToken::create([
+                'email'=>$driver_email,
+                'fcm_token'=>$fcm_token,
+            ]);
+        }
+        else if(auth()->guard('student-api')->check())
+        {
+            $student_email=auth()->guard('student-api')->email;
+            $fcm_token=$request->fcm_token;
+            DeviceToken::create([
+                'email'=>$student_email,
+                'fcm_token'=>$fcm_token,
+            ]);
+        }
+        else
+        {
+            return 'error';
+        }
+     
     }
 
 }

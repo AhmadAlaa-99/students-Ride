@@ -48,21 +48,21 @@
                                                     </div>
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="start" class="form-control"
-                                                            name="start" placeholder="محطة الانطلاق">
+                                                            name="start" value="{{$line->start}}" placeholder="محطة الانطلاق">
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>محطة الوجهة</label>
                                                     </div>
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="email-id" class="form-control"
-                                                            name="end" placeholder="محطة الوجهة">
+                                                            name="end" value="{{$line->end}}" placeholder="محطة الوجهة">
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>اجرة الخط</label>
                                                     </div>
                                                     <div class="col-md-8 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
-                                                            name="price" placeholder="اجرة الخط">
+                                                            name="price" value="{{$line->price}}" placeholder="اجرة الخط">
                                                     </div>
 
 </br>

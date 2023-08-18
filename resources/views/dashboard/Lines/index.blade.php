@@ -93,14 +93,13 @@
                       </td>
                       <td>
                         <div style="display: flex;">
-                        <a href="{{route('lines.destroy',$line->id)}}">
+                        <a href="{{route('delete_line',$line->id)}}" title="حذف الخط">
                         <div class="icon dripicons-trash"></div>
                         </a>
-                        
-                        <a href="{{route('lines.show',$line->id)}}">
+                        <a href="{{route('lines.show',$line->id)}}" title="تفاصيل الخط">
                         <div class="icon dripicons-blog"></div>
                         </a>
-                        <a href="{{route('lines.edit',$line->id)}}">
+                        <a href="{{route('lines.edit',$line->id)}}" title="تعديل بيانات الخط">
                         <div class="icon dripicons-document-edit"></div>
                         </a>
                         </td>

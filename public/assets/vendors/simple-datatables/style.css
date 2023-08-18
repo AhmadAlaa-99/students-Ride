@@ -10,12 +10,12 @@
 
 .dataTable-top > div:first-child,
 .dataTable-bottom > div:first-child {
-	float: left;
+	float: right;
 }
 
 .dataTable-top > div:last-child,
 .dataTable-bottom > div:last-child {
-	float: right;
+	float: left;
 }
 
 .dataTable-input {
@@ -29,8 +29,8 @@
 
 .dataTable-pagination a {
 	border: 1px solid transparent;
-	float: left;
-	margin-left: 2px;
+	float: right;
+	margin-right: 2px;
 	padding: 6px 12px;
 	position: relative;
 	text-decoration: none;
@@ -77,13 +77,13 @@
 
 .dataTable-table > tfoot > tr > th {
 	vertical-align: bottom;
-	text-align: left;
+	text-align: right;
 	border-top: 1px solid #d9d9d9;
 }
 
 .dataTable-table th {
 	vertical-align: bottom;
-	text-align: left;
+	text-align: right;
 }
 
 .dataTable-table th a {
@@ -104,9 +104,9 @@
 	height: 0;
 	width: 0;
 	position: absolute;
-	right: 4px;
-	border-left: 4px solid transparent;
+	left: 4px;
 	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
 	opacity: 0.2;
 }
 
@@ -143,5 +143,5 @@
 
 .dataTable-dropdown label {
 	white-space: nowrap;
-	margin-left: 15px;
+	margin-right: 15px;
 }

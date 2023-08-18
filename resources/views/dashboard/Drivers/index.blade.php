@@ -33,7 +33,7 @@
               <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>ادارة بيانات السائقين</h3>
                 <p class="text-subtitle text-muted">
-                  عرض بيانات السائقين
+                  عرض بيانات السائقين 
                 </p>
               </div>
               <div class="col-12 col-md-6 order-md-2 order-first">
@@ -60,7 +60,6 @@
                 <table class="table table-striped" id="table1">
                   <thead>
                     <tr>
-                    <th>#</th>
                       <th>الاسم الكامل</th>
                       <th>البريد الالكتروني</th>
                       <th>العمر</th>
@@ -73,26 +72,22 @@
                       <th>عدد الركاب</th>
                       <th>المحفظة</th>
                       <th>العقد</th>
-                      <th>حالة الحساب</th>
                       <th>عدد الانذارات</th>
                       <th> تفاصيل الرحلات</th>
                       <th>العمليات</th>
                     </tr>
                   </thead>
                   <tbody>
-                  @php
-                                $i = 0;
-                                @endphp
+                
                                 @foreach ($drivers as $driver)
-                                    @php
-                                    $i++
-                                    @endphp
+                                  
                     <tr>
-                    <td>{{ $i }}</td>
+                   
 
     
                       <td>{{$driver->full_name}}</td>
-                      <td>{{$driver->email}}</td>
+                      <td>{{$driver->email}} - @if($driver->status=="1") مفعل @else غير مفعل @endif
+</td>
                       <td>{{$driver->age}}</td>
                       <td>
                         <span class="badge bg-success">{{$driver->gender}}</span>
@@ -105,55 +100,55 @@
                       </td>
                       <td>{{$driver->vehicle_type}}</td>
                       <td>{{$driver->num_stu}}</td>
-                      <td>{{$driver->financial}}</td>
-                      
+                      <td>
+                      <span class="badge bg-warning"> {{$driver->financial}}</span>
+                      </td>
                       <td>
                         
                     
 
                      <a class="btn btn-outline-info btn-sm"
-                                                           href="{{route('down.contract_file',$driver->id)}}"
+                                                           href="{{route('down_contract_file',$driver->id)}}"
                                                                             role="button"><i
                                                                                 class="fas fa-download"></i>&nbsp;
                                                                             تحميل</a>
-
-
                       </td>
-                      <td>{{$driver->status}}</td>
+                     
                       <td>{{$driver->alert_count}}</td>
-                      <td><a href="{{route('driver_trips',$driver->id)}}">driver_trips</a></td>
+                      <td>
+                        <a type="button" href="{{route('driver_trips',$driver->id)}}">
+                        <span class="badge bg-danger">سجل السائق</span>
+                      </a></td>
                       <td>
                         <div style="display: flex;">
-                        <a href="#" title="تعديل الحساب">
+                        <a href="{{route('drivers.edit',$driver->id)}}" title="تعديل الحساب">
+                        <div class="icon dripicons-document-edit"></div>
+                        </a>
+                        <a href="{{route('delete_driver',$driver->id)}}" title="حذف الحساب">
                         <div class="icon dripicons-trash"></div>
                         </a>
-                        <a href="" title="حذف الحساب">
-                        <div class="icon dripicons-blog"></div>
-                        </a>
-                        @if($driver->status=="active")
-                  
+                       
+                        @if($driver->status=="1")
                           <a href="{{route('inactive_driver',$driver->id)}}" title="الغاء تفعيل الحساب">
-                        <div class="icon dripicons-document-edit"></div>
-                        </a>
-
+                        <div class="icon dripicons-wrong"> </div> </a>
+                        
                         <a href="{{route('driver_sendalert',$driver->id)}}" title=" ارسال انذار">
-                        <div class="icon dripicons-document-edit"></div>
+                        <div class="icon dripicons-warning"></div>
                         </a>
-
                         
                         @else
-                        
-                          <a href="{{route('active_driver',$driver->id)}}" title="تفعيل الحساب">
-                        <div class="icon dripicons-document-edit"></div>
+                        <a href="{{route('receipts_done',$driver->id)}}" title="استيفاء الذمم المالية">
+                        <div class="icon dripicons-wallet"></div>
                         </a>
+                        <a href="{{route('active_driver',$driver->id)}}" title="تفعيل الحساب">
+                        <div class="icon dripicons-checkmark"></div>
+                        </a>
+                        @endif
 
                         
-                        @endif
-                    
-                      
+                         
+                       
                         </td>
-                   
-                
                     </tr>
                     @endforeach
                   </tbody>

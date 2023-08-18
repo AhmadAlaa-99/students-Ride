@@ -13,7 +13,7 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>ادارة بيانات السائقين</h3>
+                             <h3>ادارة بيانات السائقين</h3>
                             <p class="text-subtitle text-muted">اضافة سائق</p>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
@@ -44,19 +44,25 @@
 
                                             <div class="form-body">
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <label>الاسم الكامل</label>
                                                     </div>
-                                                    <div class="col-md-8 form-group">
+                                                    <div class="col-md-3 form-group">
                                                         <input type="text" id="start" class="form-control"
                                                             name="full_name" placeholder="الاسم الكامل">
+                                                            @error('full_name')
+                                             <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3u">
                                                         <label>البريد الالكتروني</label>
                                                     </div>
-                                                    <div class="col-md-8 form-group">
+                                                    <div class="col-md-3 form-group">
                                                         <input type="text" id="email" class="form-control"
                                                             name="email" placeholder="البريد الالكتروني">
+                                                            @error('email')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>كلمة السر</label>
@@ -64,6 +70,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="password" placeholder="كلمة السر">
+                                                            @error('password')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
 
                                                     <div class="col-md-4">
@@ -72,6 +81,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="phone_number" placeholder="رقم الهاتف">
+                                                            @error('phone_number')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
 
 
@@ -81,6 +93,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="age" placeholder="العمر">
+                                                            @error('age')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>الجنس</label>
@@ -105,6 +120,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="date" id="contact-info" class="form-control"
                                                             name="date_reg" placeholder="تاريخ بداية العقد">
+                                                            @error('date_reg')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>تاريح نهاية العقد</label>
@@ -112,6 +130,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="date" id="contact-info" class="form-control"
                                                             name="data_reg_end" placeholder="تاريخ نهاية العقد">
+                                                            @error('data_reg_end')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>رقم المركبة</label>
@@ -119,6 +140,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="contact-info" class="form-control"
                                                             name="vehicle_number" placeholder="رقم المركبة">
+                                                            @error('vehicle_number')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>نوع المركبة</label>
@@ -126,6 +150,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="contact-info" class="form-control"
                                                             name="vehicle_type" placeholder="نوع المركبة">
+                                                            @error('vehicle_type')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                   
                                                     <div class="col-md-4">
@@ -134,6 +161,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="num_stu" placeholder="عدد الركاب ">
+                                                            @error('num_stu')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
 
                                                     <div class="col-md-4">
@@ -142,6 +172,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="file" id="contact-info" class="form-control"
                                                             name="portfolio" placeholder="ملف العقد">
+                                                            @error('portfolio')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
 
                                                  

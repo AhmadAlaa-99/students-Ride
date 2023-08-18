@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\driver;
 use App\Models\student;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use App\Models\suggestion;
 use App\Models\admin;
 class SettingsController extends Controller
@@ -30,7 +32,7 @@ class SettingsController extends Controller
     }
     public function profile_admin()
     {
-        $account=admin::first();
+        $account=User::first();
         return view('dashboard.settings.profile')->with([
             'account'=>$account,]);
     }
@@ -44,6 +46,19 @@ class SettingsController extends Controller
     }
     public function notifications()
     {
+       $notifications=auth()->user()->unreadNotifications()->get()->count();
+        return view('dashboard.settings.notifications',compact('notifications'));
+    }
+    public function mark_As_read($id)
+    {
+        Auth::user()->notifications()->find($id)->markAsRead();
+        return view('dashboard.settings.notifications');
+
+    }
+    public function mark_all_read()
+    {
+
+        Auth::user()->notifications()->delete();
         return view('dashboard.settings.notifications');
     }
 }

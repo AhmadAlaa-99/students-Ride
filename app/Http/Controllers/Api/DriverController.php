@@ -27,6 +27,8 @@ class DriverController extends BaseController
         $driver=auth()->guard('driver-api')->user()->id;
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
                 ->where('trips.status', '=','حالية')
+                ->where('driver_id',$driver)
+                ->groupBy('trips.id')
                 ->get();
           return response()->json([
             'status'=>true,
@@ -75,9 +77,7 @@ class DriverController extends BaseController
             'status'=>'قيد التقدم',
         ]);
 
-        /*
-        //send notify admin update trip status
-        $trip=trip::where('id',$tripId)->first();
+        
         $admin=User::where('id','1')->first();
         $driver=driver::where('id',$trip->driver_id)->first();
         $admin->notify(new status_TripAdmin($trip,$driver));
@@ -85,9 +85,12 @@ class DriverController extends BaseController
         $students = student::whereHas('trips', function ($query) use ($tripId) {
             $query->where('trip_id', $tripId);
         })->get();
-
-        \Notification::send($students,new status_TripStudents($trip));
-        */
+        foreach ($students as $student) {
+            $title=sprintf('تحديث حالة الرحلة');
+            $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
+            $this->sendFCMNotification('student',$student->id,$title,$body);
+        }
+        
         return $this->sendResponse($trip,'current_trip');
     }
 
@@ -102,10 +105,9 @@ class DriverController extends BaseController
             $status = boolval($check_box[$index]);
                 $student->update([
                     'status'=>$status,
-                ]);       
-    }
-    $num_stu_final=student_trip::where(
-        [
+                ]);   
+                }
+             $num_stu_final=student_trip::where([
             'trip_id'=>$tripId,
             'status'=>'1',
         ])->count();
@@ -115,6 +117,23 @@ class DriverController extends BaseController
         'num_stu_final'=>$num_stu_final,
         'price_final'=>$num_stu_final*$trip->line->price,
     ]);
+    $driver=driver::where('id',$trip->driver_id)->update([
+        'financial'=>++$trip->price_final,
+    ]);
+    $admin=User::where('id','1')->first();
+    $driver=driver::where('id',$trip->driver_id)->first();
+    $admin->notify(new status_TripAdmin($trip,$driver));
+    //send notify students in this trip 
+    $students = student::whereHas('trips', function ($query) use ($tripId) {
+        $query->where('trip_id', $tripId);
+    })->get();
+    
+    foreach ($students as $student) {
+        $title=sprintf('تحديث حالة الرحلة');
+        $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
+        $this->sendFCMNotification('student',$student->id,$title,$body);
+    }
+    return $this->sendResponse($trip,'current_trip'); 
 
 /*
         $student = student::find($student_id);  
@@ -137,16 +156,14 @@ class DriverController extends BaseController
         \Notification::send($students,new status_TripStudents($trip));
         */
     
-        return $this->sendResponse($trip,'current_trip');
-      
+        
     }
     public function show_details_for_current_trip($tripId)
     { 
+        $driver=auth()->guard('driver-api')->user()->id;
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
         ->where('trips.id', '=',$tripId)
-        ->with([
-            'driver',
-            'students',
+        ->with([ 'driver','students',
         ])->first();
     
   return response()->json([
@@ -158,8 +175,7 @@ class DriverController extends BaseController
         $trip=trip::where('id',$tripId)->update([
             'status'=>$request->status,
         ]);
-         
-        
+           
         //send notify admin update trip status
         $trip=trip::where('id',$tripId)->first();
         $admin=User::where('id','1')->first();
@@ -169,7 +185,13 @@ class DriverController extends BaseController
         $students = student::whereHas('trips', function ($query) use ($tripId) {
             $query->where('trip_id', $tripId);
         })->get();
-        \Notification::send($students,new status_TripStudents($trip));
+        
+        foreach ($students as $student) {
+            $title=sprintf('تحديث حالة الرحلة');
+            $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
+            $this->sendFCMNotification('student',$student->id,$title,$body);
+        }
+      //  \Notification::send($students,new status_TripStudents($trip));
         
         return $this->sendResponse($trip,'current_trip');
     }
@@ -212,5 +234,35 @@ class DriverController extends BaseController
         $student->trips()->updateExistingPivot($trip_id,
          ['status' => $request->status, ]);
         return $this->sendResponse($student,'Update status as'.$request->status);
+    }
+
+    public function cancel_trip($id)
+    {
+        $trip=trip::join('drivers','trips.driver_id','=','drivers.id')
+        ->join('lines','trips.line_id','lines.id')->where('trips.id',$id)->first();
+        //notify for admin
+        $admin=User::first();
+        \Notification::send($admin,new TripCancel_admin($trip));
+        //delete students from student_trip -  notify for students if exist 
+        $students = student::whereHas('trips', function ($query) use ($id) {
+            $query->where('trip_id', $id);
+        })->get();
+       // \Notification::send($students,new TripCancel_students($trip));
+      foreach($students as $student){
+    $title=sprintf('التغت الرحلة');
+    $body=sprintf(' تم الغاء الرحلة على الخط لسبب طارئ');
+    $this->sendFCMNotification('student',$student->id,$title,$body);
+
+}
+
+     
+
+        $trip->students()->detach($students);
+        //aler_count++
+        $driver=driver::where('id',$trip->driver_id)->first();
+        $driver->update(['alert_count'=>$driver->alert_count++,]);
+        //status_trip 
+        $trip->update([ 'status'=>'تم الالغاء' ]);
+
     }
 }

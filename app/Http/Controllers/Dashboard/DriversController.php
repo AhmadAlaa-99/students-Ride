@@ -5,12 +5,20 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\driver;
+use Validator;
 use Storage;
 use App\Models\trip;
+use App\Http\Controllers\BaseController;
 use Response;
 use App\Notifications\alert_driver;
-
-class DriversController extends Controller
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\AndroidConfig;
+use NotificationChannels\Fcm\Resources\AndroidFcmOptions;
+use NotificationChannels\Fcm\Resources\AndroidNotification;
+use NotificationChannels\Fcm\Resources\ApnsConfig;
+use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
+class DriversController extends BaseController
 {
     /**
      * Display all drivers
@@ -19,7 +27,7 @@ class DriversController extends Controller
      */
     public function index() 
     {
-        $drivers = driver::latest()->paginate(10);
+        $drivers = driver::latest()->where('status','1')->paginate(10);
         return view('dashboard.Drivers.index', compact('drivers'));
     }
 
@@ -42,19 +50,31 @@ class DriversController extends Controller
      */
     public function store(driver $driver,Request $request) 
     {
-        $validatedData = $request->validate([
-           // 'portfolio' => 'required|csv,txt,xlx,xls,pdf|max:2048',
-    
-           ]);
-         //  $path=$request->file('portfolio')->store('public/files');
+        
+        $rules = [
+            'full_name' => 'required|string|unique:drivers',
+            'email' => 'required|string|unique:drivers',
+            'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W]{8,}$/',
+            'age' => 'required|numeric',
+            'gender' => 'required|string',
+            'phone_number' => 'required|string|regex:/^09\d{8}$/',
+            'date_reg' => 'required|date',
+            'data_reg_end' => 'required|date',
+            'vehicle_number' => 'required|string',
+            'vehicle_type' => 'required|string',
+            'portfolio' => 'required|string',
+            'num_stu' => 'required|string',
+            'status' => 'required|string',
+            'alert_count' => 'required|numeric',
+        ];
+        $request->validate($rules);
          $image_name='doc-'.time().'.'.$request->portfolio->extension();
 
          $request->portfolio->move(public_path('contracts'),$image_name);
 
 
-          
-
-        $password=Hash::make($request->password);
+    
+    $password=Hash::make($request->password);
     $driver=driver::create([
     'full_name'=>$request->full_name,
     'email'=>$request->email,
@@ -103,20 +123,52 @@ class DriversController extends Controller
         ]);
     }
 
-    /**
-     * Update user data
-     * 
-     * @param User $user
-     * @param UpdateUserRequest $request
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function update(User $user, UpdateUserRequest $request) 
+    public function update(driver $driver, Request $request) 
     {
-        $user->update($request->validated());
+        $rules = [
+            'full_name' => 'required|string|unique:drivers',
+            'email' => 'required|string|unique:drivers',
+            'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W]{8,}$/',
+            'age' => 'required|numeric',
+            'gender' => 'required|string',
+            'phone_number' => 'required|string|regex:/^09\d{8}$/',
+            'date_reg' => 'required|date',
+            'data_reg_end' => 'required|date',
+            'vehicle_number' => 'required|string',
+            'vehicle_type' => 'required|string',
+            'portfolio' => 'required|string',
+            'num_stu' => 'required|string',
+            'status' => 'required|string',
+            'alert_count' => 'required|numeric',
+        ];
+        $request->validate($rules);
+         $image_name='doc-'.time().'.'.$request->portfolio->extension();
 
-        return redirect()->route('drivers.index')
-            ->withSuccess(__('User updated successfully.'));
+         $request->portfolio->move(public_path('contracts'),$image_name);
+
+    
+    $password=Hash::make($request->password);
+        $driver->update([
+            'full_name'=>$request->full_name,
+            'email'=>$request->email,
+            'password'=>$password,
+            'age'=>$request->age,
+            'gender'=>$request->gender,
+            'phone_number'=>$request->phone_number,
+            'date_reg'=>$request->date_reg,
+            'data_reg_end'=>$request->data_reg_end,
+            'vehicle_number'=>$request->vehicle_number,
+            'vehicle_type'=>$request->vehicle_type,
+            'portfolio'=>$image_name,
+            'num_stu'=>$request->num_stu,
+            'status'=>'active',
+            'alert_count'=>'0',
+        ]);
+        session()->flash('edit', 'تم تعديل الخط بنجاح');
+        return redirect()->route('drivers.index');
+   
+
+      
     }
 
     /**
@@ -128,8 +180,15 @@ class DriversController extends Controller
      */
     public function destroy(driver $driver) 
     {
-        $line->delete();
+             $driver->delete();
 
+        return redirect()->route('drivers.index')
+            ->withSuccess(__('User deleted successfully.'));
+    }
+    public function delete_driver($id) 
+    {
+        $driver=driver::where('id',$id)->first();
+        $driver->delete();
         return redirect()->route('drivers.index')
             ->withSuccess(__('User deleted successfully.'));
     }
@@ -155,17 +214,22 @@ class DriversController extends Controller
     {
         $driver=driver::where('id',$id)->first();
         $driver->update([
-            'alert_count'=>$driver->alert_count++,
+            'alert_count'=>$driver->alert_count+=1,
         ]);
-
-        $driver->notify(new alert_driver($driver ));
-        
-       return redirect()->route('drivers.index');
+        $title=sprintf('انذار جديد');
+        $body=sprintf('تلقيت انذار جديد لديك %s انذارات',$driver->alert_count,);
+        $this->sendFCMNotification('driver',$driver->id,$title,$body);
+         return redirect()->route('drivers.index');
     }
+    
+    
+    
+    
+    
     public function active_driver($id)
     {
         $driver=driver::where('id',$id)->update([
-            'status'=>'active',
+            'status'=>'1',
         ]);
        return redirect()->route('drivers.index');
     }
@@ -185,8 +249,20 @@ class DriversController extends Controller
     public function inactive_driver($id)
     {
         $driver=driver::where('id',$id)->update([
-            'status'=>'inactive',
+            'status'=>'0',
         ]);
        return redirect()->route('drivers.index');
+    }
+    public function drivers_index_unactive()
+    {
+        $drivers = driver::latest()->where('status','0')->paginate(10);
+        return view('dashboard.Drivers.index', compact('drivers'));
+
+    }
+    public function receipts_done($id)
+    {
+        $driver=driver::where('id',$id)->update([
+            'financial'=>'0'
+        ]);
     }
 }

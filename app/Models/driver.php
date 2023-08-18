@@ -57,6 +57,7 @@ class driver extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    /*
     public function devicetokens()
     {
         return $this->hasMany(DeviceToken::class);
@@ -65,4 +66,5 @@ class driver extends Authenticatable implements JWTSubject
     {
         return $this->devicetokens()->pluck('fcm_token')->toArray();
     }
+    */
 }
