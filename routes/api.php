@@ -42,6 +42,8 @@ Route::get('browse_notifications',[DriverController::class,'browse_notifications
 Route::prefix('student/')->group(function ()
 {
         Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
+        //active email   - soon
+        //change_password  - soon
         Route::post('Create_Profile',[StudentController::class,'Create_Profile'])->name('Create_Profile');
         Route::group(["middleware"=>['auth:student-api']],function(){
         Route::get('Delete_Profile',[StudentController::class,'Delete_Profile'])->name('Delete_Profile'); //alert_count > 5
