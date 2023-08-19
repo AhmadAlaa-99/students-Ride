@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator;
 use App\Mail\delete_profile_student;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Rules\In;
@@ -185,9 +186,9 @@ class StudentController extends BaseController
         
     }
     public function information_of_trip(Request $request){
-        $validator = $request->validate([
+        $request->validate([
             'start' => 'required',
-            'end' => 'required|different_than:start',
+            'end' => 'required|different:start',
         ]);
 
        $now = now()->format('H')+3;
@@ -230,24 +231,6 @@ class StudentController extends BaseController
     public function choose_The_Information_trip(Request $request,$id)
     {
         $trip=trip::where('id',$id)->first();
-    /*
-            $validator = $request->validate([
-            'main_time' => [
-                'required',
-                Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
-            ],
-            'time_desire_1' => [
-                'required',
-                Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
-                Rule::notIn([$main_time]),
-            ],
-            'time_desire_2' => [
-                'required',
-                Rule::in([$trip->time_1, $trip->time_2, $trip->time_3]),
-                Rule::notIn([$main_time, $time_desire_1]),
-            ],
-        ]);
-        
         $validator =   $request->validate([
             'main_time' => ['required', new In([$trip->time_1, $trip->time_2, $trip->time_3])],
             'time_desire_1' => [
@@ -261,7 +244,7 @@ class StudentController extends BaseController
                 new NotIn([$request->input('main_time'), $request->input('time_desire_1')]),
             ],
         ]);
-        */
+        
       $now = Carbon::now();
 
       $tomorrow = $now->addDay();
