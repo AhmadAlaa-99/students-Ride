@@ -218,8 +218,8 @@ class DriversController extends BaseController
         ]);
         $title=sprintf('انذار جديد');
         $body=sprintf('تلقيت انذار جديد لديك %s انذارات',$driver->alert_count,);
-        $this->sendFCMNotification('driver',$driver->id,$title,$body);
-         return redirect()->route('drivers.index');
+        //$this->sendFCMNotification('driver',$driver->id,$title,$body);
+         //return redirect()->route('drivers.index');
     }
     
     

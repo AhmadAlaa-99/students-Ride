@@ -149,7 +149,7 @@ class DatabaseSeeder extends Seeder
                 'status'=>'0',
                 'student_id'=>$i,
                 'trip_id'=>1,
-                'num_stu'=>'8',
+                
             ]);
         
         }
@@ -174,7 +174,7 @@ class DatabaseSeeder extends Seeder
                 'status'=>'0',
                 'student_id'=>$i,
                 'trip_id'=>2,
-                'num_stu'=>'8',
+             
             ]);
         }
 

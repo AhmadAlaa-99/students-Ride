@@ -254,9 +254,6 @@ class DriverController extends BaseController
     $this->sendFCMNotification('student',$student->id,$title,$body);
 
 }
-
-     
-
         $trip->students()->detach($students);
         //aler_count++
         $driver=driver::where('id',$trip->driver_id)->first();
