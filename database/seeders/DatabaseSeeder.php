@@ -136,6 +136,7 @@ class DatabaseSeeder extends Seeder
         'status'=>'حالية',
         'driver_id'=>'1',
         'line_id'=>'1',
+        'num_stu'=>'8',
       
         ]);
 
@@ -148,6 +149,7 @@ class DatabaseSeeder extends Seeder
                 'status'=>'0',
                 'student_id'=>$i,
                 'trip_id'=>1,
+                'num_stu'=>'8',
             ]);
         
         }
@@ -160,6 +162,7 @@ class DatabaseSeeder extends Seeder
         'status'=>'حالية',
         'driver_id'=>'2',
         'line_id'=>'1',
+        'num_stu'=>'8',
         
         ]);
         for($i=1;$i<5;$i++)
@@ -171,6 +174,7 @@ class DatabaseSeeder extends Seeder
                 'status'=>'0',
                 'student_id'=>$i,
                 'trip_id'=>2,
+                'num_stu'=>'8',
             ]);
         }
 
@@ -183,6 +187,7 @@ class DatabaseSeeder extends Seeder
             'status'=>'قادمة',
             'driver_id'=>4,
             'line_id'=>2,
+            'num_stu'=>'8',
             
             ]);
             
@@ -195,6 +200,7 @@ class DatabaseSeeder extends Seeder
                 'status'=>'قادمة',
                 'driver_id'=>5,
                 'line_id'=>2,
+                'num_stu'=>'8',
                 
             ]);
 
@@ -209,6 +215,7 @@ class DatabaseSeeder extends Seeder
             'status'=>'قادمة',
             'driver_id'=>rand(5,10),
             'line_id'=>rand(5,10),
+            'num_stu'=>'8',
             
             ]);
     }
@@ -224,6 +231,7 @@ class DatabaseSeeder extends Seeder
             'status'=>'قادمة',
             'driver_id'=>rand(1,5),
             'line_id'=>rand(6,10),
+            'num_stu'=>'8',
             
             ]);
     }

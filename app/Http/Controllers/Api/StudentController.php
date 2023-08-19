@@ -144,7 +144,7 @@ class StudentController extends BaseController
    
     public function end_start_lines ()
     {
-        /*
+        
         $now = now()->format('H')+3;
         $nine_pm = '21';
         
@@ -168,17 +168,13 @@ class StudentController extends BaseController
         $tomorrow = $now->addDay();
        
         $tomorrow_str = $tomorrow->format('Y-m-d');
-
         }
-   */
-      //  $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')->pluck('lines.start');
-      //  ->whereDate('trips.trip_date', '=', $tomorrow)
-      $source=line::pluck('start');
-      $destination=line::pluck('end');
-
-          
-     //   $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')->pluck('lines.end'); 
-       // ->whereDate('trips.trip_date', '=', $tomorrow)
+        $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.start');
+      //$source=line::pluck('start');
+      //$destination=line::pluck('end');
+        $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
+        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.end');
        
 
                return response()->json([
@@ -190,9 +186,9 @@ class StudentController extends BaseController
     }
     public function information_of_trip(Request $request){
         $validator = $request->validate([
-            'start'=>'required',
-            'end'=>'required'
-       ]); 
+            'start' => 'required',
+            'end' => 'required|different_than:start',
+        ]);
 
        $now = now()->format('H')+3;
        $nine_pm = '21';
@@ -218,8 +214,6 @@ class StudentController extends BaseController
        $tomorrow_str = $tomorrow->format('Y-m-d');
 
         }
-
-
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
        ->whereDate('trips.trip_date', $tomorrow)
        ->where ('lines.start',$request->start)
@@ -253,7 +247,7 @@ class StudentController extends BaseController
                 Rule::notIn([$main_time, $time_desire_1]),
             ],
         ]);
-        */
+        
         $validator =   $request->validate([
             'main_time' => ['required', new In([$trip->time_1, $trip->time_2, $trip->time_3])],
             'time_desire_1' => [
@@ -267,6 +261,7 @@ class StudentController extends BaseController
                 new NotIn([$request->input('main_time'), $request->input('time_desire_1')]),
             ],
         ]);
+        */
       $now = Carbon::now();
 
       $tomorrow = $now->addDay();
@@ -276,7 +271,7 @@ class StudentController extends BaseController
     
       $count=count(student_trip::where('trip_id','=',$id )->get());
       $num_str=trip::where('id',$id)->pluck('num_stu')->first();
-  
+            
       if ($count >= $num_str){
           return response()->json([
               'status'=>false,
@@ -296,38 +291,37 @@ class StudentController extends BaseController
         $student_trip->time_desire_1=$request->time_desire_1;
         $student_trip->time_desire_2=$request->time_desire_2;
         $student_trip->trip_id=$id;
-        $student_trip->student_id=$student->id();
-       $student_trip->status=0;
+        $student_trip->student_id=$student_id;
+        $student_trip->status=0;
         $date =trip::where('id','=',$id)->get('trip_date')->first();
         $student_trip->save();
 
         $title=sprintf('تأكيد الحجز');
         $body=sprintf('تم حجز الرحلة بنجاح , سيصلك تأكيد بالوقت بعد التاسعة ');
-        $this->sendFCMNotification('student',$student->id,$title,$body);
+        $this->sendFCMNotification('student',$student_id,$title,$body);
 
         return response()->json([
             'status'=>true,
              'message'=>'تم حجز رحلة بنجاح',
              'data'=>$student_trip
             ]);
-            //notify to student 
-            //\Notification::send($student,new confirm_after_choose($trip));
     }
 }
     public function Cancel_Trip($id)
     { 
         $student_id= auth()->guard('student-api')->id();
-        if (!student_trip::where([['student_id','=',$student_id],['id','=',$id]])->exists())
+       
+        if (!student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists())
         {
             return response()->json([
                 'status'=>false,
                  'message'=>'هذه الرحلة غير موجودة',
                 ]);     
         }
-
         $now = Carbon::now();
         $hour = $now->hour +3;
-        if ($hour >= 21) {
+        if ($hour >= 21)
+         {
          $student=student::find($student_id);
          $student->alert_count=$student->alert_count+1;
          $student->save();
@@ -342,7 +336,9 @@ class StudentController extends BaseController
            $this->Delete_Profile();
             return response()->json([
                 'status'=>true,
-                 'message'=>'تم حظر الحساب وذلك لتجاوز عدد مرات الالغاء بعد الساعه 9 مساء ال 5 مرات ',
+                 'message'=>'تم حظر الحساب وذلك
+                  لتجاوز عدد
+                  مرات الالغاء بعد الساعه 9 مساء ال 5 مرات ',
                 ]);
          }
          else {
@@ -352,15 +348,15 @@ class StudentController extends BaseController
         //  \Notification::send($driver,new alert_driver($driver));
             $this->sendFCMNotification('student',$student->id,$title,$body);
      //       \Notification::send($student,new attention_alert_student($student)); 
+        
          return response()->json([
             'status'=>true,
             'message'=>'تم الالغاء بنجاح',
-            'عدد الانذارات'=>$student->alert_count
             ]);
         }
     }
         else {
-            $trip=student_trip::where('id','=',$id)->first();
+            $trip=student_trip::where('trip_id','=',$id)->first();
             $trip->delete();
             return response()->json([
                 'status'=>true,
@@ -391,11 +387,12 @@ public function show_my_current_trips()
         $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
                 ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
                 ->join('lines', 'trips.line_id','lines.id')
-                ->where('trips.trip_date', '>', $today)
+              //  ->where('trips.trip_date', '>', $today)
                 ->where('student_trip.student_id', '=', $student_id)
-                //->where('student_trip.status', '=', 'حالية')
+                ->where('trips.status', '=', 'حالية')
                 ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
                 ->get();
+            
        return response()->json([
         'status'=>true,
          'data'=>$info
@@ -415,7 +412,8 @@ public function show_my_current_trips()
         $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
                 ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
                 ->join('lines', 'trips.line_id','lines.id')
-                ->where('trips.trip_date', '>', $today)
+              //  ->where('trips.trip_date', '>', $today)
+                ->where('trips.status', '=', 'حالية')
                 ->where('student_trip.student_id', '=', $student_id)
                 ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
                 ->get()->first();

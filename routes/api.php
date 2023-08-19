@@ -32,18 +32,19 @@ Route::get('show_details_for_current_trip/{id}',[DriverController::class,'show_d
 Route::post('filter_search_trips',[DriverController::class,'filter_search_trips'])->name('filter_search_trips');
 Route::post('start_trip/{id}',[DriverController::class,'start_trip'])->name('start_trip');
 Route::post('end_trip/{id}',[DriverController::class,'end_trip'])->name('end_trip');
-Route::post('check_box_student/{trip_id}/{student_id}',[DriverController::class,'check_box_student'])->name('check_box_student');
+//Route::post('check_box_student/{trip_id}/{student_id}',[DriverController::class,'check_box_student'])->name('check_box_student');
 Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversController::class, 'down_contract_file'])->name('down.contract_file');
 Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
 Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_profile');
 Route::get('browse_notifications',[DriverController::class,'browse_notifications'])->name('browse_notifications');
 });
 /*--------------------------------Student------------------------*/
-Route::prefix('student/')->group(function (){
-    Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
-    Route::post('Create_Profile',[StudentController::class,'Create_Profile'])->name('Create_Profile');
-    Route::group(["middleware"=>['auth:student-api']],function(){
-        Route::get('Delete_Profile',[StudentController::class,'Delete_Profile'])->name('Delete_Profile');
+Route::prefix('student/')->group(function ()
+{
+        Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
+        Route::post('Create_Profile',[StudentController::class,'Create_Profile'])->name('Create_Profile');
+        Route::group(["middleware"=>['auth:student-api']],function(){
+        Route::get('Delete_Profile',[StudentController::class,'Delete_Profile'])->name('Delete_Profile'); //alert_count > 5
         Route::get('Show_Profile',[StudentController::class,'Show_Profile'])->name('Show_Profile');
         Route::post('Edit_Profile',[StudentController::class,'Edit_Profile'])->name('Edit_Profile');
         Route::get('Browse_my_Trips',[StudentController::class,'Browse_my_Trips'])->name('Browse_my_Trips');

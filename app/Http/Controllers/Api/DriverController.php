@@ -162,7 +162,7 @@ class DriverController extends BaseController
     { 
         $driver=auth()->guard('driver-api')->user()->id;
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->where('trips.id', '=',$tripId)
+        ->where('trips.id', '=',$tripId)->where('trips.status','حالية')
         ->where('driver_id', $driver)
         ->with([ 'driver','students',])->first();
     
