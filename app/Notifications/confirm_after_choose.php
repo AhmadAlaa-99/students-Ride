@@ -7,13 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\AndroidConfig;
-use NotificationChannels\Fcm\Resources\AndroidFcmOptions;
-use NotificationChannels\Fcm\Resources\AndroidNotification;
-use NotificationChannels\Fcm\Resources\ApnsConfig;
-use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
+
 
 class confirm_after_choose extends Notification
 {
@@ -67,6 +61,7 @@ class confirm_after_choose extends Notification
             //
         ];
     }
+    /*
     public function toDatabase($notifiable)
     {
 
@@ -76,7 +71,7 @@ class confirm_after_choose extends Notification
             'http://127.0.0.1:8000/trip/%s',
             $this->trip->id,
            );
-           */
+        
         return [
         'body'=>$body,
        // 'action'=>$url,
@@ -123,4 +118,5 @@ class confirm_after_choose extends Notification
         // $message is what is returned by `toFcm`
         return 'app'; // name of the firebase project to use
     }
+    */
 }

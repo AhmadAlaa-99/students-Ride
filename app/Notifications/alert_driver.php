@@ -1,13 +1,7 @@
 <?php
 namespace App\Notifications;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\AndroidConfig;
-use NotificationChannels\Fcm\Resources\AndroidFcmOptions;
-use NotificationChannels\Fcm\Resources\AndroidNotification;
-use NotificationChannels\Fcm\Resources\ApnsConfig;
-use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
+
 
 
 class alert_driver extends Notification
@@ -24,7 +18,7 @@ class alert_driver extends Notification
         //return [FcmChannel::class];
         return ['database'];
     }
-
+/*
     public function toFcm($notifiable)
     {
         return FcmMessage::create()
@@ -46,12 +40,12 @@ class alert_driver extends Notification
     {
 
        $body=sprintf('تلقيت انذار جديد لديك %s انذارات',$this->driver->alert_count,);
-       /*  
+    
         $url=sprintf(
             'http://127.0.0.1:8000/trip/%s',
             $this->trip->id,
            );
-           */
+           
         return [
         'body'=>$body,
        // 'action'=>$url,
@@ -65,5 +59,6 @@ class alert_driver extends Notification
         // $message is what is returned by `toFcm`
         return 'app'; // name of the firebase project to use
     }
+    */
 
 }

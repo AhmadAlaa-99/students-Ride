@@ -156,7 +156,7 @@ return [
 
     'providers' => [
 
-        /*
+         /*
          * Laravel Framework Service Providers...
          */
         Illuminate\Auth\AuthServiceProvider::class,
@@ -185,20 +185,18 @@ return [
         /*
          * Package Service Providers...
          */
-        //Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-        //Kreait\Laravel\Firebase\ServiceProvider::class,
-
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        //Spatie\Permission\PermissionServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
         
-        //Collective\Html\HtmlServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
         
     ],
 

@@ -6,13 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\AndroidConfig;
-use NotificationChannels\Fcm\Resources\AndroidFcmOptions;
-use NotificationChannels\Fcm\Resources\AndroidNotification;
-use NotificationChannels\Fcm\Resources\ApnsConfig;
-use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
+
 
 class TripCancel_students extends Notification
 {
@@ -82,6 +76,7 @@ class TripCancel_students extends Notification
      //   'action'=>$url,
         ];
     }
+    /*
     public function toFcm($notifiable)
     {
 
@@ -126,5 +121,6 @@ class TripCancel_students extends Notification
         // $message is what is returned by `toFcm`
         return 'app'; // name of the firebase project to use
     }
+    */
 
 }

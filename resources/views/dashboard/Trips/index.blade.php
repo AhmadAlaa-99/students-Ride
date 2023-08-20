@@ -100,15 +100,9 @@
                       <td>{{$trip->driver->num_stu}}</td>
                       <td>{{$trip->num_stu_final}}</td>
                       <td>{{$trip->price_final}}</td>
-                      
-
-
-                 
-        
                       <td>
-                   
                         <div style="display: flex;">
-                        @if($trip->status=="قادمة")
+                        @if($trip->status = "قادمة")
                         <a href="{{route('trips_delete',$trip->id)}}" title="حذف رحلة">
                         <div class="icon dripicons-trash"></div>
                         </a>
@@ -116,11 +110,10 @@
                         <div class="icon dripicons-document-edit"></div>
                         </a>
                         @endif
-                        @if($trip->status=="منتهية" || "ملغاة ")
+                        @if($trip->status="منتهية" || "ملغاة ")
                         <a href="{{route('trips_reviews',$trip->id)}}" title="مراجعات رحلة">
                         <div class="bi bi-emoji-smile" style="padding-right: 3px;"></div>
                         </a>
-
                         <a href="{{route('trips.show',$trip->id)}}" title="تفاصيل رحلة">
                         <div class="icon dripicons-document-blog"></div>
                         </a>

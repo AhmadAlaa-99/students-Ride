@@ -250,8 +250,6 @@ class StudentController extends BaseController
       $tomorrow = $now->addDay();
 
       $tomorrow_str = $tomorrow->format('Y-m-d');
-
-    
       $count=count(student_trip::where('trip_id','=',$id )->get());
       $num_str=trip::where('id',$id)->pluck('num_stu')->first();
             
@@ -261,7 +259,8 @@ class StudentController extends BaseController
                'message'=>'نعتذر الباص قد امتلأ',
           ]);
       }
-      else {
+      else 
+      {
       $student_id= auth()->guard('student-api')->id();
       if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
           return response()->json([
@@ -354,11 +353,11 @@ class StudentController extends BaseController
         $student_id= auth()->guard('student-api')->id();
         $today = Carbon::now();
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-                ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
-                ->join('student_trip' , 'student_trip.trip_id','=','trips.id')
-                ->where('student_trip.student_id', '=', $student_id)
-                ->select('trips.*', 'lines.*','drivers.full_name as DriverName')
-                ->get();
+        ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
+        ->join('student_trip', 'student_trip.trip_id', '=', 'trips.id')
+        ->where('student_trip.student_id', '=', $student_id)
+        ->select('trips.id as trip_id', 'trips.*', 'drivers.full_name as DriverName')
+        ->get();
         
         
         return response()->json($info, 200);
@@ -443,8 +442,10 @@ public function show_my_current_trips()
     public function All_inforamtion_of_trip($id){
         
 
-        $trip_info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-                          ->where('trips.id', '=', $id)->first();
+        $trip_info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
+        ->where('trips.id', '=', $id)
+        ->select('trips.id as trip_id', 'lines.*')
+        ->first();
 
         
        return response()->json([

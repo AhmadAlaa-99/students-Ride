@@ -44,6 +44,7 @@ Route::prefix('student/')->group(function ()
         Route::post('login_student',[Auth_ApiController::class,'login_student'])->name('login_student');
         //active email   - soon
         //change_password  - soon
+
         Route::post('Create_Profile',[StudentController::class,'Create_Profile'])->name('Create_Profile');
         Route::group(["middleware"=>['auth:student-api']],function(){
         Route::get('Delete_Profile',[StudentController::class,'Delete_Profile'])->name('Delete_Profile'); //alert_count > 5
@@ -60,9 +61,8 @@ Route::prefix('student/')->group(function ()
         Route::post('Send_Suggestion/{trip_id}',[StudentController::class,'Send_Suggestion']);
       //  Route::get('logout',[Auth_ApiController::class,'logout'])->name('logout_student');
     });
-    });
+  });
 /*--------------------------------Alghorithm------------------------*/
-
 Route::post('Trips_Algorithm',[StudentController::class,'Trips_Algorithm'])->name('Trips_Algorithm');
 Route::get('All_inforamtion_of_trip/{id}',[StudentController::class,'All_inforamtion_of_trip'])->name('All_inforamtion_of_trip');
 

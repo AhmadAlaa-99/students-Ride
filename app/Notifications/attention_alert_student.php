@@ -6,13 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Fcm\FcmChannel;
-use NotificationChannels\Fcm\FcmMessage;
-use NotificationChannels\Fcm\Resources\AndroidConfig;
-use NotificationChannels\Fcm\Resources\AndroidFcmOptions;
-use NotificationChannels\Fcm\Resources\AndroidNotification;
-use NotificationChannels\Fcm\Resources\ApnsConfig;
-use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
+
 
 class attention_alert_student extends Notification
 {
@@ -79,6 +73,7 @@ class attention_alert_student extends Notification
        // 'action'=>$url,
         ];
     }
+    /*
     public function toFcm($notifiable)
     {
         $SERVER_API_KEY ='AAAAodUJ2Uw:APA91bEnqNHdJyE1_2V
@@ -120,4 +115,5 @@ class attention_alert_student extends Notification
         // $message is what is returned by `toFcm`
         return 'app'; // name of the firebase project to use
     }
+    */
 }

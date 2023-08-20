@@ -28,7 +28,7 @@ class DriverController extends BaseController
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
                 ->where('trips.status', '=','حالية')
                 ->where('driver_id',$driver)
-                ->groupBy('trips.id')
+                ->select('trips.id as trip_id', 'trips.*', 'lines.*')
                 ->get();
           return response()->json([
             'status'=>true,
@@ -38,19 +38,18 @@ class DriverController extends BaseController
     }
     public function show_my_finite_trips()
     {
-       
-
         $driver=auth()->guard('driver-api')->user()->id;
         $trips = trip::join('lines', 'trips.line_id', '=', 'lines.id')
         ->where([
             'driver_id'=>$driver,
             'status'=>'منتهية',
             ])
+            ->select('trips.id as trip_id', 'trips.*', 'lines.*')
         ->get();
         $totalPrice = $trips->sum(function ($trip) {
             return (float) $trip->price_final;
         });
-  return response()->json([
+     return response()->json([
     'data'=>$trips,
     'totalPrice'=>$totalPrice,
 ]);  
@@ -64,7 +63,8 @@ class DriverController extends BaseController
         $trips=trip::join('lines', 'trips.line_id', '=', 'lines.id')->where([
             'driver_id'=>$driver,
             'status'=>'قادمة',
-            ])->get();
+            ]) ->select('trips.id as trip_id', 'trips.*', 'lines.*')
+            ->get();
             return response()->json([
                 'status'=>true,
                 'data'=>$trips,
@@ -162,7 +162,7 @@ class DriverController extends BaseController
     { 
         $driver=auth()->guard('driver-api')->user()->id;
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->where('trips.id', '=',$tripId)->where('trips.status','حالية')
+        ->where('trips.id', '=',$tripId)->where('trips.status_trip','حالية')
         ->where('driver_id', $driver)
         ->with([ 'driver','students',])->first();
     

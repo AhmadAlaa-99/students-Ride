@@ -108,14 +108,21 @@ class TripsController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function update(User $user, UpdateUserRequest $request) 
+    public function update(Request $request,trip $trip) 
     {
-        $user->update($request->validated());
-
-        return redirect()->route('lines.index')
-            ->withSuccess(__('User updated successfully.'));
+        
+          
+        $trip->update([    
+            'trip_date'=>$request->trip_date,
+            'time_1'=>$request->time_1,
+            'time_2'=>$request->time_2,
+            'time_3'=>$request->time_3,
+            'driver_id'=>$request->driver_id,
+            'line_id'=>$request->line_id,
+        ]);
+        session()->flash('edit', 'تم تعديل الرحلة بنجاح');
+        return redirect()->route('trips.index');
     }
-
     /**
      * Delete user data
      * 

@@ -177,7 +177,6 @@ class DatabaseSeeder extends Seeder
              
             ]);
         }
-
             \App\Models\trip::create([
             'trip_date'=>$tm,
             'time_1'=>$time1->format('H:i'),
@@ -188,9 +187,7 @@ class DatabaseSeeder extends Seeder
             'driver_id'=>4,
             'line_id'=>2,
             'num_stu'=>'8',
-            
             ]);
-            
             \App\Models\trip::create([
                 'trip_date'=>$tm,
                 'time_1'=>$time4->format('H:i'),
@@ -201,7 +198,6 @@ class DatabaseSeeder extends Seeder
                 'driver_id'=>5,
                 'line_id'=>2,
                 'num_stu'=>'8',
-                
             ]);
 
     for($i=0; $i<10 ;$i++)
@@ -232,7 +228,20 @@ class DatabaseSeeder extends Seeder
             'driver_id'=>rand(1,5),
             'line_id'=>rand(6,10),
             'num_stu'=>'8',
-            
+            ]);
+    }
+    for($i=0; $i<5 ;$i++)
+    {
+        \App\Models\trip::create([
+            'trip_date'=>'2023-08-10',
+            'time_1'=>$time1->format('H:i'),
+            'time_2'=>$time2->format('H:i'),
+            'time_3'=>$time3->format('H:i'),
+            'time_final'=>'-',
+            'status'=>'منتهية',
+            'driver_id'=>rand(1,5),
+            'line_id'=>rand(6,10),
+            'num_stu'=>'8',
             ]);
     }
 }

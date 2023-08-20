@@ -51,8 +51,8 @@ Route::group(['middleware'=>'auth'],function()
     Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversController::class, 'down_contract_file'])->name('down_contract_file');
     Route::get('/drivers_index_unactive', [App\Http\Controllers\Dashboard\DriversController::class, 'drivers_index_unactive'])->name('drivers_index_unactive');
     Route::get('/driver_trips/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_trips'])->name('driver_trips');
-    Route::post('/active_driver/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'active_driver'])->name('active_driver');
-    Route::post('/inactive_driver/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'inactive_driver'])->name('inactive_driver');
+    Route::get('/active_driver/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'active_driver'])->name('active_driver');
+    Route::get('/inactive_driver/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'inactive_driver'])->name('inactive_driver');
     Route::get('/receipts_done/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'receipts_done'])->name('receipts_done');
     Route::get('/driver_sendalert/{id}', [App\Http\Controllers\Dashboard\DriversController::class, 'driver_sendalert'])->name('driver_sendalert');
 
