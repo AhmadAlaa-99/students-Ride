@@ -145,6 +145,8 @@ class StudentController extends BaseController
    
     public function end_start_lines ()
     {
+      
+/*
         $now = now()->format('H')+3;
         $nine_pm = '01';
 
@@ -167,14 +169,18 @@ class StudentController extends BaseController
        
         $tomorrow_str = $tomorrow->format('Y-m-d');
         }
-        
+        */
+        /*
         $source =   $info = line::join('trips', 'trips.line_id', '=', 'lines.id')
         ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.start');
-    
+        */
+        $source =   $info = line->pluck('lines.start');
+        /*
       
          $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
          ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.end');
-       
+         */
+         $destination =   $info = trip->pluck('lines.end');
 
                return response()->json([
                 'status'=>true,
@@ -202,6 +208,7 @@ class StudentController extends BaseController
            $tomorrow = $now->addDay();
            $tomorrow_str = $tomorrow->format('Y-m-d');
             }
+            
             $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
            ->whereDate('trips.trip_date', $tomorrow)
            ->where ('lines.start',$request->start)
@@ -298,14 +305,19 @@ class StudentController extends BaseController
         }
         $now = Carbon::now();
         $hour = $now->hour +3;
+        $student=student::find($student_id);
+        $student->alert_count=$student->alert_count+1;
+        $student->save();
+       
+        $student_trip=student_trip::where(
+            ['trip_id'=>$id,
+              'student_id'=>$student->id,
+            ])->first();
+            return $student_trip;
+        $student_trip->delete();
+        $admin=User::first();
         if ($hour >= 21)
          {
-         $student=student::find($student_id);
-         $student->alert_count=$student->alert_count+1;
-         $student->save();
-         $student=student_trip::where('trip_id','=',$id)->first();
-         $student->delete();
-         $admin=User::first();
          //delete account if conunt of alert big than 5
          if ($student->alert_count>=5)
          {
