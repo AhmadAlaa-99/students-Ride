@@ -96,16 +96,20 @@ class DriverController extends BaseController
     public function end_trip($tripId,Request $request)
     {
       
-        $check_box = json_encode($request->input('check_box', []));
+        $check_box = json_decode($request->input('check_box', []));
         //$check_box = $request->input('check_box', []);
         //return [true,false,truse,false];
         $students=student_trip::where('trip_id',$tripId)->get();
-          foreach ($students as $index => $student) {
-            $status = boolval($check_box[$index]);
-                $student->update([
-                    'status'=>$status,
-                ]);   
-                }
+        $check_box = [true, false, true, false];
+        $convertedData = array_map(fn($value) => (int)$value, $check_box);
+        $count = count($students);
+        
+        for ($i = 0; $i < $count; $i++) {
+            $student = $students[$i];
+            $student->update([
+                'status' => $convertedData[$i],
+            ]);
+        }
              $num_stu_final=student_trip::where([
             'trip_id'=>$tripId,
             'status'=>'1',
@@ -133,6 +137,7 @@ class DriverController extends BaseController
         $this->sendFCMNotification('student',$student->id,$title,$body);
     }
     return $this->sendResponse($trip,'current_trip'); 
+    
 
 /*
         $student = student::find($student_id);  

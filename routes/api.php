@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\StudentController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('activate',[StudentController::class,'ActivateEmail']);
 Route::post('fcm_token_store',[Auth_ApiController::class,'fcm_token_store'])->name('fcm_token_store');
 Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversController::class, 'down_contract_file'])->name('down.contract_file');
 /*--------------------------------forgotpassword : just student------------------------*/
@@ -46,7 +47,7 @@ Route::prefix('student/')->group(function ()
         //change_password  - soon
 
         Route::post('Create_Profile',[StudentController::class,'Create_Profile'])->name('Create_Profile');
-        Route::group(["middleware"=>['auth:student-api']],function(){
+        Route::group(["middleware"=>['auth:student-api','verified']],function(){ //, 
         Route::get('Delete_Profile',[StudentController::class,'Delete_Profile'])->name('Delete_Profile'); //alert_count > 5
         Route::get('Show_Profile',[StudentController::class,'Show_Profile'])->name('Show_Profile');
         Route::post('Edit_Profile',[StudentController::class,'Edit_Profile'])->name('Edit_Profile');

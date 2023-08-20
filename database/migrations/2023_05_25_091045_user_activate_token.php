@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_activate_token', function (Blueprint $table) {
             $table->id();
-            $table->string('token');
+            $table->string('code');
             $table->bigInteger('student_id')->unsigned()->index();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade' );
             $table->timestamps();

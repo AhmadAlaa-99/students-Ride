@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
+use App\Models\UserActivateToken;
+use App\Models\password_confirmation;
 use App\Mail\delete_profile_student;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Rules\In;
 use Illuminate\Validation\Rules\NotIn;
-
+use App\Notifications\ActivateEmail;
+use App\Mail\RegisterUserMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Models\driver;
 use App\Models\trip;
 use App\Models\line;
@@ -62,9 +67,16 @@ class StudentController extends BaseController
         $student->age=$request->age;
         $student->university=$request->university;
         $student->location=$request->location;
-     
         //save in database
          $student->save();
+         
+         $code=random_int(1000,9999);
+         $newToken=new UserActivateToken();
+         $newToken->student_id=$student->id;
+         $newToken->code=$code;
+         $newToken->save();
+         Mail::to($student->email)->send(new RegisterUserMail($student,$code));
+         
          //make token
         //VALIDATE DATA
         $credentials = request(['email', 'password']);
@@ -80,6 +92,33 @@ class StudentController extends BaseController
             'token'=>$token
         ],200);
     }
+
+    public function ActivateEmail(Request $request)
+    {
+        $checkToken=UserActivateToken::where(['code'=>$request->code])->first();
+        if ($checkToken) 
+        {
+            $student_id=$checkToken->student_id;
+            $studen=student::where(['id'=>$student_id])->first();
+            $studen->email_verified_at=Carbon::now();
+            $studen->save();
+            $studen->notify(new ActivateEmail($studen));
+            return response()->json([
+                'status'=>true,
+                'message'=>'تم تفعيل الحساب بنجاح'
+            ]);   
+        }
+        else 
+        {
+            return response()->json([
+                'status'=>false,
+                'message'=>'خطأ في الكود'
+            ]); 
+
+        }
+    }
+    
+
    
     public function Show_Profile ()
     {
@@ -174,20 +213,18 @@ class StudentController extends BaseController
         $source =   $info = line::join('trips', 'trips.line_id', '=', 'lines.id')
         ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.start');
         */
-        $source =   $info =line::pluck('lines.start');
+        $source =$info =line::pluck('lines.start');
         /*
       
          $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
          ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.end');
          */
-         $destination =   $info =line::pluck('lines.end');
-
+         $destination =$info =line::pluck('lines.end');
                return response()->json([
                 'status'=>true,
                  'source'=>$source,
                  'destination'=>$destination,
             ]);  
-        
     }
     public function information_of_trip(Request $request){
         try {
