@@ -186,7 +186,7 @@ class Auth_ApiController extends BaseController
         
         if(auth()->guard('driver-api')->check())
         {
-            $driver_email=auth()->guard('driver-api')->email;
+            $driver_email=auth()->guard('driver-api')->user()->email;
             $fcm_token=$request->fcm_token;
             DeviceToken::create([
                 'email'=>$driver_email,
@@ -195,7 +195,7 @@ class Auth_ApiController extends BaseController
         }
         else if(auth()->guard('student-api')->check())
         {
-            $student_email=auth()->guard('student-api')->email;
+            $student_email=auth()->guard('student-api')->user()->email;
             $fcm_token=$request->fcm_token;
             DeviceToken::create([
                 'email'=>$student_email,

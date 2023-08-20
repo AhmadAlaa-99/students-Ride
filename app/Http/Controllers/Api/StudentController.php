@@ -146,6 +146,7 @@ class StudentController extends BaseController
     public function end_start_lines ()
     {
         
+        /*
         $now = now()->format('H')+3;
         $nine_pm = '21';
         
@@ -170,13 +171,16 @@ class StudentController extends BaseController
        
         $tomorrow_str = $tomorrow->format('Y-m-d');
         }
+        
         $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
         ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.start');
-      //$source=line::pluck('start');
-      //$destination=line::pluck('end');
+        */
+      $source=line::pluck('start');
+      $destination=line::pluck('end');
+      /*
         $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
         ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.end');
-       
+       */
 
                return response()->json([
                 'status'=>true,
@@ -231,6 +235,7 @@ class StudentController extends BaseController
     public function choose_The_Information_trip(Request $request,$id)
     {
         $trip=trip::where('id',$id)->first();
+        /*
         $validator =   $request->validate([
             'main_time' => ['required', new In([$trip->time_1, $trip->time_2, $trip->time_3])],
             'time_desire_1' => [
@@ -244,6 +249,7 @@ class StudentController extends BaseController
                 new NotIn([$request->input('main_time'), $request->input('time_desire_1')]),
             ],
         ]);
+        */
         
       $now = Carbon::now();
 
@@ -371,7 +377,7 @@ public function show_my_current_trips()
                 ->join('lines', 'trips.line_id','lines.id')
               //  ->where('trips.trip_date', '>', $today)
                 ->where('student_trip.student_id', '=', $student_id)
-                ->where('trips.status', '=', 'حالية')
+               // ->where('trips.status', '=', 'حالية')
                 ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
                 ->get();
             

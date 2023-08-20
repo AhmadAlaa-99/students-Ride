@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\StudentController;
 |
 */
 Route::post('fcm_token_store',[Auth_ApiController::class,'fcm_token_store'])->name('fcm_token_store');
+Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversController::class, 'down_contract_file'])->name('down.contract_file');
 /*--------------------------------forgotpassword : just student------------------------*/
 Route::post('forgotpasswordCreate', [Auth_ApiController::class, 'forgotPasswordCreate']);//notify email 
 Route::post('forgotpassword', [Auth_ApiController::class, 'forgotPasswordToken']);  //request code
@@ -33,7 +34,6 @@ Route::post('filter_search_trips',[DriverController::class,'filter_search_trips'
 Route::post('start_trip/{id}',[DriverController::class,'start_trip'])->name('start_trip');
 Route::post('end_trip/{id}',[DriverController::class,'end_trip'])->name('end_trip');
 //Route::post('check_box_student/{trip_id}/{student_id}',[DriverController::class,'check_box_student'])->name('check_box_student');
-Route::get('/down_contract_file/{id}',[App\Http\Controllers\Dashboard\DriversController::class, 'down_contract_file'])->name('down.contract_file');
 Route::post('cancel_trip/{id}',[DriverController::class,'cancel_trip'])->name('cancel_trip');
 Route::get('show_profile',[DriverController::class,'show_profile'])->name('show_profile');
 Route::get('browse_notifications',[DriverController::class,'browse_notifications'])->name('browse_notifications');
