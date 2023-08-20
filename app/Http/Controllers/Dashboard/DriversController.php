@@ -68,8 +68,7 @@ class DriversController extends BaseController
             'alert_count' => 'required|numeric',
         ];
         $request->validate($rules);
-         $image_name='doc-'.time().'.'.$request->portfolio->extension();
-
+         $image_name='doc'.time().'.'.$request->portfolio->extension();
          $request->portfolio->move(public_path('contracts'),$image_name);
 
 

@@ -10,6 +10,7 @@ use App\Models\trip;
 use App\Models\student_trip;
 use App\Models\student;
 use App\Models\User;
+use DB;
 use App\Http\Controllers\BaseController; 
 use Illuminate\Notifications\Notifiable;
 use Auth;
@@ -63,21 +64,19 @@ class DriverController extends BaseController
         $trips=trip::join('lines', 'trips.line_id', '=', 'lines.id')->where([
             'driver_id'=>$driver,
             'status'=>'قادمة',
-            ]) ->select('trips.id as trip_id', 'trips.*', 'lines.*')
+            ])->select('trips.id as trip_id', 'trips.*', 'lines.*')
             ->get();
             return response()->json([
                 'status'=>true,
                 'data'=>$trips,
-               
-            ]);  
+                ]);  
     }
     public function start_trip($tripId,Request $request)
     {
-        $trip=trip::where('id',$tripId)->update([
+        $trip=trip::where('id',$tripId)->first();
+        $trip->update([
             'status'=>'قيد التقدم',
-        ]);
-
-        
+        ]); 
         $admin=User::where('id','1')->first();
         $driver=driver::where('id',$trip->driver_id)->first();
         $admin->notify(new status_TripAdmin($trip,$driver));
@@ -162,10 +161,11 @@ class DriverController extends BaseController
     { 
         $driver=auth()->guard('driver-api')->user()->id;
         $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->where('trips.id', '=',$tripId)->where('trips.status_trip','حالية')
-        ->where('driver_id', $driver)
+       ->select('trips.id as trip_id','trips.*', 'lines.*')
+        ->where('trips.id', '=',$tripId)
+        ->where('trips.status','حالية')
+        ->where('trips.driver_id', $driver)
         ->with([ 'driver','students',])->first();
-    
   return response()->json([
     'data'=>$info
 ]);    
@@ -238,8 +238,15 @@ class DriverController extends BaseController
 
     public function cancel_trip($id)
     {
-        $trip=trip::join('drivers','trips.driver_id','=','drivers.id')
-        ->join('lines','trips.line_id','lines.id')->where('trips.id',$id)->first();
+        $trip = DB::table('trips')
+            ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
+            ->join('lines', 'trips.line_id', '=', 'lines.id')
+            ->where('trips.id', $id)
+            ->select('trips.id as trip_id', 'trips.*', 'lines.*')
+            ->first();
+
+        return $trip;
+        
         //notify for admin
         $admin=User::first();
         \Notification::send($admin,new TripCancel_admin($trip));

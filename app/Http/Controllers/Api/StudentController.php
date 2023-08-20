@@ -145,11 +145,9 @@ class StudentController extends BaseController
    
     public function end_start_lines ()
     {
-        
-        /*
         $now = now()->format('H')+3;
-        $nine_pm = '21';
-        
+        $nine_pm = '01';
+
         if ($now >= $nine_pm) {
 
             $now = Carbon::now();
@@ -159,8 +157,6 @@ class StudentController extends BaseController
             $tomorrow=$tomorrow->addDay();
 
             $tomorrow_str = $tomorrow->format('Y-m-d');
-
-        
         }
 
         else {
@@ -172,15 +168,13 @@ class StudentController extends BaseController
         $tomorrow_str = $tomorrow->format('Y-m-d');
         }
         
-        $source =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.start');
-        */
-      $source=line::pluck('start');
-      $destination=line::pluck('end');
-      /*
-        $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
-        ->whereDate('trips.trip_date', '=', $tomorrow)->pluck('lines.end');
-       */
+        $source =   $info = line::join('trips', 'trips.line_id', '=', 'lines.id')
+        ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.start');
+    
+      
+         $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
+         ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.end');
+       
 
                return response()->json([
                 'status'=>true,
@@ -190,47 +184,43 @@ class StudentController extends BaseController
         
     }
     public function information_of_trip(Request $request){
-        $request->validate([
-            'start' => 'required',
-            'end' => 'required|different:start',
-        ]);
-
-       $now = now()->format('H')+3;
-       $nine_pm = '21';
-
-       if ($now >= $nine_pm) {
-        $now = Carbon::now();
-
-        $tomorrow = $now->addDay();
-
-        $tomorrow=$tomorrow->addDay();
-
-        $tomorrow_str = $tomorrow->format('Y-m-d');
-
-       }
-
-      else {
-
-       $now = Carbon::now();
-
-       $tomorrow = $now->addDay();
-
-       
-       $tomorrow_str = $tomorrow->format('Y-m-d');
-
+        try {
+            $request->validate([
+                'start' => 'required',
+                'end' => 'required|different:start',
+            ]);
+           $now = now()->format('H')+3;
+           $nine_pm = '21';
+           if ($now >= $nine_pm) {
+            $now = Carbon::now();
+            $tomorrow = $now->addDay();
+            $tomorrow=$tomorrow->addDay();
+            $tomorrow_str = $tomorrow->format('Y-m-d');
+           }
+          else {
+           $now = Carbon::now();
+           $tomorrow = $now->addDay();
+           $tomorrow_str = $tomorrow->format('Y-m-d');
+            }
+            $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
+           ->whereDate('trips.trip_date', $tomorrow)
+           ->where ('lines.start',$request->start)
+           ->where ('lines.end',$request->end)
+           ->where ('trips.status','قادمة')
+           ->select('trips.id as trip_id', 'trips.*', 'lines.*')
+           ->get();
+           return response()->json([
+            'status'=>true,
+             'information'=>$info,
+        ]);  
+        } catch (Illuminate\Validation\ValidationException $exception) {
+            $errors = $exception->validator->errors()->all();
+            return response()->json([
+                'status' => false,
+                'message' => $errors[0], 
+            ]);
         }
-        $info = trip::join('lines', 'trips.line_id', '=', 'lines.id')
-       ->whereDate('trips.trip_date', $tomorrow)
-       ->where ('lines.start',$request->start)
-       ->where ('lines.end',$request->end)
-       ->select('trips.*','lines.*')
-       ->get();
-
-       return response()->json([
-        'status'=>true,
-         'information'=>$info,
-
-    ]);  
+       
     }
     public function choose_The_Information_trip(Request $request,$id)
     {
@@ -362,7 +352,8 @@ class StudentController extends BaseController
         ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
         ->join('student_trip', 'student_trip.trip_id', '=', 'trips.id')
         ->where('student_trip.student_id', '=', $student_id)
-        ->select('trips.id as trip_id', 'trips.*', 'drivers.full_name as DriverName')
+        ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName',
+        'trips.status as status_trip','drivers.status as status_driver','trips.id as trip_id')
         ->get();
         
         
@@ -375,12 +366,12 @@ public function show_my_current_trips()
         $info = trip::join('student_trip', 'trips.id', '=', 'student_trip.trip_id')
                 ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
                 ->join('lines', 'trips.line_id','lines.id')
-              //  ->where('trips.trip_date', '>', $today)
                 ->where('student_trip.student_id', '=', $student_id)
-               // ->where('trips.status', '=', 'حالية')
-                ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
+                ->whereIn('trips.status', ['حالية', 'قادمة'])
+                ->select('trips.id as trip_id','lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName',
+                'trips.status as status_trip','drivers.status as status_driver')
                 ->get();
-            
+
        return response()->json([
         'status'=>true,
          'data'=>$info
@@ -390,7 +381,12 @@ public function show_my_current_trips()
     public function show_details_for_trip($trip_id)
     {
         $student_id= auth()->guard('student-api')->id();
-        if (!student_trip::where([['trip_id','=',$trip_id],['student_id','=',$student_id]])->exists()){
+        $count = student_trip::where('trip_id', $trip_id)
+                    ->where('student_id', $student_id)
+                    ->count();
+
+        if ($count == 0)
+        {
             return response()->json([
                  'status'=>false,
                  'message'=>'هذه الرحلة غير موجودة',
@@ -401,10 +397,11 @@ public function show_my_current_trips()
                 ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
                 ->join('lines', 'trips.line_id','lines.id')
               //  ->where('trips.trip_date', '>', $today)
-                ->where('trips.status', '=', 'حالية')
+                // ->whereIn('trips.status', ['حالية', 'قادمة'])
                 ->where('student_trip.student_id', '=', $student_id)
-                ->select('lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName')
-                ->get()->first();
+                ->select('trips.id as trip_id','lines.*','trips.*', 'student_trip.*','drivers.full_name as DriverName',
+                'trips.status as status_trip','drivers.status as status_driver')
+                ->first();
           return response()->json([
             'status'=>true,
             'data'=>$info
@@ -447,7 +444,6 @@ public function show_my_current_trips()
 
     public function All_inforamtion_of_trip($id){
         
-
         $trip_info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
         ->where('trips.id', '=', $id)
         ->select('trips.id as trip_id', 'lines.*')
@@ -526,14 +522,12 @@ public function show_my_current_trips()
                 $query->where('trip_id', $tripid);
             })->get();
            // return $trip;
-            $trip=trip::join('lines', 'trips.line_id', '=', 'lines.id')
-            ->where('trips.id','=',$tripid)->first();
-
+             $trip=trip::join('lines', 'trips.line_id', '=', 'lines.id') 
+             ->select('trips.id as trip_id','trips.*', 'lines.*')   
+             ->where('trips.id','=',$tripid)->first();
             $trip->update([
                 'status'=>'حالية',
             ]);
-        
-
             $title=sprintf('رحلة مجدولة');
             $body=sprintf('كن مستعد - الرحلة %s - %s - %s في الساعة %s صباحا',
             $trip->start,$trip->end,$trip->price,$trip->time_final);
