@@ -18,14 +18,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $permissions = [
-            'ادارة الخطوط',
-            'ادارة السائقين',
-         
-            
-    
+        $permissions = [            
+   
+        'ادارة عمليات الخطوط',
+       'تصفح قسم الاقتراحات',
+        'ادارة عمليات السائقين',
+      
+        'ادارة عمليات الرحلات',
+        'تصفح بيانات الطلاب',
+        'تصفح قسم الانذارات',
+        'تصفح قسم الاشعارات',
+        'ادارة بيانات المستخدمين ',
+        'ادارة الصلاحيات ',
 
-    
     ];
     
     
@@ -44,7 +49,7 @@ class DatabaseSeeder extends Seeder
         'Status' => 'مفعل',
     ]);
  
-  
+   
         $role = Role::create(['name' => 'owner']);
    
         $permissions = Permission::pluck('id','id')->all();

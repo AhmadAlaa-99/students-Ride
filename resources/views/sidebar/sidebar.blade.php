@@ -25,6 +25,14 @@
                                 <span>احصائيات التطبيق</span>
                             </a>
                         </li>
+                        
+           
+         
+          
+         
+         
+
+                     @can( 'ادارة عمليات الخطوط')
 
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
@@ -41,7 +49,9 @@
                                 </li>
                             </ul>
                         </li>
-
+                        @endcan
+                        @can('ادارة عمليات السائقين')
+           
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-speedometer2"></i>
@@ -60,6 +70,9 @@
                                
                             </ul>
                         </li>
+                        @endcan
+                        @can('ادارة عمليات الرحلات')
+           
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-slack"></i>
@@ -71,7 +84,7 @@
                                 </li>
                                 <li class="submenu-item ">
                                     <a href="{{route('trips_finite')}}">عرض بيانات الرحلات المنتيهة</a>
-                                </li>
+                                 </li>
                                 <li class="submenu-item ">
                                     <a href="{{route('trips_current')}}">عرض بيانات الرحلات الحالية</a>
                                 </li>
@@ -87,26 +100,39 @@
                                
                             </ul>
                         </li>
-
+                        @endcan
+                
+       
+           
+         
+          
+            @can('تصفح بيانات الطلاب')
+         
                         <li class="sidebar-item active ">
                             <a href="{{route('students.index')}}" class='sidebar-link'>
                                 <i class="bi bi-person-circle"></i>
                                 <span>تصفح بيانات الطلاب</span>
                             </a>
                         </li>
-
+                        @endcan
+                        @can('تصفح قسم الانذارات')
                         <li class="sidebar-item active ">
                             <a href="{{route('alerts')}}" class='sidebar-link'>
                                 <i class="bi bi-exclamation-triangle-fill"></i>
                                 <span>قسم الانذارات</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('تصفح قسم الاقتراحات')
+                        
                         <li class="sidebar-item active ">
                             <a href="{{route('suggestions')}}" class='sidebar-link'>
                                 <i class="bi bi-chat-left-text-fill"></i>
                                 <span>قسم الاقتراحات</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('تصفح قسم الاشعارات')
                         <li class="sidebar-item active ">
                             <a href="{{route('notifications_admin')}}" class='sidebar-link'>
                                 <i class="bi bi-bell-fill"></i>
@@ -117,7 +143,7 @@
                             </a>
                         </li>
                     
-
+                        @endcan
                     <!--
                         <li class="sidebar-item">
                             <a href="{{route('profile_admin')}}" class='sidebar-link'>
@@ -126,18 +152,24 @@
                             </a>
                         </li>
 -->
+@can('ادارة بيانات المستخدمين ')
+          
                         <li class="sidebar-item">
                             <a href="{{ url('/' . ($page = 'users')) }}" class='sidebar-link'>
                                 <i class="bi bi-person-lines-fill"></i>
                                 <span> قائمة المستخدمين</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('ادارة الصلاحيات ')
+            
                         <li class="sidebar-item">
                             <a href="{{ url('/' . ($page = 'roles')) }}" class='sidebar-link'>
                                 <i class="bi bi-patch-check-fill"></i>
                                 <span>صلاحيات المستخدمين</span>
                             </a>
                         </li>
+                        @endcan
                         <li class="sidebar-item">
                             <a href="{{ url('/' . ($page = 'logout')) }}" class='sidebar-link'>
                             <i class="bi bi-toggle2-off"></i>                                <span>تسجيل الخروج</span>
