@@ -46,7 +46,7 @@ class BaseController
             $user =student::where('id',$userId)->first();
         }
 
-      $deviceTokens =DeviceToken::where('email',$user->email)->first();
+      $deviceTokens =DeviceToken::where('email',$user->email)->get();
       foreach($deviceTokens as $deviceToken)
       {
         $SERVER_API_KEY = 'AAAAwjICafo:APA91bGl4kOs_x7Wl9wdFaOkcJSorNZsXdvT_durj5fG6bu21wE6r5_v
