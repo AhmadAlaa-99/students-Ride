@@ -51,8 +51,7 @@ class BaseController
       {
         $SERVER_API_KEY = 'AAAAwjICafo:APA91bGl4kOs_x7Wl9wdFaOkcJSorNZsXdvT_durj5fG6bu21wE6r5_v
         vRY9tHi_NIPhdcNuD4CeIq2F_dlLzTnU-PX9qQCtLGvHbUE9_69jlvoXaIUQ1OczlEeVoFOOv
-        B9HqBGDIZVf';
-    
+        B9HqBGDIZVf';    
         $data = [
             "to" => $deviceToken->fcm_token,
             "priority" => 'high',
@@ -64,8 +63,7 @@ class BaseController
         $dataString = json_encode($data);
         $headers = [
             'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-        ];
+            'Content-Type: application/json', ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
         curl_setopt($ch, CURLOPT_POST, true);
