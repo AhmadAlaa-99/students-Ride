@@ -31,14 +31,14 @@ class delete_profile_student extends Mailable
      */
     public function build()
     {
-        $student=$this->ResetPassword->token;
+   
        // $url=url(path:'api/forgotpassword/'.$this->ResetPassword->token);
-        return $this->from(address:'student_ride@gmai.com')->view(view:'mail.delete_profile')->with([
+        return $this->from(address:'student_ride@gmai.com')->view(view:'Mail.delete_profile')->with([
             'student'=>$this->student->email,
              //'url'>=$url,
             
         ]);
-       // return $this->view(view:'view.name');
+      
     }
     public function envelope()
     {
@@ -54,9 +54,7 @@ class delete_profile_student extends Mailable
      */
     public function content()
     {
-        return new Content(
-            view: 'view.name',
-        );
+      
     }
 
     /**

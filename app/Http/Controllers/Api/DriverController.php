@@ -87,7 +87,8 @@ class DriverController extends BaseController
         foreach ($students as $student) {
             $title=sprintf('تحديث حالة الرحلة');
             $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
-            $this->sendFCMNotification('student',$student->id,$title,$body);
+          //  $this->sendFCMNotification('student',$student->id,$title,$body);
+            
         }
         
         return $this->sendResponse($trip,'current_trip');
@@ -134,7 +135,7 @@ class DriverController extends BaseController
     foreach ($students as $student) {
         $title=sprintf('تحديث حالة الرحلة');
         $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
-        $this->sendFCMNotification('student',$student->id,$title,$body);
+    //    $this->sendFCMNotification('student',$student->id,$title,$body);
     }
     return $this->sendResponse($trip,'current_trip'); 
     
@@ -194,7 +195,7 @@ class DriverController extends BaseController
         foreach ($students as $student) {
             $title=sprintf('تحديث حالة الرحلة');
             $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
-            $this->sendFCMNotification('student',$student->id,$title,$body);
+          //  $this->sendFCMNotification('student',$student->id,$title,$body);
         }
       
         
@@ -249,20 +250,20 @@ class DriverController extends BaseController
             ->where('trips.id', $id)
             ->select('trips.id as trip_id', 'trips.*', 'lines.*','drivers.full_name as driver_name')
             ->first();   
-               
-        //notify for admin
         $admin=User::first();
         \Notification::send($admin,new TripCancel_admin($trip));
-        //delete students from student_trip -  notify for students if exist 
-        $students = student::whereHas('trips', function ($query) use ($id) {
-            $query->where('trip_id', $id);
+        $tripId=$trip->id;
+        $students = student::whereHas('trips', function ($query) use ($tripId) {
+            $query->where('trip_id', $tripId);
         })->get();
-      
-      foreach($students as $student){
+      foreach($students as $student)
+      {
+   
     $title=sprintf('التغت الرحلة');
     $body=sprintf(' تم الغاء الرحلة على الخط لسبب طارئ');
     $this->sendFCMNotification('student',$student->id,$title,$body);
-}
+      }
+         $trip=trip::where('id',$tripId)->first();
         $trip->students()->detach($students);
         //aler_count++
         $driver=driver::where('id',$trip->driver_id)->first();

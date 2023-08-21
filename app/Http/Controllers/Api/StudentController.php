@@ -310,6 +310,7 @@ class StudentController extends BaseController
           ]);
       }
         $student_trip = new student_trip();
+       
         $student_trip->main_time=$request->main_time;
         $student_trip->time_desire_1=$request->time_desire_1;
         $student_trip->time_desire_2=$request->time_desire_2;
@@ -318,11 +319,9 @@ class StudentController extends BaseController
         $student_trip->status=0;
         $date =trip::where('id','=',$id)->get('trip_date')->first();
         $student_trip->save();
-
         $title=sprintf('تأكيد الحجز');
         $body=sprintf('تم حجز الرحلة بنجاح , سيصلك تأكيد بالوقت بعد التاسعة ');
         $this->sendFCMNotification('student',$student_id,$title,$body);
-
         return response()->json([
             'status'=>true,
              'message'=>'تم حجز رحلة بنجاح',
@@ -330,6 +329,7 @@ class StudentController extends BaseController
             ]);
     }
 }
+/*
     public function Cancel_Trip($id)
     { 
         $student_id= auth()->guard('student-api')->id();
@@ -393,7 +393,60 @@ class StudentController extends BaseController
                 ]);
         }
        
+    } */
+    public function Cancel_Trip($id)
+    { 
+        $student_id= auth()->guard('student-api')->id();
+       
+        if (!student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists())
+        {
+            return response()->json([
+                'status'=>false,
+                 'message'=>'هذه الرحلة غير موجودة',
+                ]);     
+        }
+        $now = Carbon::now();
+        $hour = $now->hour +3;
+        $student=student::find($student_id);
+        $student->alert_count=$student->alert_count+1;
+        $student->save();
+       
+        $student_trip=student_trip::where(
+            ['trip_id'=>$id,
+              'student_id'=>$student->id,
+            ])->first();
+
+        $student_trip->delete();
+        $admin=User::first();
+        if ($hour >= 19)
+         {
+         //delete account if conunt of alert big than 5
+         if ($student->alert_count>=5)
+         {
+     
+           $student->delete();
+            return response()->json([
+                'status'=>true,
+                 'message'=>'تم حظر الحساب وذلك
+                  لتجاوز عدد
+                  مرات الالغاء بعد الساعه 9 مساء ال 5 مرات ',
+                ]);
+         }
+         else {
+            //notify student to attention account_alert
+            $title=sprintf('انذار جديد');
+            $body=sprintf('تلقيت انذار جديد لديك %s انذارات',$student->alert_count,);
+        //  \Notification::send($driver,new alert_driver($driver));
+            $this->sendFCMNotification('student',$student->id,$title,$body);
+     //       \Notification::send($student,new attention_alert_student($student)); 
+        
+         return response()->json([
+            'status'=>true,
+            'message'=>'تم الالغاء بنجاح',
+            ]);
+        }
     }
+}
     public function Browse_my_Trips()
     {
         $student_id= auth()->guard('student-api')->id();
@@ -464,6 +517,7 @@ public function show_my_current_trips()
             'message'=>'required',
         ]);
         $student_id= auth()->guard('student-api')->id();
+        
         if (!student_trip::where([['student_id','=',$student_id],['trip_id','=',$trip_id]])->exists()){
             return response()->json([
                 'status'=>false,
@@ -619,13 +673,17 @@ public function show_my_current_trips()
     ['trip_date'=> $tomorrow_str,
     'status'=>'قادمة'
     ]
-    )->get();
+    )->has('studentTrips')->get();
+
+   
   foreach($trips as $trip)
   {
+    
     $students_trip=student_trip::where('trip_id','=',$trip->id)->get();
     $trip_date=$trip->trip_date;
     foreach($students_trip as $student_trip )
     {
+     
         $trip_time1=trip::where('id',$trip->id)->pluck('trips.time_1');
     
        
@@ -668,28 +726,31 @@ public function show_my_current_trips()
       $students = Student::whereHas('trips', function ($query) use($trip_id) {
         $query->where('trip_id', $trip_id);
     })->get();
+
+    $trip_info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
+    ->where('trips.id', '=', $trip_id)
+    ->select('trips.id as trip_id', 'lines.*','trips.*')
+    ->first();
       $title=sprintf('رحلة مجدولة');
       $body=sprintf('كن مستعد - الرحلة %s - %s - %s في الساعة %s صباحا',
-      $trip->start,$trip->end,$trip->price,$trip->time_final);
+      $trip_info->start,$trip_info->end,$trip_info->price,$trip_info->time_final);
+   
       foreach($students as $student)
       {
+     
           $this->sendFCMNotification('student',$student->id,$title,$body);     
       }
       //Notification::send($students, new Reservation_Confirm($trip));
       //notify admin 
       $admin=User::first();
-      \Notification::send($admin, new Reservation_Confirm_admin($trip));
+      \Notification::send($admin, new Reservation_Confirm_admin($trip_info));
       //notify driver 
       $driver=driver::where('id',$trip->driver_id)->first();
       //Notification::send($driver, new Reservation_Confirm_driver($trip));
-      $title=sprintf('رحلة مجدولة');
-      $body=sprintf('تم جدولة الرحلة على الخط %s - %s - %s في الساعة %s صباحا',
-      $trip->start,$trip->end,$trip->price,$trip->time_final);
-      $this->sendFCMNotification('driver',$driver->id,$title,$body);
+      //$title=sprintf('رحلة مجدولة');
+      //$body=sprintf('تم جدولة الرحلة على الخط %s - %s - %s في الساعة %s صباحا',
+      //$trip_info->start,$trip_info->end,$trip_info->price,$trip_info->time_final);
+    //  $this->sendFCMNotification('driver',$driver->id,$title,$body);
  }
- 
-
-
     }
-
 }
