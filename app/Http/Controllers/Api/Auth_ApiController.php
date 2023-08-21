@@ -183,7 +183,7 @@ class Auth_ApiController extends BaseController
 
     public function fcm_token_store(Request $request)
     {
-        if(auth()->guard('driver-api')->user()->check())
+        if(auth()->guard('driver-api')->check())
         {
             $driver_email=auth()->guard('driver-api')->user()->email;
             $fcm_token=$request->fcm_token;
@@ -192,7 +192,7 @@ class Auth_ApiController extends BaseController
                 'fcm_token'=>$fcm_token,
             ]);
         }
-        else if(auth()->guard('student-api')->user()->check())
+        else if(auth()->guard('student-api')->check())
         {
             $student_email=auth()->guard('student-api')->user()->email;
             $fcm_token=$request->fcm_token;
