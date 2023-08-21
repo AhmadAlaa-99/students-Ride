@@ -49,9 +49,10 @@ class BaseController
       $deviceTokens =DeviceToken::where('email',$user->email)->get();
       foreach($deviceTokens as $deviceToken)
       {
-        $SERVER_API_KEY = 'AAAAwjICafo:APA91bGl4kOs_x7Wl9wdFaOkcJSorNZsXdvT_durj5fG6bu21wE6r5_v
-        vRY9tHi_NIPhdcNuD4CeIq2F_dlLzTnU-PX9qQCtLGvHbUE9_69jlvoXaIUQ1OczlEeVoFOOv
-        B9HqBGDIZVf';    
+        $SERVER_API_KEY = 'AAAApmQ8pR4:APA91bHGXTNP4Vl
+        CY_g0nNXlIWz_RrbzQX4vCBQZORN0B5
+        6xIcUGyWGmjx8wPXbHLHlEkcBBK-vkmnrZfMZ6X2zmvYqm9-
+        0juLwk1ZDRvgcvAg9c52ZQpi3mXf4_oJwWM5vjaYkZBbNJ';    
         $data = [
             "to" => $deviceToken->fcm_token,
             "priority" => 'high',
