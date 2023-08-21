@@ -46,7 +46,7 @@
                         <div class="col-md-12 col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">بيانات الخط</h4>
+                                    <h4 class="card-title">بيانات المستحدم</h4>
                                 </div>
                               
                                 <div class="card-content">
@@ -123,7 +123,11 @@
                                                         <div class="col-xs-12 col-md-12">
                                                             <div class="form-group">
                                                                 <label class="form-label"> صلاحية المستخدم</label>
-                                                                {!! Form::select('roles_name[]', $roles,[], array('class' => 'form-control','multiple')) !!}
+                                                                <select name="roles_name[]" class="form-control" multiple>
+                @foreach($roles as $role)
+                    <option value="{{ $role }}">{{ $role }}</option>
+                @endforeach
+            </select>
                                                             </div>
                                                         </div>
                                                     </div>

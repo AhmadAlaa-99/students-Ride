@@ -53,7 +53,13 @@ $input = $request->all();
 
 $input['password'] = Hash::make($input['password']);
 
-$user = User::create($input);
+$user = User::create([
+    'name' =>$request->name,
+'email' => $request->email,
+'password' => $request->password,
+'roles_name' => $request->roles_name,
+'Status' => $request->Status,
+]);
 $user->assignRole($request->input('roles_name'));
 return redirect()->route('users.index')
 ->with('success','تم اضافة المستخدم بنجاح');

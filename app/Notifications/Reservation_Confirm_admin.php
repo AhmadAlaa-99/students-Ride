@@ -69,7 +69,7 @@ class Reservation_Confirm_admin extends Notification
        
         $url=sprintf(
             'http://127.0.0.1:8000/trips/%s',
-            $this->trip->id,
+            $this->trip->trip_id,
            );
         return [
         'body'=>$body,

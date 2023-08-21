@@ -73,7 +73,7 @@ class DriverController extends BaseController
     }
     public function start_trip($tripId,Request $request)
     {
-        $trip=trip::where('id',$tripId)->first();
+        $trip=trip::where('id',$tripId)->with('line')->first();
         $trip->update([
             'status'=>'قيد التقدم',
         ]); 
@@ -196,7 +196,7 @@ class DriverController extends BaseController
             $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
             $this->sendFCMNotification('student',$student->id,$title,$body);
         }
-      //  \Notification::send($students,new status_TripStudents($trip));
+      
         
         return $this->sendResponse($trip,'current_trip');
     }
@@ -247,11 +247,9 @@ class DriverController extends BaseController
             ->join('drivers', 'trips.driver_id', '=', 'drivers.id')
             ->join('lines', 'trips.line_id', '=', 'lines.id')
             ->where('trips.id', $id)
-            ->select('trips.id as trip_id', 'trips.*', 'lines.*')
-            ->first();
-
-        return $trip;
-        
+            ->select('trips.id as trip_id', 'trips.*', 'lines.*','drivers.full_name as driver_name')
+            ->first();   
+               
         //notify for admin
         $admin=User::first();
         \Notification::send($admin,new TripCancel_admin($trip));
@@ -259,12 +257,11 @@ class DriverController extends BaseController
         $students = student::whereHas('trips', function ($query) use ($id) {
             $query->where('trip_id', $id);
         })->get();
-       // \Notification::send($students,new TripCancel_students($trip));
+      
       foreach($students as $student){
     $title=sprintf('التغت الرحلة');
     $body=sprintf(' تم الغاء الرحلة على الخط لسبب طارئ');
     $this->sendFCMNotification('student',$student->id,$title,$body);
-
 }
         $trip->students()->detach($students);
         //aler_count++

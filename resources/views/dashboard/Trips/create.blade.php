@@ -49,6 +49,9 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="date" id="start" class="form-control"
                                                             name="trip_date" placeholder="تاريخ الرحلة">
+                                                            @error('trip_date')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>اوقات الرحلة</label>
@@ -56,14 +59,23 @@
                                                     <div class="col-md-2 form-group">
                                                         <input type="time" id="email-id" class="form-control"
                                                             name="time_1" placeholder="EX : 9:20,9:40,9:60">
+                                                            @error('time_1')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-2 form-group">
                                                         <input type="time" id="email-id" class="form-control"
                                                             name="time_2" placeholder="EX : 9:20,9:40,9:60">
+                                                            @error('time_2')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-2 form-group">
                                                         <input type="time" id="email-id" class="form-control"
                                                             name="time_3" placeholder="EX : 9:20,9:40,9:60">
+                                                            @error('time_3')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label> السائق</label>
@@ -79,6 +91,9 @@
                                                         @endforeach
                                                       
                                                     </select>
+                                                    @error('driver_id')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                 </div>
                                                     </div>
 
@@ -96,6 +111,9 @@
                                                         @endforeach
                                                       
                                                     </select>
+                                                    @error('line_id')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                 </div>
                                                     </div>
 

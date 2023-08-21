@@ -48,12 +48,13 @@ class BaseController
       $deviceTokens =DeviceToken::where('email',$user->email)->get();
       foreach($deviceTokens as $deviceToken)
       {
-        //$SERVER_API_KEY = $deviceToken->fcm_token;
+        $deviceToken = $deviceToken->fcm_token;
         $SERVER_API_KEY = 'AAAAwjICafo:APA91bGl4kOs_x7Wl9wdFaOkcJSorNZsXdvT_durj5fG6bu21wE6r5_v
         vRY9tHi_NIPhdcNuD4CeIq2F_dlLzTnU-PX9qQCtLGvHbUE9_69jlvoXaIUQ1OczlEeVoFOOv
         B9HqBGDIZVf';
+    
         $data = [
-            "to" => 'd0tLNPooSSaRwDhPmPH0pO:APA91bHSsEQVrrgBKWQQRyjbiRI82YirO9wmgWRixSeqdjfMlvdJNDKBafElatQ2AaToFNp6Qb1fJJBOk179cvkA0E4tHb9ZYj2CE5ZS_wAcHvIjSLgPXaHnKxVoT1Ow6wuzy9duMNRh',
+            "to" => $deviceToken->fcm_token,
             "priority" => 'high',
             "notification" => [
                 "title" => $title,

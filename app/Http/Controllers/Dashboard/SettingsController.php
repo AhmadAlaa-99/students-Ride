@@ -46,7 +46,7 @@ class SettingsController extends Controller
     }
     public function notifications()
     {
-       $notifications=auth()->user()->unreadNotifications()->get()->count();
+      $notifications=auth()->user()->unreadNotifications()->get()->count();
         return view('dashboard.settings.notifications',compact('notifications'));
     }
     public function mark_As_read($id)

@@ -50,6 +50,17 @@ class TripsController extends Controller
     {     
         //num_stu
         //price_final
+        $rules = [
+        
+            'trip_date' => 'required|date',
+            'time_1' => 'required',
+            'time_2' => 'required',
+            'time_3' => 'required',
+            'driver_id' => 'required|string',
+            'line_id' => 'required|string',
+          
+        ];
+        $request->validate($rules);
        trip::create([
     'trip_date'=>$request->trip_date,
     'time_1'=>$request->time_1,
@@ -72,10 +83,10 @@ class TripsController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function show(line $line) 
+    public function show(trip $trip) 
     {
-        return view('lines.show', [
-            'line' => $line
+        return view('dashboard.Trips.show', [
+            'trip' => $trip
         ]);
     }
 

@@ -44,9 +44,7 @@
 
                                             <div class="form-body">
                                                 <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label>الاسم الكامل</label>
-                                                    </div>
+                                                  
                                                     <div class="col-md-3 form-group">
                                                         <input type="text" id="start" class="form-control"
                                                             name="full_name" placeholder="الاسم الكامل">
@@ -54,9 +52,7 @@
                                              <div class="alert alert-danger">{{ $message }}</div>
 @enderror
                                                     </div>
-                                                    <div class="col-md-3u">
-                                                        <label>البريد الالكتروني</label>
-                                                    </div>
+                                                
                                                     <div class="col-md-3 form-group">
                                                         <input type="text" id="email" class="form-control"
                                                             name="email" placeholder="البريد الالكتروني">
@@ -64,10 +60,8 @@
     <div class="alert alert-danger">{{ $message }}</div>
 @enderror
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <label>كلمة السر</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                   
+                                                    <div class="col-md-3 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="password" placeholder="كلمة السر">
                                                             @error('password')
@@ -75,10 +69,7 @@
 @enderror
                                                     </div>
 
-                                                    <div class="col-md-4">
-                                                        <label>رقم الهاتف</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                    <div class="col-md-3 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="phone_number" placeholder="رقم الهاتف">
                                                             @error('phone_number')
@@ -87,67 +78,49 @@
                                                     </div>
 
 
-                                                    <div class="col-md-4">
-                                                        <label>العمر</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
-                                                        <input type="number" id="contact-info" class="form-control"
-                                                            name="age" placeholder="العمر">
-                                                            @error('age')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>الجنس</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                
+                                                
+                                                 
+                                                    <div class="col-md-3 form-group">
 
                                                     <div class="input-group mb-3">
                                                     <label class="input-group-text"
-                                                        for="inputGroupSelect01">Options</label>
+                                                        for="inputGroupSelect01">اختيار</label>
                                                     <select class="form-select" name="gender"id="inputGroupSelect01">
-                                                        <option selected>Select Gender...</option>
-                                                        <option value="male">male</option>
-                                                        <option value="female">female</option>
+                                                        <option selected>اختيار الجنس...</option>
+                                                        <option value="male">ذكر</option>
+                                                        <option value="female">انثى</option>
                                                       
                                                     </select>
                                                 </div>
                                                 
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <label>تاريخ بداية العقد</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                
+                                                    <div class="col-md-3 form-group">
                                                         <input type="date" id="contact-info" class="form-control"
                                                             name="date_reg" placeholder="تاريخ بداية العقد">
                                                             @error('date_reg')
     <div class="alert alert-danger">{{ $message }}</div>
 @enderror
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <label>تاريح نهاية العقد</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                
+                                                    <div class="col-md-3 form-group">
                                                         <input type="date" id="contact-info" class="form-control"
                                                             name="data_reg_end" placeholder="تاريخ نهاية العقد">
                                                             @error('data_reg_end')
     <div class="alert alert-danger">{{ $message }}</div>
 @enderror
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <label>رقم المركبة</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                 
+                                                    <div class="col-md-3 form-group">
                                                         <input type="text" id="contact-info" class="form-control"
                                                             name="vehicle_number" placeholder="رقم المركبة">
                                                             @error('vehicle_number')
     <div class="alert alert-danger">{{ $message }}</div>
 @enderror
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <label>نوع المركبة</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                  
+                                                    <div class="col-md-3 form-group">
                                                         <input type="text" id="contact-info" class="form-control"
                                                             name="vehicle_type" placeholder="نوع المركبة">
                                                             @error('vehicle_type')
@@ -155,10 +128,8 @@
 @enderror
                                                     </div>
                                                   
-                                                    <div class="col-md-4">
-                                                        <label>عدد الركاب</label>
-                                                    </div>
-                                                    <div class="col-md-8 form-group">
+                                                  
+                                                    <div class="col-md-3 form-group">
                                                         <input type="number" id="contact-info" class="form-control"
                                                             name="num_stu" placeholder="عدد الركاب ">
                                                             @error('num_stu')
@@ -166,12 +137,10 @@
 @enderror
                                                     </div>
 
-                                                    <div class="col-md-4">
-                                                        <label>ملفات العقد</label>
-                                                    </div>
+                                                
                                                     <div class="col-md-8 form-group">
                                                         <input type="file" id="contact-info" class="form-control"
-                                                            name="portfolio" placeholder="ملف العقد">
+                                                            name="portfolio" placeholder="مرفق العقد">
                                                             @error('portfolio')
     <div class="alert alert-danger">{{ $message }}</div>
 @enderror

@@ -58,10 +58,14 @@ class TripCancel_admin extends Notification
     public function toDatabase($notifiable)
     {
 
-       $body=sprintf('لقد تم الغاء الرحلة من قبل السائق %s',$this->trip->full_name,);
+       $body=sprintf('لقد تم الغاء الرحلة من قبل السائق %s على الخط %s -%s',
+       $this->trip->driver_name,
+       $this->trip->start,
+       $this->trip->end
+    );
         $url=sprintf(
             'http://127.0.0.1:8000/trips/%s',
-            $this->trip->id,
+            $this->trip->trip_id,
            );
         return [
         'body'=>$body,

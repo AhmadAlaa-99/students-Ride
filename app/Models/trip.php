@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\driver;
 use App\Models\line;
 use App\Models\student;
+use App\Models\studentTrips;
 
 class trip extends Model
 {
@@ -17,6 +18,7 @@ class trip extends Model
     {
         return explode(',', $value);
     }
+
     protected $guarded=[''];
     
     public function driver()
@@ -35,6 +37,10 @@ class trip extends Model
     public function scopeBetweenDates($query, $startDate, $endDate)
 {
     return $query->whereBetween('trip_date', [$startDate, $endDate]);
+}
+public function studentTrips()
+{
+    return $this->hasMany(student_trip::class, 'trip_id');
 }
     
 }

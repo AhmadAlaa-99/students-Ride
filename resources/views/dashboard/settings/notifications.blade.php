@@ -188,17 +188,19 @@
 <div class="row notification-container">
   <h2 class="text-center">قسم الاشعارات</h2>
   <p class="dismiss text-right"><a id="dismiss-all" href="{{route('mark_all_read')}}">حذف جميع الاشعارات</a></p>
-  @foreach ($notifications as $notification)
- 
-              
+  @foreach (auth()->user()->unreadNotifications as $notification)            
   <div class="card notification-card notification-reminder">
     <div class="card-body">
        <table>
-       <div class="avatar bg-primary me-3">
+      
+        <tr>
+      
+          <td style="width:70%">
+         
+          <div class="">
+          <div class="avatar bg-primary me-3">
                                 <span class="avatar-content"><i class="bi bi-envelope"></i></span>
                             </div>
-        <tr>
-          <td style="width:70%"><div class="card-title">
           {{ $notification->data['body'] }}
           </div></td>
           <td style="width:30%">

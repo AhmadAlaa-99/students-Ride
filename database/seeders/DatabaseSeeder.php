@@ -19,24 +19,17 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $permissions = [            
-   
         'ادارة عمليات الخطوط',
        'تصفح قسم الاقتراحات',
         'ادارة عمليات السائقين',
-      
         'ادارة عمليات الرحلات',
         'تصفح بيانات الطلاب',
         'تصفح قسم الانذارات',
         'تصفح قسم الاشعارات',
         'ادارة بيانات المستخدمين ',
         'ادارة الصلاحيات ',
-
     ];
-    
-    
-    
     foreach ($permissions as $permission) {
-    
     Permission::create(['name' => $permission]);
     }
     $pass='12345678';
@@ -64,9 +57,9 @@ class DatabaseSeeder extends Seeder
         for($i=0; $i<10 ;$i++)
         {
             $randomStartIndex = array_rand($start);
-    $randomEndIndex = array_rand($end);
-    $randomStart = $start[$randomStartIndex];
-    $randomEnd = $end[$randomEndIndex];
+            $randomEndIndex = array_rand($end);
+           $randomStart = $start[$randomStartIndex];
+          $randomEnd = $end[$randomEndIndex];
      
         \App\Models\line::create([
 
@@ -182,6 +175,7 @@ class DatabaseSeeder extends Seeder
              
             ]);
         }
+     
             \App\Models\trip::create([
             'trip_date'=>$tm,
             'time_1'=>$time1->format('H:i'),
@@ -248,6 +242,30 @@ class DatabaseSeeder extends Seeder
             'line_id'=>rand(6,10),
             'num_stu'=>'8',
             ]);
+    }
+    for($i=10;$i<15;$i++)
+    {
+        \App\Models\student_trip::create([
+            'main_time'=>$time4->format('H:i'),
+            'time_desire_1'=>$time5->format('H:i'),
+            'time_desire_2'=>$time6->format('H:i'),
+            'status'=>'0',
+            'student_id'=>$i,
+            'trip_id'=>3,
+         
+        ]);
+    }
+    for($i=16;$i<20;$i++)
+    {
+        \App\Models\student_trip::create([
+            'main_time'=>$time4->format('H:i'),
+            'time_desire_1'=>$time5->format('H:i'),
+            'time_desire_2'=>$time6->format('H:i'),
+            'status'=>'0',
+            'student_id'=>$i,
+            'trip_id'=>4,
+         
+        ]);
     }
 }
 

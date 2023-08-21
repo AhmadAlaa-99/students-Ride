@@ -117,26 +117,23 @@
                             <td>{{ ++$i }}</td>
                             <td>{{ $role->name }}</td>
                             <td>
-                                @can('عرض صلاحية')
+                            
                                     <a class="btn btn-success btn-sm"
                                         href="{{ route('roles.show', $role->id) }}">عرض</a>
-                                @endcan
+                    
                                 
-                                @can('تعديل صلاحية')
+                                
                                     <a class="btn btn-primary btn-sm"
                                         href="{{ route('roles.edit', $role->id) }}">تعديل</a>
-                                @endcan
+                                
 
                                 @if ($role->name !== 'owner')
-                                    @can('حذف صلاحية')
+                                
                                         {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy',
                                         $role->id], 'style' => 'display:inline']) !!}
                                         {!! Form::submit('حذف', ['class' => 'btn btn-danger btn-sm']) !!}
                                         {!! Form::close() !!}
-                                    @endcan
                                 @endif
-
-
                             </td>
                         </tr>
                     @endforeach
