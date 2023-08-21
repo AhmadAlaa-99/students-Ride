@@ -45,14 +45,12 @@ class BaseController
         {
             $user =student::where('id',$userId)->first();
         }
-      $deviceTokens =DeviceToken::where('email',$user->email)->get();
-      foreach($deviceTokens as $deviceToken)
-      {
-        $deviceToken = $deviceToken->fcm_token;
+
+        $deviceToken =DeviceToken::where('email',$user->email)->first();
+         $deviceToken = $deviceToken->fcm_token;
         $SERVER_API_KEY = 'AAAAwjICafo:APA91bGl4kOs_x7Wl9wdFaOkcJSorNZsXdvT_durj5fG6bu21wE6r5_v
         vRY9tHi_NIPhdcNuD4CeIq2F_dlLzTnU-PX9qQCtLGvHbUE9_69jlvoXaIUQ1OczlEeVoFOOv
         B9HqBGDIZVf';
-    
         $data = [
             "to" => $deviceToken->fcm_token,
             "priority" => 'high',
@@ -75,9 +73,6 @@ class BaseController
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
         $response = curl_exec($ch);
         print($response);
-
-      }
-       
     }
 
 }
