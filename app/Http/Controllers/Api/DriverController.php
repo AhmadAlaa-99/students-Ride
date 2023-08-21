@@ -101,7 +101,7 @@ class DriverController extends BaseController
         //$check_box = $request->input('check_box', []);
         //return [true,false,truse,false];
         $students=student_trip::where('trip_id',$tripId)->get();
-        $check_box = [true, false, true, false];
+     //   $check_box = [true, false, true, false];
         $convertedData = array_map(fn($value) => (int)$value, $check_box);
         $count = count($students);
         
@@ -131,15 +131,12 @@ class DriverController extends BaseController
     $students = student::whereHas('trips', function ($query) use ($tripId) {
         $query->where('trip_id', $tripId);
     })->get();
-    
     foreach ($students as $student) {
         $title=sprintf('تحديث حالة الرحلة');
         $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
-    //    $this->sendFCMNotification('student',$student->id,$title,$body);
+        $this->sendFCMNotification('student',$student->id,$title,$body);
     }
     return $this->sendResponse($trip,'current_trip'); 
-    
-
 /*
         $student = student::find($student_id);  
         $student->trips()->updateExistingPivot($trip_id,
