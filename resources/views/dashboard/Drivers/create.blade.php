@@ -92,6 +92,9 @@
                                                         <option value="female">انثى</option>
                                                       
                                                     </select>
+                                                    @error('gender')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                                 </div>
                                                 
                                                     </div>

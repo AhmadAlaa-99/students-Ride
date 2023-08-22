@@ -92,7 +92,9 @@
                                                       
                                                     </select>
                                                     @error('driver_id')
-    <div class="alert alert-danger">{{ $message }}</div>
+    <div class="alert alert-danger">{{ $message }}
+        
+    </div>
 @enderror
                                                 </div>
                                                     </div>

@@ -111,8 +111,13 @@
                                                         <option selected>Select Gender...</option>
                                                         <option value="male">male</option>
                                                         <option value="female">female</option>
+                                                        
                                                       
                                                     </select>
+                                                    @error('age')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
+                                                    
                                                 </div>
                                                 
                                                     </div>

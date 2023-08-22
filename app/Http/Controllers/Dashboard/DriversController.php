@@ -125,8 +125,8 @@ class DriversController extends BaseController
     public function update(driver $driver, Request $request) 
     {
         $rules = [
-            'full_name' => 'required|string|unique:drivers',
-            'email' => 'required|string|unique:drivers',
+            'full_name' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W]{8,}$/',
             'age' => 'required|numeric',
             'gender' => 'required|string',

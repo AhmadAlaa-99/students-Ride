@@ -56,8 +56,8 @@ class TripsController extends Controller
             'time_1' => 'required',
             'time_2' => 'required',
             'time_3' => 'required',
-            'driver_id' => 'required|string',
-            'line_id' => 'required|string',
+            'driver_id' => 'required',
+            'line_id' => 'required',
           
         ];
         $request->validate($rules);
@@ -121,8 +121,17 @@ class TripsController extends Controller
      */
     public function update(Request $request,trip $trip) 
     {
+        $rules = [
         
+            'trip_date' => 'required|date',
+            'time_1' => 'required',
+            'time_2' => 'required',
+            'time_3' => 'required',
+            'driver_id' => 'required',
+            'line_id' => 'required',
           
+        ];
+        $request->validate($rules);
         $trip->update([    
             'trip_date'=>$request->trip_date,
             'time_1'=>$request->time_1,
