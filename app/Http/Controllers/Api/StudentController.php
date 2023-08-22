@@ -309,6 +309,7 @@ class StudentController extends BaseController
                'message'=>'تم التسجيل على هذه الرحلة مسبقا',
           ]);
       }
+   
         $student_trip = new student_trip();
        
         $student_trip->main_time=$request->main_time;

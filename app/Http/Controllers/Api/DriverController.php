@@ -96,12 +96,8 @@ class DriverController extends BaseController
 
     public function end_trip($tripId,Request $request)
     {
-      
-        $check_box = json_decode($request->input('check_box', []));
-        //$check_box = $request->input('check_box', []);
-        //return [true,false,truse,false];
+        $check_box = json_decode($request->input('check_box', []), true);
         $students=student_trip::where('trip_id',$tripId)->get();
-     //   $check_box = [true, false, true, false];
         $convertedData = array_map(fn($value) => (int)$value, $check_box);
         $count = count($students);
         
