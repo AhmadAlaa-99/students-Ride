@@ -186,7 +186,7 @@ class StudentController extends BaseController
     public function end_start_lines ()
     {
       
-/*
+
         $now = now()->format('H')+3;
         $nine_pm = '01';
 
@@ -209,23 +209,23 @@ class StudentController extends BaseController
        
         $tomorrow_str = $tomorrow->format('Y-m-d');
         }
-        */
-        /*
+        
+        
         $source =   $info = line::join('trips', 'trips.line_id', '=', 'lines.id')
         ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.start');
-        */
-        $source =$info =line::pluck('lines.start');
-        /*
+        
+   //     $source =$info =line::pluck('lines.start');
+        
       
          $destination =   $info = trip::join('lines', 'trips.line_id', '=', 'lines.id') 
          ->whereDate('trips.trip_date', '=', $tomorrow)->distinct('lines.start')->pluck('lines.end');
-         */
-         $destination =$info =line::pluck('lines.end');
-               return response()->json([
-                'status'=>true,
-                 'source'=>$source,
-                 'destination'=>$destination,
-            ]);  
+         
+     //     $destination =$info =line::pluck('lines.end');
+                return response()->json([
+                 'status'=>true,
+                  'source'=>$source,
+                  'destination'=>$destination,
+             ]);  
     }
     public function information_of_trip(Request $request){
         try {

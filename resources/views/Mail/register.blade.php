@@ -196,21 +196,7 @@
           </tr>
           <!-- end button -->
 
-          <!-- start copy -->
-          <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px" font-family="Source Sans Pro, Helvetica, Arial, sans-serif" font-size="16px" line-height="24px">
-              <p style="margin: 0;">welcome</p>
-            </td>
-          </tr>
-          <!-- end copy -->
-
-          <!-- start copy -->
-          <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px" font-family="Source Sans Pro, Helvetica, Arial, sans-serif "font-size= "16px"line-height=" 24px" border-bottom="3px solid #d4dadf">
-              <p style="margin: 0;">social<br> for all</p>
-            </td>
-          </tr>
-          <!-- end copy -->
+      
 
         </table>
         <!--[if (gte mso 9)|(IE)]>
@@ -233,21 +219,11 @@
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
 
           <!-- start permission -->
-          <tr>
-            <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px" font-family= "Source Sans Pro, Helvetica, Arial, sans-serif" font-size=" 14px" line-height= "20px" color="#666">
-              <p style="margin: 0;">ya welcome</p>
-            </td>
-          </tr>
+    
+       
           <!-- end permission -->
 
-          <!-- start unsubscribe -->
-          <tr>
-            <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px" font-family="Source Sans Pro, Helvetica, Arial, sans-serif "font-size=" 14px"line-height=" 20px" color=" #666">
-              <p style="margin: 0;">to contact <a href=# target="_blank">welcome</a> at any time.</p>
-              <p style="margin: 0;">syria</p>
-            </td>
-          </tr>
-          <!-- end unsubscribe -->
+         
 
         </table>
         <!--[if (gte mso 9)|(IE)]>
