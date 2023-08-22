@@ -302,6 +302,7 @@ class StudentController extends BaseController
       }
       else 
       {
+        
       $student_id= auth()->guard('student-api')->id();
       if (student_trip::where([['student_id','=',$student_id],['trip_id','=',$id]])->exists()){
           return response()->json([
