@@ -38,7 +38,7 @@ Route::get('/', function ()
 {
     return view('auth.login');
 });
-Route::group(['middleware'=>'auth'],function()
+Route::group(['middleware'=>'auth:web'],function()
 {
     /** main dashboard */
     Route::controller(statiticsController::class)->group(function () {

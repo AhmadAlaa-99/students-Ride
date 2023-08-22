@@ -309,12 +309,14 @@ class StudentController extends BaseController
                'message'=>'تم التسجيل على هذه الرحلة مسبقا',
           ]);
       }
-   
+
         $student_trip = new student_trip();
        
         $student_trip->main_time=$request->main_time;
         $student_trip->time_desire_1=$request->time_desire_1;
         $student_trip->time_desire_2=$request->time_desire_2;
+            
+
         $student_trip->trip_id=$id;
         $student_trip->student_id=$student_id;
         $student_trip->status=0;

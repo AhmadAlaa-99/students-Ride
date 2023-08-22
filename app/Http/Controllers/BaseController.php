@@ -37,11 +37,22 @@ class BaseController
   }
   public function sendFCMNotification($type,$userId, $title, $body)
     {
+          if($type=='driver')
+        {
+            $user =driver::where('id',$userId)->first();
+        }
+        else
+        {
+            $user =student::where('id',$userId)->first();
+        }
+        /*
         $user=student::where('id',$userId)->first();
+        */
         $deviceTokens =DeviceToken::where('email',$user->email)->get();
+        
         foreach($deviceTokens as $deviceToken)
         {
-        $SERVER_API_KEY = 'AAAApmQ8pR4:APA91bHGXTNP4VlCY_g0nNXlIWz_RrbzQX4vCBQZORN0B56xIcUGyWGmjx8wPXbHLHlEkcBBK-vkmnrZfMZ6X2zmvYqm9-0juLwk1ZDRvgcvAg9c52ZQpi3mXf4_oJwWM5vjaYkZBbNJ';
+        $SERVER_API_KEY='AAAApmQ8pR4:APA91bHGXTNP4VlCY_g0nNXlIWz_RrbzQX4vCBQZORN0B56xIcUGyWGmjx8wPXbHLHlEkcBBK-vkmnrZfMZ6X2zmvYqm9-0juLwk1ZDRvgcvAg9c52ZQpi3mXf4_oJwWM5vjaYkZBbNJ';
         $data = [
             "to" => $deviceToken->fcm_token,
             "priority" => 'high',
