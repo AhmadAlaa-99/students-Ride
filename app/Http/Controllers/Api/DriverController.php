@@ -96,6 +96,13 @@ class DriverController extends BaseController
 
     public function end_trip($tripId,Request $request)
     {
+        $trip=trip::where('id',$tripId)->first();
+        $trip->update([
+     'status'=>'منتهية',
+     'num_stu_final'=>$num_stu_final,
+     'price_final'=>$num_stu_final*$trip->line->price,
+ ]);
+        
         $check_box = json_decode($request->input('check_box', []), true);
         $students=student_trip::where('trip_id',$tripId)->get();
         $convertedData = array_map(fn($value) => (int)$value, $check_box);
@@ -111,19 +118,14 @@ class DriverController extends BaseController
             'trip_id'=>$tripId,
             'status'=>'1',
         ])->count();
-        $trip=trip::where('id',$tripId)->first();
-           $trip->update([
-        'status'=>'منتهية',
-        'num_stu_final'=>$num_stu_final,
-        'price_final'=>$num_stu_final*$trip->line->price,
-    ]);
+      
     $driver=driver::where('id',$trip->driver_id)->update([
         'financial'=>++$trip->price_final,
     ]);
     $admin=User::where('id','1')->first();
     $driver=driver::where('id',$trip->driver_id)->first();
     $admin->notify(new status_TripAdmin($trip,$driver));
-    //send notify students in this trip 
+    
     $students = student::whereHas('trips', function ($query) use ($tripId) {
         $query->where('trip_id', $tripId);
     })->get();
