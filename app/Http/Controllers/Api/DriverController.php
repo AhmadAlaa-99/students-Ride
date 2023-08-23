@@ -87,7 +87,7 @@ class DriverController extends BaseController
         foreach ($students as $student) {
             $title=sprintf('تحديث حالة الرحلة');
             $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
-          //  $this->sendFCMNotification('student',$student->id,$title,$body);
+           $this->sendFCMNotification('student',$student->id,$title,$body);
             
         }
         
@@ -190,7 +190,7 @@ class DriverController extends BaseController
         foreach ($students as $student) {
             $title=sprintf('تحديث حالة الرحلة');
             $body=sprintf('تم تحديث حالة الرحلة الى ',$request->status,);
-          //  $this->sendFCMNotification('student',$student->id,$title,$body);
+           $this->sendFCMNotification('student',$student->id,$title,$body);
         }
       
         

@@ -412,8 +412,7 @@ class StudentController extends BaseController
         $now = Carbon::now();
         $hour = $now->hour +3;
         $student=student::find($student_id);
-        $student->alert_count=$student->alert_count+1;
-        $student->save();
+  
        
         $student_trip=student_trip::where(
             ['trip_id'=>$id,
@@ -422,12 +421,19 @@ class StudentController extends BaseController
 
         $student_trip->delete();
         $admin=User::first();
-        if ($hour >= 19)
+        if ($hour >= 10)
          {
+            $student->alert_count=$student->alert_count+1;
+            $student->save();
          //delete account if conunt of alert big than 5
          if ($student->alert_count>=5)
          {
-     
+
+           $student=student::where('id',$student->id)->first();
+           
+         
+         //   Mail::to($student->email)->send(new delete_profile_student($student));
+           
            $student->delete();
             return response()->json([
                 'status'=>true,
@@ -649,8 +655,11 @@ public function show_my_current_trips()
      
           $this->sendFCMNotification('student',$student->id,$title,$body);     
       }
- 
-    
+
+      $driver=driver::where('id',$trip_info->driver_id)->first();
+     $this->sendFCMNotification('driver',$driver->id,$title,$body);  
+
+
        $admin=User::first();
       \Notification::send($admin, new Reservation_Confirm_admin($trip_info));
     
